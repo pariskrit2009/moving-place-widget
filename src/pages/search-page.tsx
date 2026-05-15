@@ -5,10 +5,19 @@ import { Icon } from "@/components/ui/icon";
 import { LocationSearchInput } from "@/components/form/LocationSearchInput";
 import { useLocationsForm, type LocationsFormData } from "@/features/search";
 import { useWidgetStore } from "@/store";
+import type { SelectedPlace } from "@/features/search";
 export default function SearchPage() {
   const { navigateWithParams } = useNavigateWithParams();
   const search = useWidgetStore((s) => s.search);
   const setSearch = useWidgetStore((s) => s.setSearch);
+  const setSelectedPlace = useWidgetStore((s) => s.setSelectedPlace);
+
+  const handlePlaceSelect = (
+    field: "startLocation" | "endLocation",
+    place: SelectedPlace,
+  ) => {
+    setSelectedPlace(field, place);
+  };
 
   const {
     handleSubmit,
@@ -53,6 +62,7 @@ export default function SearchPage() {
                 id="startLocation"
                 placeholder="Zip code or street address"
                 error={errors.startLocation?.message}
+                onPlaceSelect={(place) => handlePlaceSelect("startLocation", place)}
               />
 
               <LocationSearchInput
@@ -62,6 +72,7 @@ export default function SearchPage() {
                 id="endLocation"
                 placeholder="Zip code or street address"
                 error={errors.endLocation?.message}
+                onPlaceSelect={(place) => handlePlaceSelect("endLocation", place)}
               />
             </div>
 

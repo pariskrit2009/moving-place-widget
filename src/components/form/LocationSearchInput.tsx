@@ -16,7 +16,12 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import FieldError from "./FieldError";
-import { usePlaceSearch } from "@/features/search";
+import {
+  usePlaceAutocomplete,
+  usePlaceDetails,
+  resetSessionToken,
+} from "@/features/search";
+import type { SelectedPlace } from "@/features/search";
 import { useDebounce } from "@/hooks";
 import { LabelStackedField } from "./LabelStackedField";
 import { Input } from "../ui/input";
@@ -28,6 +33,7 @@ interface LocationSearchInputProps<T extends FieldValues> {
   id: string;
   placeholder?: string;
   error?: string;
+  onPlaceSelect?: (place: SelectedPlace) => void;
 }
 
 export function LocationSearchInput<T extends FieldValues>({
@@ -37,6 +43,7 @@ export function LocationSearchInput<T extends FieldValues>({
   id,
   placeholder = "Zip code or street address",
   error,
+  onPlaceSelect,
 }: LocationSearchInputProps<T>) {
   return (
     <Controller
@@ -49,6 +56,7 @@ export function LocationSearchInput<T extends FieldValues>({
           label={label}
           placeholder={placeholder}
           error={error}
+          onPlaceSelect={onPlaceSelect}
         />
       )}
     />
@@ -66,6 +74,7 @@ interface LocationSearchInnerProps {
   label: string;
   placeholder: string;
   error?: string;
+  onPlaceSelect?: (place: SelectedPlace) => void;
 }
 
 function LocationSearchInner({
@@ -74,26 +83,37 @@ function LocationSearchInner({
   label,
   placeholder,
   error,
+  onPlaceSelect,
 }: LocationSearchInnerProps) {
   const [inputValue, setInputValue] = useState(field.value);
   const [isOpen, setIsOpen] = useState(false);
 
   const debouncedQuery = useDebounce(inputValue, 300);
-  const { suggestions, isLoading } = usePlaceSearch(debouncedQuery);
+  const { suggestions, isLoading: isLoadingSuggestions } =
+    usePlaceAutocomplete(debouncedQuery);
+  const detailsMutation = usePlaceDetails();
 
   const handleSelect = useCallback(
-    (description: string) => {
+    async (placeId: string, description: string) => {
       setInputValue(description);
       field.onChange(description);
       setIsOpen(false);
+
+      try {
+        const placeDetails = await detailsMutation.mutateAsync(placeId);
+        onPlaceSelect?.(placeDetails);
+      } catch (err) {
+        console.error("Failed to fetch place details:", err);
+      }
     },
-    [field],
+    [field, detailsMutation, onPlaceSelect],
   );
 
   const handleClear = useCallback(() => {
     setInputValue("");
     field.onChange("");
     setIsOpen(false);
+    resetSessionToken();
   }, [field]);
 
   const handleInputChange = useCallback(
@@ -106,6 +126,8 @@ function LocationSearchInner({
     },
     [field],
   );
+
+  const isLoading = isLoadingSuggestions || detailsMutation.isPending;
 
   return (
     <div>
@@ -159,10 +181,22 @@ function LocationSearchInner({
                     <CommandItem
                       key={suggestion.placeId}
                       value={suggestion.placeId}
-                      onSelect={() => handleSelect(suggestion.description)}
+                      onSelect={() =>
+                        handleSelect(
+                          suggestion.placeId,
+                          suggestion.description,
+                        )
+                      }
                     >
                       <MapPin className="h-4 w-4 shrink-0 text-[#677890]" />
-                      <span className="truncate">{suggestion.description}</span>
+                      <div className="truncate">
+                        <span className="block truncate">
+                          {suggestion.mainText}
+                        </span>
+                        <span className="block truncate text-xs text-[#677890]">
+                          {suggestion.secondaryText}
+                        </span>
+                      </div>
                     </CommandItem>
                   ))}
                 </CommandGroup>

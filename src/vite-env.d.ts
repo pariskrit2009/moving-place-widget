@@ -5,6 +5,8 @@ interface ImportMetaEnv {
   readonly VITE_API_TIMEOUT: string;
   readonly VITE_APP_ENV: "development" | "staging" | "production";
   readonly VITE_API_AUTHORIZATION_KEY: string;
+  readonly VITE_API_GOOGLE_PLACES: string;
+  readonly VITE_API_GOOGLE_PLACES_KEY: string;
 }
 
 interface ImportMeta {

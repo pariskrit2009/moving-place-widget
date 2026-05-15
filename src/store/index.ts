@@ -38,6 +38,7 @@ export type WidgetStore = SearchSlice &
 
 const PERSIST_KEYS: (keyof WidgetStore)[] = [
   "search",
+  "selectedPlaces",
   "locations",
   "movingDateData",
   "selectedMoveOption",
