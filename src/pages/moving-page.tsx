@@ -53,7 +53,7 @@ export default function MovingPage() {
           </div>
 
           {!hasDifferentDates && (
-            <div className="w-1/2">
+            <div className="w-full sm:w-1/2">
               <DatePickerInput
                 control={control}
                 name="movingDate"

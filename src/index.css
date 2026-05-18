@@ -76,6 +76,14 @@
   --font-base: "Mulish", system-ui, -apple-system, sans-serif;
   --font-heading: "Mulish", system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, monospace;
+
+  /* Daypicker Variables */
+  .rdp-root {
+    --rdp-day-width: 40px;
+    --rdp-day-height: 40px;
+    --rdp-day_button-height: 38px;
+    --rdp-day_button-width: 38px;
+  }
 }
 
 /* Dark mode overrides */

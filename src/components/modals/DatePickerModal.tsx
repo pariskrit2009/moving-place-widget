@@ -1,10 +1,9 @@
-import { DayPicker } from "react-day-picker";
+import { DayPicker, getDefaultClassNames } from "@daypicker/react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import "react-day-picker/style.css";
 
 interface DatePickerModalProps {
   open?: boolean;
@@ -32,7 +31,7 @@ export function DatePickerModal({
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
       {trigger && <PopoverTrigger asChild>{trigger}</PopoverTrigger>}
-      <PopoverContent>
+      <PopoverContent className="rounded-3xl" align="end">
         <DayPicker
           mode="single"
           selected={selectedDate}
@@ -40,6 +39,12 @@ export function DatePickerModal({
           disabled={{ before: minDate || new Date() }}
           navLayout="around"
           showOutsideDays
+          classNames={{
+            chevron: ` fill-gray-800`,
+            selected: "bg-teal-600 rounded-[8px] text-white",
+            day: `${getDefaultClassNames().day}`,
+            caption_label: `${getDefaultClassNames().caption_label} font-normal text-gray-800 text-base`,
+          }}
           // captionLayout="dropdown"
         />
       </PopoverContent>
