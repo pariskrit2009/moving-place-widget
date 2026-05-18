@@ -7,8 +7,8 @@ const routeStepMap: Record<string, number> = {
   "/move-option": 4,
   "/movers": 5,
   "/all-movers": 5,
-  "/quote": 6,
-  "/customize": 7,
+  "/customize": 6,
+  "/quote": 7,
   "/checkout": 8,
 };
 

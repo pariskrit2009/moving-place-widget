@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Info } from "lucide-react";
 import { ProviderBlock } from "./ProviderBlock";
 import type { MoverQuote } from "../types";
+import { useNavigateWithParams } from "@/hooks";
 
 function Divider() {
   return (
@@ -12,6 +13,7 @@ function Divider() {
 }
 
 export function QuoteCard({ quote }: { quote: MoverQuote }) {
+  const { navigateWithParams } = useNavigateWithParams();
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-4">
       <div className="flex flex-col gap-2">
@@ -25,7 +27,11 @@ export function QuoteCard({ quote }: { quote: MoverQuote }) {
               <Info className="size-3.75 text-teal-600" />
             </button>
           </div>
-          <Button variant="cta" className="px-3 py-3">
+          <Button
+            variant="cta"
+            className="px-3 py-3"
+            onClick={() => navigateWithParams("/customize")}
+          >
             Select & Review
           </Button>
         </div>
