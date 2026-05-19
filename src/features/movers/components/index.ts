@@ -7,3 +7,4 @@ export type { SortTab } from "./SortTabs";
 export { MoverCard } from "./MoverCard";
 export { SortDropdown } from "./SortDropdown";
 export type { SortOption } from "./SortDropdown";
+export { Timer } from "./Timer";

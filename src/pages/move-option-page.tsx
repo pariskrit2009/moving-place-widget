@@ -122,7 +122,7 @@ export default function MoveOptionPage() {
       <div className=" flex flex-col">
         <div className="flex flex-col space-y-2 ">
           <h2 className="text-xl leading-6">Choose a move option</h2>
-          <div className="text-sm pb-8 flex gap-4 leading-[18px]">
+          <div className="text-sm pb-6 sm:pb-8 flex gap-4 leading-[18px]">
             <TrustBadge label=" Up to $10,000 damage protection">
               <Icon name="shieldcheck" />
             </TrustBadge>
