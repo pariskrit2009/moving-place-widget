@@ -3,7 +3,7 @@ import type { MoveOption } from "./schema";
 
 export interface MoveOptionSlice {
   selectedMoveOption: MoveOption | null;
-  setSelectedMoveOption: (option: MoveOption) => void;
+  setSelectedMoveOption: (option: MoveOption | null) => void;
   resetMoveOption: () => void;
 }
 

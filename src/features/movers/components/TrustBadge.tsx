@@ -8,9 +8,9 @@ export function TrustBadge({
   label: string;
 }) {
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center whitespace-nowrap gap-1">
       {children}
-      <span className="text-sm font-semibold text-primary-foreground">
+      <span className="text-xs sm:text-sm font-semibold text-primary-foreground">
         {label}
       </span>
     </div>
