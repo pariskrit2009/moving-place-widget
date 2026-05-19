@@ -22,6 +22,8 @@ export function DatePickerModal({
   minDate,
   trigger,
 }: DatePickerModalProps) {
+  const defaultClassNames = getDefaultClassNames();
+
   const handleDateSelect = (date: Date | undefined) => {
     onSelect(date);
 
@@ -42,8 +44,8 @@ export function DatePickerModal({
           classNames={{
             chevron: ` fill-gray-800`,
             selected: "bg-teal-600 rounded-[8px] text-white",
-            day: `${getDefaultClassNames().day}`,
-            caption_label: `${getDefaultClassNames().caption_label} font-normal text-gray-800 text-base`,
+            day: `${defaultClassNames.day}`,
+            caption_label: `${defaultClassNames.caption_label} font-normal text-gray-800 text-base`,
           }}
           // captionLayout="dropdown"
         />

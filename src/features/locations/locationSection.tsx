@@ -89,7 +89,7 @@ export function LocationSection({
       {/* Conditional Fields */}
       {isHouseOrApartment && (
         <>
-          <div className="flex flex-wrap gap-6">
+          <div className="flex flex-col sm:flex-row gap-6">
             {/* Bedrooms */}
             <Controller
               control={control}

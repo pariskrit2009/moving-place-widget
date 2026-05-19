@@ -133,31 +133,33 @@ export default function LocationsPage() {
                 control={control}
                 name="needsHeavyItems"
                 render={({ field }) => (
-                  <div className="flex items-center gap-3 relative">
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                    <span className="size-[30px] bg-teal-100 text-center rounded-full ">
-                      <Icon name="extras" />
-                    </span>
+                  <div className="">
+                    <label className="flex items-center gap-3 relative">
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                      <span className="size-[30px] bg-teal-100 text-center rounded-full hidden sm:block">
+                        <Icon name="extras" />
+                      </span>
 
-                    <div>
-                      <p className="text-[#2E343E] font-bold">
-                        I need to move heavy items
-                      </p>
+                      <div>
+                        <p className="text-[#2E343E] font-bold">
+                          I need to move heavy items
+                        </p>
 
-                      <p className="text-[#677890] text-sm">
-                        Pianos, disassembled pool tables (no slate), or large
-                        items that take a few people to lift
-                      </p>
-                    </div>
+                        <p className="text-[#677890] text-sm">
+                          Pianos, disassembled pool tables (no slate), or large
+                          items that take a few people to lift
+                        </p>
+                      </div>
 
-                    <Icon
-                      name="info"
-                      size={20}
-                      className="absolute top-1/2 -translate-y-1/2 right-3 hidden sm:block"
-                    />
+                      <Icon
+                        name="info"
+                        size={20}
+                        className="absolute top-1/2 -translate-y-1/2 right-3 hidden sm:block"
+                      />
+                    </label>
                   </div>
                 )}
               />
