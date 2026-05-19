@@ -35,3 +35,83 @@ export interface MoverItem {
   hours: number;
   hasTruck: boolean;
 }
+
+export type SortOrder = "QualityRating" | "PriceLowToHigh" | "PriceHighToLow";
+export type ServiceType = "Standard";
+
+export interface ServiceProviderParams {
+  requestedDate: string;
+  loadingZipCode: string;
+  laborHours: number;
+  crewSize: number;
+  sortOrder: SortOrder;
+  serviceType: ServiceType;
+  flightsOfStairs: number;
+  onlyAvailable: boolean;
+}
+
+export interface ReviewStat {
+  stars: number;
+  count: number;
+  percent: number;
+}
+
+export interface AvailableEquipment {
+  name: string;
+  description: string;
+  price: number;
+  additionalCosts: boolean;
+}
+
+export interface Credential {
+  field: string;
+  sortOrder: number;
+  verifiedByHireAHelper: boolean;
+  credentialName: string;
+}
+
+export interface ServiceProvider {
+  providerId: number;
+  workerLocationId: number;
+  companyName: string;
+  companyDescription: string;
+  bookThisCompanyUrl: string;
+  price: number;
+  internal_GrandTotalWithoutFees: number;
+  internal_GrandTotalWithFees: number;
+  ranking: number;
+  availabilityNotes: string;
+  availableWorkerTimeSlotsDescription: string;
+  availableArrivalWindows: string[];
+  numberOfReviews: number;
+  completedJobCount: number;
+  ratingAverage: number;
+  noShowJobCount: number;
+  unusedTimePolicyRuleDesc: string;
+  overTimePolicyRuleDesc: string;
+  serviceMiniDescription: string;
+  reviewStats: ReviewStat[];
+  reasonsCantShow: string[];
+  availableEquipment: AvailableEquipment[];
+  credentials: Credential[];
+  publicNotices: string[];
+  minHours: number;
+  actualNumHours: number;
+  actualCrewSize: number;
+  hasFlexibleScheduling: boolean;
+  driveTimePolicyDescription: string;
+  driveTimePolicy: string;
+  extraHourRate: number;
+  travelHours: number;
+  profileImageUrl: string;
+  isGenericProfileImage: boolean;
+  transportOptionID: number;
+  offersPacking: boolean;
+}
+
+export interface ServiceProviderListResponse {
+  serviceProviders: ServiceProvider[];
+  helperListUrl: string;
+  success: boolean;
+  resultMessage: string;
+}

@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 
 interface WidgetLayoutProps {
   children: React.ReactNode;
+  loading?: boolean;
   navigateBack?: () => void;
   onContinue?: () => void;
 }
@@ -13,6 +14,7 @@ export function WidgetLayout({
   children,
   navigateBack,
   onContinue,
+  loading,
 }: WidgetLayoutProps) {
   const { hostOrigin } = useWidgetParams();
   useWidgetResize({ hostOrigin });
@@ -36,11 +38,7 @@ export function WidgetLayout({
           )}
           <StepProgress />
           {onContinue && (
-            <Button
-              variant="cta"
-              onClick={onContinue}
-              // disabled={isSubmitting}
-            >
+            <Button variant="cta" onClick={onContinue} disabled={loading}>
               Continue
             </Button>
           )}
