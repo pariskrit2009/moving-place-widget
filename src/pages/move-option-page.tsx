@@ -66,7 +66,7 @@ export default function MoveOptionPage() {
 
   return (
     <WidgetLayout onContinue={handleContinue} navigateBack={navigateBack}>
-      <div className=" flex flex-col">
+      <div className="flex flex-col">
         <div className="flex flex-col space-y-2 ">
           <h2 className="text-xl leading-6">Choose a move option</h2>
           <div className="text-sm pb-6 sm:pb-8 flex gap-4 leading-[18px]">

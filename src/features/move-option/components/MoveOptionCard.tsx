@@ -32,7 +32,7 @@ export function MoveOptionCard({
         <Icon
           name={option?.id}
           size={30}
-          className="group-disabled:text-gray-600"
+          className="group-disabled:text-gray-600 text-teal-500"
         />
       </div>
       <div className="flex-1 min-w-0 flex flex-col gap-3 ">

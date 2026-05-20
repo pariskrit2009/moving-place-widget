@@ -2,11 +2,11 @@ import { useState, useMemo } from "react";
 import { useNavigateWithParams } from "@/hooks";
 import WidgetLayout from "@/components/layout/WidgetLayout";
 import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/ui/icon";
 import {
   MoverCard,
+  MoversHeader,
+  MoversTrustBadges,
   SortDropdown,
-  TrustBadge,
 } from "@/features/movers/components";
 import type { SortOption } from "@/features/movers/components/SortDropdown";
 import {
@@ -39,38 +39,13 @@ export default function AllMoversPage() {
   const totalCount = data?.serviceProviders.length ?? 0;
 
   return (
-    <WidgetLayout
-      onContinue={() => navigateWithParams("/quote")}
-      navigateBack={() => navigateWithParams("/movers")}
-    >
-      <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-bold leading-8.5 text-gray-800">
-          {totalCount} available movers
-        </h1>
+    <WidgetLayout navigateBack={() => navigateWithParams("/movers")}>
+      {/* Page header */}
 
-        <div className="flex items-center gap-1">
-          <span className="text-sm text-gray-800">
-            {selectedMoveOption === "movers-only"
-              ? "Movers Only"
-              : "Movers + Truck"}
-          </span>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <TrustBadge label="Up to $10,000 damage protection">
-              <Icon name="shieldcheck" size={20} className="text-gray-800" />
-            </TrustBadge>
-            <TrustBadge label="No hidden fees">
-              <Icon name="circle-dollar" size={24} className="text-gray-800" />
-            </TrustBadge>
-            <TrustBadge label="Background-checked movers">
-              <Icon name="shieldcheck" size={20} className="text-gray-800" />
-            </TrustBadge>
-          </div>
-
-          <SortDropdown activeSort={activeSort} onSortChange={setActiveSort} />
-        </div>
+      <MoversHeader header={`${totalCount} available movers`} />
+      <div className="flex flex-col flex-wrap md:flex-row md:items-center relative justify-between space-y-2 md:pt-3 md:pb-7 mt-3 mb-6 md:m-0">
+        <MoversTrustBadges />
+        <SortDropdown activeSort={activeSort} onSortChange={setActiveSort} />
       </div>
 
       {isLoading && (
@@ -103,12 +78,6 @@ export default function AllMoversPage() {
           No movers available for your criteria. Try adjusting your move date.
         </div>
       )}
-
-      <div className="flex items-center justify-end gap-1 rounded-2xl bg-gray-50 px-2 py-1 self-end">
-        <Icon name="timer" size={15} className="text-gray-800" />
-        <span className="text-xs text-gray-800">Quotes expire in</span>
-        <span className="text-xs font-bold text-gray-800">57:17</span>
-      </div>
     </WidgetLayout>
   );
 }

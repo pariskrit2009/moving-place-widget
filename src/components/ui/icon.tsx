@@ -9,13 +9,17 @@ import ShieldCheckIcon from "@/assets/shield-check.svg?react";
 import ExtrasIcon from "@/assets/extras.svg?react";
 import TimerIcon from "@/assets/timer.svg?react";
 import CircleDollarIcon from "@/assets/circle-dollar.svg?react";
-import PersonDollyIcon from "@/assets/person-dolly.svg?react";
+import DollyIcon from "@/assets/person-dolly.svg?react";
 import ClockIcon from "@/assets/clock.svg?react";
 import CircleInfoIcon from "@/assets/circle-info.svg?react";
 import MoversTruckIcon from "@/assets/movers-truck.svg?react";
 import MoversOnlyIcon from "@/assets/movers-only.svg?react";
 import BackgroundCheckedMoversIcon from "@/assets/backgound-checkers.svg?react";
 import MoversIcon from "@/assets/movers.svg?react";
+import TruckSlash from "@/assets/truck-slash.svg?react";
+import TrolleyIcon from "@/assets/trolley.svg?react";
+import SofaIcon from "@/assets/sofa.svg?react";
+import TruckIcon from "@/assets/truck.svg?react";
 import { cn } from "@/lib/utils";
 
 const icons = {
@@ -28,13 +32,18 @@ const icons = {
   extras: ExtrasIcon,
   timer: TimerIcon,
   "circle-dollar": CircleDollarIcon,
-  "person-dolly": PersonDollyIcon,
+  "person-dolly": DollyIcon,
   clock: ClockIcon,
   "circle-info": CircleInfoIcon,
   "movers-truck": MoversTruckIcon,
   "movers-only": MoversOnlyIcon,
   "background-checkers": BackgroundCheckedMoversIcon,
   "movers-icon": MoversIcon,
+  "truck-slash": TruckSlash,
+  truck: TruckIcon,
+  sofa: SofaIcon,
+  trolley: TrolleyIcon,
+  dolly: DollyIcon,
 } as const;
 
 type IconName = keyof typeof icons;
