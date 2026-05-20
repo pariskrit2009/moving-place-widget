@@ -20,7 +20,8 @@ export default function AllMoversPage() {
   const { navigateWithParams } = useNavigateWithParams();
   const [activeSort, setActiveSort] = useState<SortOption>("best-value");
 
-  const { data, isLoading, isError, refetch } = useServiceProviders();
+  const { loadingQuery } = useServiceProviders();
+  const { data, isLoading, isError, refetch } = loadingQuery;
   const selectedMoveOption = useWidgetStore((s) => s.selectedMoveOption);
 
   const sortedProviders = useMemo(

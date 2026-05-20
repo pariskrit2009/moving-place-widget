@@ -6,11 +6,15 @@ import { useMovingDateForm, type MovingDateFormData } from "@/features/moving";
 import { useWidgetStore } from "@/store";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Controller } from "react-hook-form";
+import { useEstimation } from "@/features/estimation";
 
 export default function MovingPage() {
   const { navigateWithParams } = useNavigateWithParams();
   const movingDateData = useWidgetStore((s) => s.movingDateData);
   const setMovingDateData = useWidgetStore((s) => s.setMovingDateData);
+  const searchData = useWidgetStore((s) => s.search);
+  const locations = useWidgetStore((s) => s.locations);
+  const { mutate } = useEstimation();
 
   const {
     handleSubmit,
@@ -30,6 +34,11 @@ export default function MovingPage() {
 
   const onSubmit = () => {
     navigateWithParams("/move-option");
+    mutate({
+      hasDifferentDates: !!movingDateData?.hasDifferentDates,
+      search: searchData,
+      locations,
+    });
   };
 
   const navigateBack = () => {

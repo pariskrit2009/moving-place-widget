@@ -46,7 +46,8 @@ const PERSIST_KEYS: (keyof WidgetStore)[] = [
   "customization",
   "checkout",
   "estimation",
-  "serviceProviders",
+  "loadingServiceProviders",
+  "unloadingServiceProviders",
   "selectedProviderId",
 ];
 

@@ -2,9 +2,13 @@ import type { StateCreator } from "zustand";
 import type { ServiceProvider } from "./types";
 
 export interface ServiceProvidersSlice {
-  serviceProviders: ServiceProvider[];
+  loadingServiceProviders: ServiceProvider[];
+  unloadingServiceProviders: ServiceProvider[];
   selectedProviderId: number | null;
-  setServiceProviders: (providers: ServiceProvider[]) => void;
+  setServiceProviders: (
+    type: "loading" | "unloading",
+    providers: ServiceProvider[],
+  ) => void;
   selectProvider: (id: number) => void;
   resetServiceProviders: () => void;
 }
@@ -15,10 +19,20 @@ export const createServiceProvidersSlice: StateCreator<
   [],
   ServiceProvidersSlice
 > = (set) => ({
-  serviceProviders: [],
+  loadingServiceProviders: [],
+  unloadingServiceProviders: [],
   selectedProviderId: null,
-  setServiceProviders: (providers) => set({ serviceProviders: providers }),
+  setServiceProviders: (type, providers) =>
+    set(
+      type === "loading"
+        ? { loadingServiceProviders: providers }
+        : { unloadingServiceProviders: providers },
+    ),
   selectProvider: (id) => set({ selectedProviderId: id }),
   resetServiceProviders: () =>
-    set({ serviceProviders: [], selectedProviderId: null }),
+    set({
+      loadingServiceProviders: [],
+      unloadingServiceProviders: [],
+      selectedProviderId: null,
+    }),
 });

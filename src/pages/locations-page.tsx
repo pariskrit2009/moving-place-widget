@@ -12,7 +12,6 @@ import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
 import { LocationSection } from "@/features/locations/locationSection";
 import { SelectField } from "@/components/form/SelectField";
-import { mapToEstimationRequest, useEstimation } from "@/features/estimation";
 
 const PIANOS_OPTIONS = [
   {
@@ -40,9 +39,7 @@ const PIANOS_OPTIONS = [
 export default function LocationsPage() {
   const { navigateWithParams } = useNavigateWithParams();
   const locations = useWidgetStore((s) => s.locations);
-  const searchData = useWidgetStore((s) => s.search);
   const setLocations = useWidgetStore((s) => s.setLocations);
-  const { mutate } = useEstimation();
 
   const {
     handleSubmit,
@@ -69,18 +66,13 @@ export default function LocationsPage() {
     const prefix =
       name === "loadingPropertyType" ? "loadingDetails" : "unloadingDetails";
 
-    setValue(`${prefix}.bedrooms`, "");
+    setValue(`${prefix}.bedrooms`, 0);
     setValue(`${prefix}.floors`, "");
     setValue(`${prefix}.elevator`, "");
   };
 
   const onSubmit = () => {
     navigateWithParams("/moving");
-    const estimationRequest = mapToEstimationRequest({
-      locations: locations,
-      search: searchData,
-    });
-    if (estimationRequest) mutate(estimationRequest);
   };
 
   const navigateBack = () => {

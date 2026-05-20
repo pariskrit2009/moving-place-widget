@@ -42,6 +42,7 @@ export type ServiceType = "Standard";
 export interface ServiceProviderParams {
   requestedDate: string;
   loadingZipCode: string;
+  unloadingZipCode?: string;
   laborHours: number;
   crewSize: number;
   sortOrder: SortOrder;

@@ -1,11 +1,25 @@
 import { post } from "@/lib/api/client";
-import type { EstimationRequest, EstimationResponse } from "./types";
+import type {
+  EstimationRequest,
+  EstimationLfsResponse,
+  RecommendationsRequest,
+  RecommendationsApiResponse,
+} from "./types";
 
 export async function getEstimation(
   data: EstimationRequest,
-): Promise<EstimationResponse> {
-  return post<EstimationResponse>(
+): Promise<EstimationLfsResponse> {
+  return post<EstimationLfsResponse>(
     "/quote/marketplace/estimations-lfs/",
+    data,
+  );
+}
+
+export async function getRecommendations(
+  data: RecommendationsRequest,
+): Promise<RecommendationsApiResponse> {
+  return post<RecommendationsApiResponse>(
+    "/quote/marketplace/recommendations/",
     data,
   );
 }

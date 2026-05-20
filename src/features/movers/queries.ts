@@ -10,23 +10,34 @@ export function useServiceProviders() {
   const estimation = useWidgetStore((s) => s.estimation);
   const setServiceProviders = useWidgetStore((s) => s.setServiceProviders);
 
-  const params = mapToServiceProviderParams({
+  const { loadingParams, unloadingParams } = mapToServiceProviderParams({
     search,
     locations,
     movingDateData,
     estimation,
   });
 
-  console.log(params, "paramssss");
-
-  return useQuery({
-    queryKey: ["service-providers", params],
-    queryFn: () => getServiceProviders(params!),
-    enabled: !!params,
-    staleTime: 1000 * 60 * 5,
-    select: (data) => {
-      setServiceProviders(data.serviceProviders);
+  const loadingQuery = useQuery({
+    queryKey: ["service-providers", "loading", loadingParams],
+    queryFn: async () => {
+      const data = await getServiceProviders(loadingParams!);
+      setServiceProviders("loading", data.serviceProviders);
       return data;
     },
+    enabled: !!loadingParams,
+    staleTime: 1000 * 60 * 5,
   });
+
+  const unloadingQuery = useQuery({
+    queryKey: ["service-providers", "unloading", unloadingParams],
+    queryFn: async () => {
+      const data = await getServiceProviders(unloadingParams!);
+      setServiceProviders("unloading", data.serviceProviders);
+      return data;
+    },
+    enabled: !!unloadingParams,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  return { loadingQuery, unloadingQuery };
 }
