@@ -4,9 +4,6 @@ export { useLocationsForm } from "./useSearchForm";
 // Query hooks
 // export { useQuotes, useLocationsHistory } from "./queries";
 
-// Mutation hooks
-export { useSubmitLocations } from "./mutations";
-
 // Place search hook
 import { useQuery } from "@tanstack/react-query";
 import { searchPlaces } from "./api";

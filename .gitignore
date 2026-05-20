@@ -28,4 +28,5 @@ feature.md
 .env.staging
 .env.production
 .env
+.playwright-mcp
 

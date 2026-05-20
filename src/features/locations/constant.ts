@@ -1,7 +1,7 @@
 const PROPERTY_OPTIONS = [
-  { value: "house", label: "House" },
-  { value: "apartment", label: "Apartment / Condo" },
-  { value: "storage", label: "Storage Unit" },
+  { value: "House", label: "House" },
+  { value: "CondoApt", label: "Apartment / Condo" },
+  { value: "StorageUnit", label: "Storage Unit" },
 ] as const;
 
 const BEDROOM_OPTIONS = [

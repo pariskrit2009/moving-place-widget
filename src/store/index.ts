@@ -21,6 +21,10 @@ import {
   createEstimationSlice,
   type EstimationSlice,
 } from "@/features/estimation";
+import {
+  createServiceProvidersSlice,
+  type ServiceProvidersSlice,
+} from "@/features/movers";
 
 export type WidgetStore = SearchSlice &
   LocationsSlice &
@@ -29,7 +33,8 @@ export type WidgetStore = SearchSlice &
   QuoteSlice &
   CustomizeSlice &
   CheckoutSlice &
-  EstimationSlice;
+  EstimationSlice &
+  ServiceProvidersSlice;
 
 const PERSIST_KEYS: (keyof WidgetStore)[] = [
   "search",
@@ -41,6 +46,8 @@ const PERSIST_KEYS: (keyof WidgetStore)[] = [
   "customization",
   "checkout",
   "estimation",
+  "serviceProviders",
+  "selectedProviderId",
 ];
 
 export const useWidgetStore = create<WidgetStore>()(
@@ -55,6 +62,7 @@ export const useWidgetStore = create<WidgetStore>()(
         ...createCustomizeSlice(...a),
         ...createCheckoutSlice(...a),
         ...createEstimationSlice(...a),
+        ...createServiceProvidersSlice(...a),
       }),
       { name: "widget-store" },
     ),

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigateWithParams } from "@/hooks";
 import WidgetLayout from "@/components/layout/WidgetLayout";
 import { Button } from "@/components/ui/button";
@@ -10,64 +10,60 @@ import {
   TrustBadge,
 } from "@/features/movers/components";
 import type { SortTab } from "@/features/movers/components";
-import type { MoverQuote } from "@/features/movers/types";
+import {
+  useServiceProviders,
+  toMoverQuote,
+  sortProviders,
+} from "@/features/movers";
 import { useWidgetStore } from "@/store";
-
-const mockQuote: MoverQuote = {
-  id: "1",
-  totalPrice: 420,
-  lowestPrice: 486,
-  topRatedPrice: 620,
-  services: [
-    {
-      type: "loading",
-      date: "Apr 28",
-      location: "Loading at San Francisco, CA 94109",
-      startingPrice: 220,
-      provider: {
-        name: "Golden Movers",
-        moves: 34,
-        yearsInBusiness: 12,
-        rating: 4.5,
-        reviews: 31,
-        summary:
-          "Student Movers stands out most for their reliability and flexibility. Customers frequently mention that the crew arrives on time or early and handles schedule changes without any Student Movers stands out most for their reliability and flexibility. Customers frequently mention that the crew arrives on time or early and handles schedule changes without any Student Movers stands out most for their reliability and flexibility. Customers frequently mention that the crew arrives on time or early and handles schedule changes without any fric...",
-      },
-      movers: 2,
-      hours: 2,
-    },
-    {
-      type: "unloading",
-      date: "May 3",
-      location: "Unloading at San Francisco, CA 94133",
-      startingPrice: 200,
-      provider: {
-        name: "4 The Love of Moving",
-        moves: 34,
-        yearsInBusiness: 12,
-        rating: 4.5,
-        reviews: 31,
-        summary:
-          "Student Movers stands out most for their reliability and flexibility. Customers frequently mention that the crew arrives on time or early and handles schedule changes without any fric...",
-      },
-      movers: 2,
-      hours: 2,
-    },
-  ],
-};
+import { formatIsoDate } from "@/lib/utils/date";
 
 export default function MoversPage() {
   const { navigateWithParams } = useNavigateWithParams();
   const [activeTab, setActiveTab] = useState<SortTab>("best-value");
   const selectedMoveOption = useWidgetStore((s) => s.selectedMoveOption);
 
+  const { data, isLoading, isError, refetch } = useServiceProviders();
+  const search = useWidgetStore((s) => s.search);
+  const movingDateData = useWidgetStore((s) => s.movingDateData);
+
+  const providers = useMemo(
+    () => sortProviders(data?.serviceProviders ?? [], activeTab),
+    [data?.serviceProviders, activeTab],
+  );
+
+  const storeContext = useMemo(() => {
+    const loadingDate = movingDateData?.hasDifferentDates
+      ? formatIsoDate(movingDateData.loadingDate)
+      : formatIsoDate(movingDateData?.movingDate ?? "");
+
+    return {
+      loadingDate,
+      unloadingDate: movingDateData?.hasDifferentDates
+        ? formatIsoDate(movingDateData.unloadingDate)
+        : null,
+      loadingLocation: search?.startLocation ?? "",
+      unloadingLocation: search?.endLocation ?? "",
+    };
+  }, [movingDateData, search]);
+
+  const quote = useMemo(
+    () => (providers.length > 0 ? toMoverQuote(providers, storeContext) : null),
+    [providers, storeContext],
+  );
+
+  const totalCount = data?.serviceProviders.length ?? 0;
+
   return (
-    <WidgetLayout navigateBack={() => navigateWithParams("/move-option")}>
+    <WidgetLayout
+      onContinue={() => navigateWithParams("/quote")}
+      navigateBack={() => navigateWithParams("/move-option")}
+    >
       {/* Page header */}
       <div className="flex flex-col gap-4">
         <div className="flex items-start justify-between gap-4">
           <h1 className="text-xl sm:text-2xl font-bold leading-8.5 text-gray-800 flex-1">
-            Out of 6 movers, here is our top pick for your move.
+            Out of {totalCount} movers, here is our top pick for your move.
           </h1>
           <Timer className="hidden md:block" />
         </div>
@@ -93,7 +89,6 @@ export default function MoversPage() {
           <TrustBadge label="No hidden fees">
             <Icon name="circle-dollar" size={20} className="text-gray-800" />
           </TrustBadge>
-
           <TrustBadge label="Background-checked movers">
             <Icon
               name="background-checkers"
@@ -107,19 +102,43 @@ export default function MoversPage() {
       <SortTabs
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        lowestPrice={mockQuote.lowestPrice}
-        topRatedPrice={mockQuote.topRatedPrice}
+        lowestPrice={quote?.lowestPrice ?? 0}
+        topRatedPrice={quote?.topRatedPrice ?? 0}
       />
 
-      <QuoteCard quote={mockQuote} />
+      {isLoading && (
+        <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center text-gray-500">
+          Loading available movers...
+        </div>
+      )}
+      {isError && (
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-center">
+          <p className="text-sm text-red-700">
+            Failed to load movers. Please try again.
+          </p>
+          <Button variant="outline" className="mt-2" onClick={() => refetch()}>
+            Retry
+          </Button>
+        </div>
+      )}
 
-      <Button
-        variant="outline"
-        className="rounded-full self-center mt-4"
-        onClick={() => navigateWithParams("/all-movers")}
-      >
-        View all 6 available movers
-      </Button>
+      {!isLoading && !isError && quote && <QuoteCard quote={quote} />}
+
+      {!isLoading && !isError && totalCount === 0 && (
+        <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center text-gray-500">
+          No movers available for your criteria. Try adjusting your move date.
+        </div>
+      )}
+
+      {!isLoading && totalCount > 1 && (
+        <Button
+          variant="outline"
+          className="rounded-full self-center mt-4"
+          onClick={() => navigateWithParams("/all-movers")}
+        >
+          View all {totalCount} available movers
+        </Button>
+      )}
     </WidgetLayout>
   );
 }

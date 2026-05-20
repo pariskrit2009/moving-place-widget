@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const propertyTypeEnum = z.enum(["house", "apartment", "storage"]);
+const propertyTypeEnum = z.enum(["House", "CondoApt", "StorageUnit"]);
 
 const pianoDetailsSchema = z.object({
   baby_or_grand_pianos: z.string(),
@@ -35,7 +35,7 @@ export const locationsSchema = z
       details: typeof data.loadingDetails,
       basePath: "loadingDetails" | "unloadingDetails",
     ) => {
-      const needsBasic = type === "house" || type === "apartment";
+      const needsBasic = type === "House" || type === "CondoApt";
 
       if (needsBasic) {
         if (!details.bedrooms) {
@@ -54,7 +54,7 @@ export const locationsSchema = z
           });
         }
 
-        if (!details.elevator && type == "apartment") {
+        if (!details.elevator && type == "CondoApt") {
           ctx.addIssue({
             code: "custom",
             path: [basePath, "elevator"],
