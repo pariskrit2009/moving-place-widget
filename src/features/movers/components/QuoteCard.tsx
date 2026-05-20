@@ -5,7 +5,7 @@ import type { MoverQuote } from "../types";
 
 function Divider() {
   return (
-    <div className="py-1">
+    <div className="py-3">
       <div className="h-px w-full bg-gray-200" />
     </div>
   );
