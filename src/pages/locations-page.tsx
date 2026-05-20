@@ -69,9 +69,9 @@ export default function LocationsPage() {
     const prefix =
       name === "loadingPropertyType" ? "loadingDetails" : "unloadingDetails";
 
-    setValue(`${prefix}.bedrooms`, "", { shouldValidate: true });
-    setValue(`${prefix}.floors`, "", { shouldValidate: true });
-    setValue(`${prefix}.elevator`, "", { shouldValidate: true });
+    setValue(`${prefix}.bedrooms`, "");
+    setValue(`${prefix}.floors`, "");
+    setValue(`${prefix}.elevator`, "");
   };
 
   const onSubmit = () => {

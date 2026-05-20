@@ -36,9 +36,9 @@ export function LocationSection({
   ) => void;
 }) {
   const isHouseOrApartment =
-    propertyType === "house" || propertyType === "apartment";
+    propertyType === "House" || propertyType === "CondoApt";
 
-  const isApartment = propertyType === "apartment";
+  const isApartment = propertyType === "CondoApt";
 
   const detailsPrefix =
     propertyTypeName === "loadingPropertyType"
