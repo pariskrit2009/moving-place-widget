@@ -35,7 +35,7 @@ export function toMoverItem(
       : "Loading, transport & unloading",
     movers: sp.actualCrewSize,
     hours: sp.actualNumHours,
-    hasTruck: sp.transportOptionID !== 0,
+    hasTruck: Boolean(sp.transportOptionID),
   };
 }
 

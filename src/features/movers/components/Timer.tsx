@@ -11,7 +11,7 @@ export function Timer({ className }: { className?: string }) {
     >
       <Icon name="timer" size={15} className="text-gray-800" />
       <span className="text-xs text-gray-800">Quotes expire in </span>
-      <span className="text-xs font-bold text-gray-800">57:17</span> //TODO
+      <span className="text-xs font-bold text-gray-800">57:17</span>
     </div>
-  );
+  ); //TODO
 }

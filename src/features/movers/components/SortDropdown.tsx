@@ -37,18 +37,23 @@ export function SortDropdown({
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 transition-colors hover:bg-gray-50"
-      >
-        <span className="font-bold">{activeLabel}</span>
-        <ChevronDown
-          className={`size-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
-        />
-      </button>
+      <div className="justify-between items-center flex">
+        <span className="font-bold md:hidden leading-[150%]">
+          Sort Movers by
+        </span>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center gap-1 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 transition-colors hover:bg-gray-50"
+        >
+          <span className="font-bold">{activeLabel}</span>
+          <ChevronDown
+            className={`size-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          />
+        </button>
+      </div>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-40 rounded-xl border border-gray-200 bg-white py-1 shadow-lg z-10">
+        <div className="absolute top-full w-full left-0 mt-1 md:w-40  rounded-xl border border-gray-200 bg-white py-1 shadow-lg z-10">
           {sortOptions.map((option) => (
             <button
               key={option.key}

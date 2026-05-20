@@ -22,10 +22,10 @@ export function WidgetLayout({
 
   return (
     <div id="widget-content" className="w-full bg-gray-100">
-      <div className="min-h-[600px] max-h-[890px] overflow-auto relative w-full border border-[#b1bbc8] bg-white p-6 flex flex-col">
+      <div className="min-h-[600px] max-h-[890px] overflow-auto relative w-full border border-[#b1bbc8] bg-white p-6 pt-0 flex flex-col">
         <div className="space-y-1"></div>
 
-        <div className="sticky top-0 flex justify-between gap-3 w-full my-4  bg-white z-20">
+        <div className="sticky top-0 flex justify-between gap-3 w-full pb-4 pt-6  bg-white z-20">
           {navigateBack && (
             <Button
               variant="outline"
