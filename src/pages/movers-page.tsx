@@ -22,7 +22,8 @@ export default function MoversPage() {
   const { navigateWithParams } = useNavigateWithParams();
   const [activeTab, setActiveTab] = useState<SortTab>("best-value");
 
-  const { data, isLoading, isError, refetch } = useServiceProviders();
+  const { loadingQuery } = useServiceProviders();
+  const { data, isLoading, isError, refetch } = loadingQuery;
   const search = useWidgetStore((s) => s.search);
   const movingDateData = useWidgetStore((s) => s.movingDateData);
 

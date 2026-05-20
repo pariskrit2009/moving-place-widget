@@ -11,7 +11,7 @@ const pianoDetailsSchema = z.object({
 });
 
 const locationDetailsSchema = z.object({
-  bedrooms: z.string(),
+  bedrooms: z.number(),
   floors: z.string(),
   elevator: z.string(),
 });

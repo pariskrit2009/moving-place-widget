@@ -10,12 +10,12 @@ const DEFAULT_VALUES: LocationsFormData = {
   needsPacking: false,
   needsHeavyItems: false,
   loadingDetails: {
-    bedrooms: "",
+    bedrooms: 0,
     floors: "",
     elevator: "",
   },
   unloadingDetails: {
-    bedrooms: "",
+    bedrooms: 0,
     floors: "",
     elevator: "",
   },

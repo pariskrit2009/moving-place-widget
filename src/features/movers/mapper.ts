@@ -1,7 +1,7 @@
 import { formatIsoDate } from "@/lib/utils/date";
 import type { LocationsFormData } from "@/features/locations/schema";
 import type { MovingDateFormData } from "@/features/moving/schema";
-import type { EstimationResponse } from "@/features/estimation/types";
+import type { UnifiedEstimationResponse } from "@/features/estimation/types";
 import type { LocationsFormData as SearchFormData } from "@/features/search/schema";
 import type { ServiceProviderParams } from "./types";
 
@@ -9,46 +9,76 @@ interface ServiceProviderMapperInput {
   search: SearchFormData | null;
   locations: LocationsFormData | null;
   movingDateData: MovingDateFormData | null;
-  estimation: EstimationResponse | null;
+  estimation: UnifiedEstimationResponse | null;
+}
+
+export interface ServiceProviderMapperResult {
+  loadingParams: ServiceProviderParams | null;
+  unloadingParams: ServiceProviderParams | null;
 }
 
 export function mapToServiceProviderParams(
   input: ServiceProviderMapperInput,
-): ServiceProviderParams | null {
+): ServiceProviderMapperResult {
   const { search, locations, movingDateData, estimation } = input;
-  console.log(
-    search,
-    "=> search",
-    locations,
-    "=> locations",
-    movingDateData,
-    "=> movingDateData",
-    estimation,
-    "=> estimation",
-  );
-
-  if (!search || !locations || !movingDateData || !estimation) return null;
-
-  // const loadingZip = extractZip(search.startLocation);
-  const loadingZip = "94551";
-  if (!loadingZip) return null;
-
-  const requestedDate = movingDateData.hasDifferentDates
-    ? formatIsoDate(movingDateData.loadingDate)
-    : formatIsoDate(movingDateData.movingDate);
-
-  if (!requestedDate) return null;
-
-  const flightsOfStairs = parseInt(locations.loadingDetails.floors, 10) || 0;
-
-  return {
-    requestedDate,
-    loadingZipCode: loadingZip,
-    laborHours: estimation.laborHours,
-    crewSize: estimation.crewSize,
-    sortOrder: "QualityRating",
-    serviceType: "Standard",
-    flightsOfStairs,
-    onlyAvailable: true,
+  const empty: ServiceProviderMapperResult = {
+    loadingParams: null,
+    unloadingParams: null,
   };
+
+  if (!search || !locations || !movingDateData || !estimation) return empty;
+
+  const loadingZip = search.startLocation;
+  const unloadingZip = search.endLocation;
+  if (!loadingZip) return empty;
+
+  const isSameDate = !movingDateData.hasDifferentDates;
+
+  // Resolve labor/crew for loading end
+  const loadLabor = estimation.load ?? estimation.aggregate;
+  // Resolve labor/crew for unloading end
+  const unloadLabor = estimation.unload ?? estimation.aggregate;
+
+  // --- Loading params ---
+  const loadingDate = isSameDate
+    ? formatIsoDate(movingDateData.movingDate)
+    : formatIsoDate(movingDateData.loadingDate);
+
+  let loadingParams: ServiceProviderParams | null = null;
+
+  if (loadingDate && loadLabor && locations.loadingDetails.floors) {
+    loadingParams = {
+      requestedDate: loadingDate,
+      loadingZipCode: "89109",
+      laborHours: loadLabor.laborHours,
+      crewSize: loadLabor.crewSize,
+      sortOrder: "QualityRating",
+      serviceType: "Standard",
+      flightsOfStairs: parseInt(locations.loadingDetails.floors, 10) || 0,
+      onlyAvailable: true,
+    };
+  }
+
+  // --- Unloading params (only when different dates) ---
+  let unloadingParams: ServiceProviderParams | null = null;
+
+  if (!isSameDate && unloadingZip && unloadLabor) {
+    const unloadingDate = formatIsoDate(movingDateData.unloadingDate);
+
+    if (unloadingDate) {
+      unloadingParams = {
+        requestedDate: unloadingDate,
+        loadingZipCode: "89109",
+        unloadingZipCode: "94551",
+        laborHours: unloadLabor.laborHours,
+        crewSize: unloadLabor.crewSize,
+        sortOrder: "QualityRating",
+        serviceType: "Standard",
+        flightsOfStairs: parseInt(locations.unloadingDetails.floors, 10) || 0,
+        onlyAvailable: true,
+      };
+    }
+  }
+
+  return { loadingParams, unloadingParams };
 }

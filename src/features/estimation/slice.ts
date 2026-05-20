@@ -1,9 +1,9 @@
 import type { StateCreator } from "zustand";
-import type { EstimationResponse } from "./types";
+import type { UnifiedEstimationResponse } from "./types";
 
 export interface EstimationSlice {
-  estimation: EstimationResponse | null;
-  setEstimation: (data: EstimationResponse) => void;
+  estimation: UnifiedEstimationResponse | null;
+  setEstimation: (data: UnifiedEstimationResponse) => void;
   resetEstimation: () => void;
 }
 

@@ -10,7 +10,10 @@ export type {
 } from "./types";
 
 export { getServiceProviders } from "./api";
-export { mapToServiceProviderParams } from "./mapper";
+export {
+  mapToServiceProviderParams,
+  type ServiceProviderMapperResult,
+} from "./mapper";
 export {
   createServiceProvidersSlice,
   type ServiceProvidersSlice,
