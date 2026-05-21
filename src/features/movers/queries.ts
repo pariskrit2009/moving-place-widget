@@ -4,7 +4,7 @@ import { getServiceProviders } from "./api";
 import { mapToServiceProviderParams } from "./mapper";
 
 export function useServiceProviders() {
-  const search = useWidgetStore((s) => s.search);
+  const search = useWidgetStore((s) => s.selectedPlaces);
   const locations = useWidgetStore((s) => s.locations);
   const movingDateData = useWidgetStore((s) => s.movingDateData);
   const estimation = useWidgetStore((s) => s.estimation);

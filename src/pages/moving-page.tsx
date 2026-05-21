@@ -12,7 +12,8 @@ export default function MovingPage() {
   const { navigateWithParams } = useNavigateWithParams();
   const movingDateData = useWidgetStore((s) => s.movingDateData);
   const setMovingDateData = useWidgetStore((s) => s.setMovingDateData);
-  const searchData = useWidgetStore((s) => s.search);
+  // const searchData = useWidgetStore((s) => s.search);
+  const selectedAddress = useWidgetStore((s) => s.selectedPlaces);
   const locations = useWidgetStore((s) => s.locations);
   const { mutate } = useEstimation();
 
@@ -36,7 +37,7 @@ export default function MovingPage() {
     navigateWithParams("/move-option");
     mutate({
       hasDifferentDates: !!movingDateData?.hasDifferentDates,
-      search: searchData,
+      search: selectedAddress,
       locations,
     });
   };

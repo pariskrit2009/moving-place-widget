@@ -1,15 +1,15 @@
-import { useEffect } from "react";
 import { useNavigateWithParams } from "@/hooks";
 import WidgetLayout from "@/components/layout/WidgetLayout";
 import { Icon } from "@/components/ui/icon";
 import { LocationSearchInput } from "@/components/form/LocationSearchInput";
-import { useLocationsForm, type LocationsFormData } from "@/features/search";
 import { useWidgetStore } from "@/store";
-import type { SelectedPlace } from "@/features/search";
+import { APIProvider } from "@vis.gl/react-google-maps";
+import { config } from "@/lib/config";
+import { useSearchForm } from "@/features/search/useSearchForm";
+import type { SelectedPlace } from "@/features/search/schema";
 export default function SearchPage() {
   const { navigateWithParams } = useNavigateWithParams();
-  const search = useWidgetStore((s) => s.search);
-  const setSearch = useWidgetStore((s) => s.setSearch);
+  const selectedPlace = useWidgetStore((s) => s.selectedPlaces);
   const setSelectedPlace = useWidgetStore((s) => s.setSelectedPlace);
 
   const handlePlaceSelect = (
@@ -23,16 +23,24 @@ export default function SearchPage() {
     handleSubmit,
     formState: { errors },
     control,
-    watch,
-  } = useLocationsForm(search ?? undefined);
+  } = useSearchForm({
+    startLocation: selectedPlace?.startLocation || {
+      fullAddress: "",
+      zip: "",
+    },
+    endLocation: selectedPlace?.endLocation || {
+      fullAddress: "",
+      zip: "",
+    },
+  });
 
   // Persist form values to store on every change
-  useEffect(() => {
-    const subscription = watch((values) => {
-      setSearch(values as LocationsFormData);
-    });
-    return () => subscription.unsubscribe();
-  }, [watch, setSearch]);
+  // useEffect(() => {
+  //   const subscription = watch((values) => {
+  //     setSearch(values as LocationsFormData);
+  //   });
+  //   return () => subscription.unsubscribe();
+  // }, [watch, setSearch]);
 
   const onSubmit = async () => {
     try {
@@ -55,25 +63,31 @@ export default function SearchPage() {
             </h2>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 pt-3">
-              <LocationSearchInput
-                control={control}
-                name="startLocation"
-                label="Loading address"
-                id="startLocation"
-                placeholder="Zip code or street address"
-                error={errors.startLocation?.message}
-                onPlaceSelect={(place) => handlePlaceSelect("startLocation", place)}
-              />
+              <APIProvider apiKey={config.googlePlacesApiKey}>
+                <LocationSearchInput
+                  control={control}
+                  name="startLocation.fullAddress"
+                  label="Loading address"
+                  id="startLocation"
+                  placeholder="Zip code or street address"
+                  error={errors.startLocation?.message}
+                  onPlaceSelect={(place) =>
+                    handlePlaceSelect("startLocation", place)
+                  }
+                />
 
-              <LocationSearchInput
-                control={control}
-                name="endLocation"
-                label="Unloading address"
-                id="endLocation"
-                placeholder="Zip code or street address"
-                error={errors.endLocation?.message}
-                onPlaceSelect={(place) => handlePlaceSelect("endLocation", place)}
-              />
+                <LocationSearchInput
+                  control={control}
+                  name="endLocation.fullAddress"
+                  label="Unloading address"
+                  id="endLocation"
+                  placeholder="Zip code or street address"
+                  error={errors.endLocation?.message}
+                  onPlaceSelect={(place) =>
+                    handlePlaceSelect("endLocation", place)
+                  }
+                />
+              </APIProvider>
             </div>
 
             <div className="rounded-2xl border border-[#2d6671] bg-[#f1faf9] px-3 py-4">

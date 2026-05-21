@@ -1,62 +1,27 @@
 import { z } from "zod";
 
-// Single date mode
-const singleDateSchema = z.object({
-  hasDifferentDates: z.literal(false),
-  // movingDate: z.string().min(1, "Moving date is required").optional,
-  // loadingDate: z.literal(""),
-  // unloadingDate: z.literal(""),
+export const selectedPlaceSchema = z.object({
+  fullAddress: z.string(),
+  zip: z.string(),
 });
-
-// Separate dates mode
-const separateDatesSchema = z.object({
-  hasDifferentDates: z.literal(true),
-  movingDate: z.literal(""),
-  loadingDate: z.string().min(1, "Loading date is required"),
-  unloadingDate: z.string().min(1, "Unloading date is required"),
-});
-
-// Union for conditional validation
-const datesSchema = z
-  .discriminatedUnion("hasDifferentDates", [
-    singleDateSchema,
-    separateDatesSchema,
-  ])
-  .refine(
-    (data) => {
-      if (data.hasDifferentDates) {
-        return (
-          !data.loadingDate ||
-          !data.unloadingDate ||
-          new Date(data.loadingDate) <= new Date(data.unloadingDate)
-        );
-      }
-      return true;
-    },
-    {
-      message: "Loading date must be before or equal to unloading date",
-      path: ["unloadingDate"],
-    },
-  );
 
 // Full locations schema
-export const locationsSchema = datesSchema.and(
-  z
-    .object({
-      startLocation: z.string(),
-      endLocation: z.string(),
-    })
-    .refine(
-      (data) =>
-        data.startLocation.trim() !== "" || data.endLocation.trim() !== "",
-      {
-        message: "At least one location is required",
-        path: ["startLocation"],
-      },
-    ),
-);
-
-export type LocationsFormData = z.infer<typeof locationsSchema>;
+export const searchSchema = z
+  .object({
+    startLocation: selectedPlaceSchema.optional(),
+    endLocation: selectedPlaceSchema.optional(),
+  })
+  .refine(
+    (data) =>
+      data.startLocation?.fullAddress.trim() !== "" ||
+      data.endLocation?.fullAddress.trim() !== "",
+    {
+      message: "At least one location is required",
+      path: ["startLocation"],
+    },
+  );
+export type SearchFormData = z.infer<typeof searchSchema>;
+export type SelectedPlace = z.infer<typeof selectedPlaceSchema>;
 
 export interface MoverQuote {
   id: string;
