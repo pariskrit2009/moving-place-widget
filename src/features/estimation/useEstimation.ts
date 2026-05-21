@@ -23,8 +23,8 @@ export function useEstimation() {
   return useMutation<UnifiedEstimationResponse, Error, EstimationCallInput>({
     mutationFn: async (input) => {
       const hasBothLocations = !!(
-        input.search?.startLocation.fullAddress &&
-        input.search?.endLocation.fullAddress
+        input.search?.startLocation?.fullAddress &&
+        input.search?.endLocation?.fullAddress
       );
       console.log(input.search?.startLocation, input.search?.endLocation);
       if (!input.hasDifferentDates && hasBothLocations) {

@@ -99,7 +99,7 @@ export function LocationSection({
                   <SelectField
                     id={`${propertyTypeName}-bedrooms`}
                     label="Number of bedrooms"
-                    value={field.value}
+                    value={String(field.value)}
                     onValueChange={field.onChange}
                     options={BEDROOM_OPTIONS}
                     required
