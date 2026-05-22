@@ -8,6 +8,7 @@ interface WidgetLayoutProps {
   loading?: boolean;
   navigateBack?: () => void;
   onContinue?: () => void;
+  continueLabel?: string;
 }
 
 export function WidgetLayout({
@@ -15,6 +16,7 @@ export function WidgetLayout({
   navigateBack,
   onContinue,
   loading,
+  continueLabel = "Continue",
 }: WidgetLayoutProps) {
   const { hostOrigin } = useWidgetParams();
   useWidgetResize({ hostOrigin });
@@ -39,7 +41,7 @@ export function WidgetLayout({
           <StepProgress />
           {onContinue && (
             <Button variant="cta" onClick={onContinue} disabled={loading}>
-              Continue
+              {continueLabel}
             </Button>
           )}
         </div>

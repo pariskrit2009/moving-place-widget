@@ -62,7 +62,7 @@ export default function QuotePage() {
   });
 
   const handleContinue = () => {
-    navigateWithParams("/customize");
+    navigateWithParams("/checkout");
   };
 
   const toggleRow = (id: string) => {
@@ -72,7 +72,7 @@ export default function QuotePage() {
   return (
     <WidgetLayout
       onContinue={handleContinue}
-      navigateBack={() => navigateWithParams("/movers")}
+      navigateBack={() => navigateWithParams("/customize")}
     >
       <FormSection
         title="Mover Quotes"
