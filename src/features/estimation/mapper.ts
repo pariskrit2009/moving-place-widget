@@ -102,7 +102,7 @@ export function mapToRecommendationsRequest(
   if (!locations) return null;
 
   const sqFt = parseBedroomCount(
-    locations.loadingDetails.bedrooms || locations.unloadingDetails.bedrooms,
+    +locations.loadingDetails.bedrooms || +locations.unloadingDetails.bedrooms,
   );
   // const linearFeet = deriveLinearFeet(sqFt);
   const heavyItems = deriveHeavyItems(locations.pianoDetails);

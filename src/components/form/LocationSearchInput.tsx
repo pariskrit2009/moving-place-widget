@@ -1,12 +1,12 @@
 import { useState } from "react";
 import type { Control, FieldValues, Path } from "react-hook-form";
 import { Controller } from "react-hook-form";
-import { X, Loader2, MapPin } from "lucide-react";
+import { X, MapPin } from "lucide-react";
 
 import {
   Popover,
+  PopoverAnchor,
   PopoverContent,
-  PopoverTrigger,
 } from "@/components/ui/popover";
 import {
   Command,
@@ -88,11 +88,8 @@ function LocationSearchInner({
   const [inputValue, setInputValue] = useState(field.value);
   const [isOpen, setIsOpen] = useState(false);
   const debouncedQuery = useDebounce(inputValue, 300);
-  const {
-    suggestions,
-    resetSession,
-    isLoading: autoCompleteLoading,
-  } = useAutocompleteSuggestions(debouncedQuery);
+  const { suggestions, resetSession } =
+    useAutocompleteSuggestions(debouncedQuery);
 
   const handleClear = () => {
     setInputValue("");
@@ -142,17 +139,15 @@ function LocationSearchInner({
   };
 
   const handleOpenChange = (open: boolean) => {
-    console.log(open, "openingggg", inputValue, "inputvalueee", isOpen);
     if (!isOpen) return;
 
     setIsOpen(open);
   };
 
-  const isLoading = autoCompleteLoading;
   return (
     <div>
       <Popover open={isOpen} onOpenChange={handleOpenChange}>
-        <PopoverTrigger className="w-full">
+        <PopoverAnchor className="w-full">
           <div className="relative w-full">
             <LabelStackedField label={label} id={id}>
               <Input
@@ -177,7 +172,7 @@ function LocationSearchInner({
               </button>
             )}
           </div>
-        </PopoverTrigger>
+        </PopoverAnchor>
         <PopoverContent
           className="p-0 w-[var(--radix-popover-trigger-width)]"
           align="start"
@@ -187,15 +182,7 @@ function LocationSearchInner({
         >
           <Command shouldFilter={false}>
             <CommandList>
-              {isLoading ? (
-                <div className="flex items-center justify-center py-6 text-sm text-[#677890]">
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  Searching...
-                </div>
-              ) : (
-                <CommandEmpty>No locations found.</CommandEmpty>
-              )}
-              {suggestions.length > 0 && (
+              {suggestions.length > 0 ? (
                 <CommandGroup>
                   {suggestions.map((suggestion) => (
                     <CommandItem
@@ -215,7 +202,10 @@ function LocationSearchInner({
                     </CommandItem>
                   ))}
                 </CommandGroup>
+              ) : (
+                <CommandEmpty>No locations found.</CommandEmpty>
               )}
+              {}
             </CommandList>
           </Command>
         </PopoverContent>
