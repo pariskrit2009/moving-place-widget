@@ -25,6 +25,7 @@ export function LocationSection({
   propertyTypeError,
   propertyType,
   onPropertyTypeChange,
+  locationAddress,
 }: {
   title: string;
   propertyTypeName: "loadingPropertyType" | "unloadingPropertyType";
@@ -34,6 +35,7 @@ export function LocationSection({
   onPropertyTypeChange: (
     name: "loadingPropertyType" | "unloadingPropertyType",
   ) => void;
+  locationAddress?: string;
 }) {
   const isHouseOrApartment =
     propertyType === "House" || propertyType === "CondoApt";
@@ -47,6 +49,7 @@ export function LocationSection({
 
   return (
     <div className="space-y-2">
+      <p className="text-sm font-normal text-gray-500 m-0">{locationAddress}</p>
       <Label className="text-xl font-bold text-[#2e343e]">{title}</Label>
 
       {/* Property Type */}
