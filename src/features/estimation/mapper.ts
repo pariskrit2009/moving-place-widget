@@ -1,3 +1,4 @@
+import type { SearchFormData } from "../search/schema";
 import type {
   EstimationRequest,
   EstimationLfsResponse,
@@ -7,7 +8,6 @@ import type {
   UnifiedEstimationResponse,
 } from "./types";
 import type { LocationsFormData } from "@/features/locations/schema";
-import type { LocationsFormData as SearchFormData } from "@/features/search/schema";
 
 // --- Input types ---
 
@@ -79,14 +79,14 @@ export function mapToEstimationRequest(
 
   if (!search || !locations) return null;
 
-  const originZip = search.startLocation;
-  const destinationZip = search.endLocation;
+  const originZip = search.startLocation?.zip;
+  const destinationZip = search.endLocation?.zip;
 
-  if (!originZip || !destinationZip) return null;
+  // if (!originZip || !destinationZip) return null;
 
   return {
-    originZip: "89109",
-    destinationZip: "94551",
+    originZip: originZip ?? null,
+    destinationZip: destinationZip ?? null,
     originAddressType: locations.loadingPropertyType,
     // originBedroomCount: parseBedroomCount(locations.loadingDetails.bedrooms),
     originBedroomCount: 2,

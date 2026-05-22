@@ -24,7 +24,7 @@ export default function MoversPage() {
 
   const { loadingQuery } = useServiceProviders();
   const { data, isLoading, isError, refetch } = loadingQuery;
-  const search = useWidgetStore((s) => s.search);
+  const search = useWidgetStore((s) => s.selectedPlaces);
   const movingDateData = useWidgetStore((s) => s.movingDateData);
 
   const providers = useMemo(
@@ -42,8 +42,8 @@ export default function MoversPage() {
       unloadingDate: movingDateData?.hasDifferentDates
         ? formatIsoDate(movingDateData.unloadingDate)
         : null,
-      loadingLocation: search?.startLocation ?? "",
-      unloadingLocation: search?.endLocation ?? "",
+      loadingLocation: search?.startLocation?.fullAddress ?? "",
+      unloadingLocation: search?.endLocation?.fullAddress ?? "",
     };
   }, [movingDateData, search]);
 

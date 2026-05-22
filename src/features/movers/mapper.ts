@@ -2,8 +2,8 @@ import { formatIsoDate } from "@/lib/utils/date";
 import type { LocationsFormData } from "@/features/locations/schema";
 import type { MovingDateFormData } from "@/features/moving/schema";
 import type { UnifiedEstimationResponse } from "@/features/estimation/types";
-import type { LocationsFormData as SearchFormData } from "@/features/search/schema";
 import type { ServiceProviderParams } from "./types";
+import type { SearchFormData } from "../search/schema";
 
 interface ServiceProviderMapperInput {
   search: SearchFormData | null;
@@ -28,8 +28,8 @@ export function mapToServiceProviderParams(
 
   if (!search || !locations || !movingDateData || !estimation) return empty;
 
-  const loadingZip = search.startLocation;
-  const unloadingZip = search.endLocation;
+  const loadingZip = search.startLocation?.zip;
+  const unloadingZip = search.endLocation?.zip;
   if (!loadingZip) return empty;
 
   const isSameDate = !movingDateData.hasDifferentDates;
@@ -49,7 +49,7 @@ export function mapToServiceProviderParams(
   if (loadingDate && loadLabor && locations.loadingDetails.floors) {
     loadingParams = {
       requestedDate: loadingDate,
-      loadingZipCode: "89109",
+      loadingZipCode: loadingZip,
       laborHours: loadLabor.laborHours,
       crewSize: loadLabor.crewSize,
       sortOrder: "QualityRating",

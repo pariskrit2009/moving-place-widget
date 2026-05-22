@@ -30,12 +30,10 @@ axiosInstance.interceptors.request.use(
     // Extract widgetKey from URL search params
     const searchParams = new URLSearchParams(window.location.search);
     const widgetKey = searchParams.get("widgetKey");
-
+    config.headers["Authorization-Token"] = configuration.apiAuthorizationToken;
     // Add widgetKey to headers if present
     if (widgetKey) {
       config.headers = config.headers || {};
-      config.headers["Authorization-Token"] =
-        configuration.apiAuthorizationToken;
     }
 
     // Log request details for debugging

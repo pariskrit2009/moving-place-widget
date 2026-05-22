@@ -13,7 +13,8 @@ export default defineConfig({
     },
   },
   server: {
-    host: "0.0.0.0",
+    host: "widget-dev.porchmovinggroup.com",
+    port: 5173,
     cors: true,
     proxy: {
       "/partner-api": {

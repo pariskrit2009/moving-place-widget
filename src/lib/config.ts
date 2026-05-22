@@ -5,4 +5,5 @@ export const config = {
   appEnv: import.meta.env.VITE_APP_ENV || "development",
   isDevelopment: import.meta.env.DEV,
   isProduction: import.meta.env.PROD,
+  googlePlacesApiKey: import.meta.env.VITE_API_GOOGLE_PLACES_KEY,
 } as const;

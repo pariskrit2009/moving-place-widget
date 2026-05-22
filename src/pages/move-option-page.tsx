@@ -33,8 +33,12 @@ export default function MoveOptionPage() {
   const { navigateWithParams } = useNavigateWithParams();
   const selectedMoveOption = useWidgetStore((s) => s.selectedMoveOption);
   const setSelectedMoveOption = useWidgetStore((s) => s.setSelectedMoveOption);
-  const startLocation = useWidgetStore((s) => s.search?.startLocation);
-  const endLocation = useWidgetStore((s) => s.search?.endLocation);
+  const startLocation = useWidgetStore(
+    (s) => s.selectedPlaces?.startLocation?.fullAddress,
+  );
+  const endLocation = useWidgetStore(
+    (s) => s.selectedPlaces?.endLocation?.fullAddress,
+  );
   const hasDifferentDates = useWidgetStore(
     (s) => s.movingDateData?.hasDifferentDates,
   );

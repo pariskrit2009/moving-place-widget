@@ -8,8 +8,8 @@ import {
 } from "./mapper";
 import type { UnifiedEstimationResponse } from "./types";
 import type { LocationsFormData } from "@/features/locations/schema";
-import type { LocationsFormData as SearchFormData } from "@/features/search/schema";
 import { useWidgetStore } from "@/store";
+import type { SearchFormData } from "../search/schema";
 
 export interface EstimationCallInput {
   hasDifferentDates: boolean;
@@ -23,16 +23,16 @@ export function useEstimation() {
   return useMutation<UnifiedEstimationResponse, Error, EstimationCallInput>({
     mutationFn: async (input) => {
       const hasBothLocations = !!(
-        input.search?.startLocation && input.search?.endLocation
+        input.search?.startLocation?.fullAddress &&
+        input.search?.endLocation?.fullAddress
       );
-
+      console.log(input.search?.startLocation, input.search?.endLocation);
       if (!input.hasDifferentDates && hasBothLocations) {
         const request = mapToEstimationRequest({
           search: input.search,
           locations: input.locations,
         });
-        if (!request)
-          throw new Error("Unable to build estimation request");
+        if (!request) throw new Error("Unable to build estimation request");
         const response = await getEstimation(request);
         return normalizeLfsResponse(response);
       }
@@ -40,8 +40,7 @@ export function useEstimation() {
       const request = mapToRecommendationsRequest({
         locations: input.locations,
       });
-      if (!request)
-        throw new Error("Unable to build recommendations request");
+      if (!request) throw new Error("Unable to build recommendations request");
       const response = await getRecommendations(request);
       return normalizeRecommendationsResponse(response);
     },

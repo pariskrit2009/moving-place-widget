@@ -1,7 +1,7 @@
 // --- Existing estimations-lfs types ---
 export interface EstimationRequest {
-  originZip: string;
-  destinationZip: string;
+  originZip: string | null;
+  destinationZip: string | null;
   originAddressType: string;
   originBedroomCount: number;
 }

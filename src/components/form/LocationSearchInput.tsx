@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import type { Control, FieldValues, Path } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import { X, Loader2, MapPin } from "lucide-react";
@@ -16,10 +16,12 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import FieldError from "./FieldError";
-import { usePlaceSearch } from "@/features/search";
 import { useDebounce } from "@/hooks";
 import { LabelStackedField } from "./LabelStackedField";
 import { Input } from "../ui/input";
+import { useMapsLibrary } from "@vis.gl/react-google-maps";
+import { useAutocompleteSuggestions } from "@/hooks/useAutocompleteSuggestions";
+import type { SelectedPlace } from "@/features/search/schema";
 
 interface LocationSearchInputProps<T extends FieldValues> {
   control: Control<T>;
@@ -28,6 +30,7 @@ interface LocationSearchInputProps<T extends FieldValues> {
   id: string;
   placeholder?: string;
   error?: string;
+  onPlaceSelect?: (place: SelectedPlace) => void;
 }
 
 export function LocationSearchInput<T extends FieldValues>({
@@ -37,6 +40,7 @@ export function LocationSearchInput<T extends FieldValues>({
   id,
   placeholder = "Zip code or street address",
   error,
+  onPlaceSelect,
 }: LocationSearchInputProps<T>) {
   return (
     <Controller
@@ -49,6 +53,7 @@ export function LocationSearchInput<T extends FieldValues>({
           label={label}
           placeholder={placeholder}
           error={error}
+          onPlaceSelect={onPlaceSelect}
         />
       )}
     />
@@ -66,6 +71,7 @@ interface LocationSearchInnerProps {
   label: string;
   placeholder: string;
   error?: string;
+  onPlaceSelect?: (place: SelectedPlace) => void;
 }
 
 function LocationSearchInner({
@@ -74,42 +80,78 @@ function LocationSearchInner({
   label,
   placeholder,
   error,
+  onPlaceSelect,
 }: LocationSearchInnerProps) {
+  // Google-Places-API
+  const places = useMapsLibrary("places");
+  // Google-Places-API
   const [inputValue, setInputValue] = useState(field.value);
   const [isOpen, setIsOpen] = useState(false);
-
   const debouncedQuery = useDebounce(inputValue, 300);
-  const { suggestions, isLoading } = usePlaceSearch(debouncedQuery);
+  const {
+    suggestions,
+    resetSession,
+    isLoading: autoCompleteLoading,
+  } = useAutocompleteSuggestions(debouncedQuery);
 
-  const handleSelect = useCallback(
-    (description: string) => {
-      setInputValue(description);
-      field.onChange(description);
-      setIsOpen(false);
-    },
-    [field],
-  );
-
-  const handleClear = useCallback(() => {
+  const handleClear = () => {
     setInputValue("");
     field.onChange("");
     setIsOpen(false);
-  }, [field]);
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value;
-      setInputValue(value);
-      if (value !== field.value) {
-        field.onChange(value);
-      }
-    },
-    [field],
-  );
+    if (onPlaceSelect)
+      onPlaceSelect({
+        fullAddress: "",
+        zip: "",
+      });
+  };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+    if (value !== field.value) {
+      field.onChange(value);
+    }
+    if (value.trim().length > 0) setIsOpen(true);
+  };
+
+  const handleSuggestionClick = async (
+    suggestion: google.maps.places.AutocompleteSuggestion,
+  ) => {
+    if (!places) return;
+    if (!suggestion.placePrediction) return;
+
+    const place = suggestion.placePrediction.toPlace();
+
+    await place.fetchFields({
+      fields: ["displayName", "formattedAddress", "postalAddress"],
+    });
+    const fullAddress = place.formattedAddress ?? "";
+    setInputValue(fullAddress);
+
+    // calling fetchFields invalidates the session-token, so we now have to call
+    // resetSession() so a new one gets created for further search
+    resetSession();
+    if (onPlaceSelect)
+      onPlaceSelect({
+        fullAddress: place.formattedAddress ?? "",
+        zip: place.postalAddress?.postalCode ?? "",
+      });
+
+    setIsOpen(false);
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    console.log(open, "openingggg", inputValue, "inputvalueee", isOpen);
+    if (!isOpen) return;
+
+    setIsOpen(open);
+  };
+
+  const isLoading = autoCompleteLoading;
   return (
     <div>
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <Popover open={isOpen} onOpenChange={handleOpenChange}>
         <PopoverTrigger className="w-full">
           <div className="relative w-full">
             <LabelStackedField label={label} id={id}>
@@ -128,7 +170,7 @@ function LocationSearchInner({
               <button
                 type="button"
                 onClick={handleClear}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-sm text-[#b1bbc8] hover:text-[#2e343e] focus:outline-none focus:ring-1 focus:ring-[#3799a3]"
+                className="absolute cursor-pointer right-2 top-1/2 -translate-y-1/2 p-0.5 rounded-sm text-[#b1bbc8] hover:text-[#2e343e] focus:outline-none focus:ring-1 focus:ring-[#3799a3]"
                 aria-label="Clear location"
               >
                 <X className="h-4 w-4" />
@@ -157,12 +199,19 @@ function LocationSearchInner({
                 <CommandGroup>
                   {suggestions.map((suggestion) => (
                     <CommandItem
-                      key={suggestion.placeId}
-                      value={suggestion.placeId}
-                      onSelect={() => handleSelect(suggestion.description)}
+                      key={suggestion.placePrediction?.placeId}
+                      value={suggestion.placePrediction?.placeId}
+                      onSelect={() => handleSuggestionClick(suggestion)}
                     >
                       <MapPin className="h-4 w-4 shrink-0 text-[#677890]" />
-                      <span className="truncate">{suggestion.description}</span>
+                      <div className="truncate">
+                        <span className="block truncate">
+                          {suggestion.placePrediction?.text.text}
+                        </span>
+                        <span className="block truncate text-xs text-[#677890]">
+                          {suggestion.placePrediction?.secondaryText?.text}
+                        </span>
+                      </div>
                     </CommandItem>
                   ))}
                 </CommandGroup>
