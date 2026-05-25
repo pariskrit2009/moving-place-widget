@@ -1,7 +1,6 @@
 import { type SVGProps } from "react";
 
 import InfoIcon from "@/assets/info.svg?react";
-import AdvantageIcon from "@/assets/advantage.svg?react";
 import TrustPilotIcon from "@/assets/trustpilot.svg?react";
 import StarIcon from "@/assets/star.svg?react";
 import TagIcon from "@/assets/tag.svg?react";
@@ -23,11 +22,12 @@ import TruckIcon from "@/assets/truck.svg?react";
 import ThumbsUp from "@/assets/thumbs-up.svg?react";
 import BoxCarry from "@/assets/box-carry.svg?react";
 
+import MovingPlaceLogo from "@/assets/moving-place-logo.svg?react";
 import { cn } from "@/lib/utils";
 
 const icons = {
   info: InfoIcon,
-  advantage: AdvantageIcon,
+  "moving-place-logo": MovingPlaceLogo,
   trustpilot: TrustPilotIcon,
   shieldcheck: ShieldCheckIcon,
   star: StarIcon,
@@ -51,7 +51,7 @@ const icons = {
   boxCarry: BoxCarry,
 } as const;
 
-type IconName = keyof typeof icons;
+export type IconName = keyof typeof icons;
 
 interface IconProps extends SVGProps<SVGSVGElement> {
   name: IconName;
