@@ -4,9 +4,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useState } from "react";
 
 interface DatePickerModalProps {
-  open?: boolean;
   onOpenChange?: (open: boolean) => void;
   selectedDate: Date | undefined;
   onSelect: (date: Date | undefined) => void;
@@ -15,7 +15,6 @@ interface DatePickerModalProps {
 }
 
 export function DatePickerModal({
-  open,
   onOpenChange,
   selectedDate,
   onSelect,
@@ -23,15 +22,16 @@ export function DatePickerModal({
   trigger,
 }: DatePickerModalProps) {
   const defaultClassNames = getDefaultClassNames();
+  const [open, setOpen] = useState(false);
 
   const handleDateSelect = (date: Date | undefined) => {
     onSelect(date);
-
+    setOpen(false);
     if (onOpenChange) onOpenChange(false);
   };
 
   return (
-    <Popover open={open} onOpenChange={onOpenChange}>
+    <Popover open={open} onOpenChange={setOpen}>
       {trigger && <PopoverTrigger asChild>{trigger}</PopoverTrigger>}
       <PopoverContent className="rounded-3xl" align="end">
         <DayPicker

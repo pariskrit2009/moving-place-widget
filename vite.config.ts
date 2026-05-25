@@ -22,11 +22,6 @@ export default defineConfig({
         changeOrigin: true,
         secure: true,
       },
-      "/v1": {
-        target: "https://places.googleapis.com",
-        changeOrigin: true,
-        secure: true,
-      },
     },
   },
 });

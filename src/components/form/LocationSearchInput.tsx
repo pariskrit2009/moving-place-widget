@@ -121,18 +121,20 @@ function LocationSearchInner({
     const place = suggestion.placePrediction.toPlace();
 
     await place.fetchFields({
-      fields: ["displayName", "formattedAddress", "postalAddress"],
+      fields: ["formattedAddress", "addressComponents"],
     });
+    const postalCode = place.addressComponents?.find((c) =>
+      c.types?.includes("postal_code"),
+    )?.longText;
     const fullAddress = place.formattedAddress ?? "";
     setInputValue(fullAddress);
-
     // calling fetchFields invalidates the session-token, so we now have to call
     // resetSession() so a new one gets created for further search
     resetSession();
     if (onPlaceSelect)
       onPlaceSelect({
         fullAddress: place.formattedAddress ?? "",
-        zip: place.postalAddress?.postalCode ?? "",
+        zip: postalCode ?? "",
       });
 
     setIsOpen(false);

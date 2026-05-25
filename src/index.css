@@ -83,6 +83,7 @@
     --rdp-day-height: 40px;
     --rdp-day_button-height: 38px;
     --rdp-day_button-width: 38px;
+    --rdp-today-color: var(--color-teal-800);
   }
 }
 

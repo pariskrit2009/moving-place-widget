@@ -20,6 +20,9 @@ import TruckSlash from "@/assets/truck-slash.svg?react";
 import TrolleyIcon from "@/assets/trolley.svg?react";
 import SofaIcon from "@/assets/sofa.svg?react";
 import TruckIcon from "@/assets/truck.svg?react";
+import ThumbsUp from "@/assets/thumbs-up.svg?react";
+import BoxCarry from "@/assets/box-carry.svg?react";
+
 import { cn } from "@/lib/utils";
 
 const icons = {
@@ -44,6 +47,8 @@ const icons = {
   sofa: SofaIcon,
   trolley: TrolleyIcon,
   dolly: DollyIcon,
+  thumbsUp: ThumbsUp,
+  boxCarry: BoxCarry,
 } as const;
 
 type IconName = keyof typeof icons;

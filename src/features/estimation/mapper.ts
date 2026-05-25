@@ -45,10 +45,10 @@ function deriveHeavyItems(
   const items: HeavyItem[] = [];
 
   const pianoQty =
-    parseInt(pianoDetails.baby_or_grand_pianos, 10) +
-    parseInt(pianoDetails.upright_pianos, 10);
-  if (!Number.isNaN(pianoQty) && pianoQty > 0) {
-    items.push({ itemType: "Pianos", quantity: pianoQty });
+    Number(pianoDetails.baby_or_grand_pianos) +
+    Number(pianoDetails.upright_pianos);
+  if (!Number.isNaN(pianoQty) && +pianoQty > 0) {
+    items.push({ itemType: "Pianos", quantity: +pianoQty });
   }
 
   const fieldMap: Array<{
@@ -61,9 +61,9 @@ function deriveHeavyItems(
   ];
 
   for (const { key, itemType } of fieldMap) {
-    const quantity = parseInt(pianoDetails[key], 10);
-    if (!Number.isNaN(quantity) && quantity > 0) {
-      items.push({ itemType, quantity });
+    const quantity = pianoDetails[key];
+    if (!Number.isNaN(quantity) && +quantity > 0) {
+      items.push({ itemType, quantity: +quantity });
     }
   }
 

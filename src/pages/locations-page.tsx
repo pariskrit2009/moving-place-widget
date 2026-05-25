@@ -12,34 +12,20 @@ import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
 import { LocationSection } from "@/features/locations/locationSection";
 import { SelectField } from "@/components/form/SelectField";
-
-const PIANOS_OPTIONS = [
-  {
-    value: "1",
-    label: "1",
-  },
-  {
-    value: "2",
-    label: "2",
-  },
-  {
-    value: "3",
-    label: "3",
-  },
-  {
-    value: "4",
-    label: "4",
-  },
-  {
-    value: "5",
-    label: "5+",
-  },
-];
+import { extractCityZip } from "@/lib/utils/extract-city-zip";
+import { PIANOS_OPTIONS } from "@/features/locations/constant";
 
 export default function LocationsPage() {
   const { navigateWithParams } = useNavigateWithParams();
   const locations = useWidgetStore((s) => s.locations);
   const setLocations = useWidgetStore((s) => s.setLocations);
+  const selectedPlaces = useWidgetStore((s) => s.selectedPlaces);
+  const loadingCityZip = extractCityZip(
+    selectedPlaces?.startLocation?.fullAddress ?? "",
+  );
+  const unloadingCityZip = extractCityZip(
+    selectedPlaces?.endLocation?.fullAddress ?? "",
+  );
 
   const {
     handleSubmit,
@@ -48,7 +34,6 @@ export default function LocationsPage() {
     watch,
     setValue,
   } = useLocationsForm(locations ?? undefined);
-
   useEffect(() => {
     const subscription = watch((values) => {
       setLocations(values as LocationsFormData);
@@ -66,7 +51,7 @@ export default function LocationsPage() {
     const prefix =
       name === "loadingPropertyType" ? "loadingDetails" : "unloadingDetails";
 
-    setValue(`${prefix}.bedrooms`, 0);
+    setValue(`${prefix}.bedrooms`, "");
     setValue(`${prefix}.floors`, "");
     setValue(`${prefix}.elevator`, "");
   };
@@ -93,6 +78,17 @@ export default function LocationsPage() {
             <p className="text-sm font-normal text-[#677890]">
               This helps us give you more accurate quotes
             </p>
+            <div className="flex items-center gap-2 md:gap-4 flex-wrap my-2">
+              <div className="flex items-center gap-1">
+                <Icon name="boxCarry" size={20} />
+                <p>1,700+ background-checked movers</p>
+              </div>
+              <div className="flex items-center gap-1">
+                <Icon name="thumbsUp" />
+
+                <p>1M+ moves completed</p>
+              </div>
+            </div>
           </div>
 
           <LocationSection
@@ -102,6 +98,7 @@ export default function LocationsPage() {
             propertyTypeError={errors.loadingPropertyType?.message}
             propertyType={loadingPropertyType}
             onPropertyTypeChange={handlePropertyTypeChange}
+            locationAddress={loadingCityZip}
           />
           <LocationSection
             title="Unloading location"
@@ -110,6 +107,7 @@ export default function LocationsPage() {
             propertyTypeError={errors.unloadingPropertyType?.message}
             propertyType={unloadingPropertyType}
             onPropertyTypeChange={handlePropertyTypeChange}
+            locationAddress={unloadingCityZip}
           />
 
           <div>
