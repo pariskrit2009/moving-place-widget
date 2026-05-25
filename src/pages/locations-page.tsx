@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
 import { useNavigateWithParams } from "@/hooks";
 import WidgetLayout from "@/components/layout/WidgetLayout";
@@ -14,12 +14,16 @@ import { LocationSection } from "@/features/locations/locationSection";
 import { SelectField } from "@/components/form/SelectField";
 import { extractCityZip } from "@/lib/utils/extract-city-zip";
 import { PIANOS_OPTIONS } from "@/features/locations/constant";
+import { HeavyItemsInfoModal } from "@/components/modals";
 
 export default function LocationsPage() {
   const { navigateWithParams } = useNavigateWithParams();
+  const [isHeavyItemsInfoOpen, setIsHeavyItemsInfoOpen] = useState(false);
   const locations = useWidgetStore((s) => s.locations);
   const setLocations = useWidgetStore((s) => s.setLocations);
   const selectedPlaces = useWidgetStore((s) => s.selectedPlaces);
+  const hasStartLocation = !!selectedPlaces?.startLocation?.fullAddress;
+  const hasEndLocation = !!selectedPlaces?.endLocation?.fullAddress;
   const loadingCityZip = extractCityZip(
     selectedPlaces?.startLocation?.fullAddress ?? "",
   );
@@ -33,7 +37,10 @@ export default function LocationsPage() {
     control,
     watch,
     setValue,
-  } = useLocationsForm(locations ?? undefined);
+  } = useLocationsForm(locations ?? undefined, {
+    showLoading: hasStartLocation,
+    showUnloading: hasEndLocation,
+  });
   useEffect(() => {
     const subscription = watch((values) => {
       setLocations(values as LocationsFormData);
@@ -91,24 +98,28 @@ export default function LocationsPage() {
             </div>
           </div>
 
-          <LocationSection
-            title="Loading location"
-            propertyTypeName="loadingPropertyType"
-            control={control}
-            propertyTypeError={errors.loadingPropertyType?.message}
-            propertyType={loadingPropertyType}
-            onPropertyTypeChange={handlePropertyTypeChange}
-            locationAddress={loadingCityZip}
-          />
-          <LocationSection
-            title="Unloading location"
-            propertyTypeName="unloadingPropertyType"
-            control={control}
-            propertyTypeError={errors.unloadingPropertyType?.message}
-            propertyType={unloadingPropertyType}
-            onPropertyTypeChange={handlePropertyTypeChange}
-            locationAddress={unloadingCityZip}
-          />
+          {hasStartLocation && (
+            <LocationSection
+              title="Loading location"
+              propertyTypeName="loadingPropertyType"
+              control={control}
+              propertyTypeError={errors.loadingPropertyType?.message}
+              propertyType={loadingPropertyType}
+              onPropertyTypeChange={handlePropertyTypeChange}
+              locationAddress={loadingCityZip}
+            />
+          )}
+          {hasEndLocation && (
+            <LocationSection
+              title="Unloading location"
+              propertyTypeName="unloadingPropertyType"
+              control={control}
+              propertyTypeError={errors.unloadingPropertyType?.message}
+              propertyType={unloadingPropertyType}
+              onPropertyTypeChange={handlePropertyTypeChange}
+              locationAddress={unloadingCityZip}
+            />
+          )}
 
           <div>
             <Label className="text-xl font-bold text-[#2e343e]">Extras</Label>
@@ -144,11 +155,14 @@ export default function LocationsPage() {
                         </p>
                       </div>
 
-                      <Icon
-                        name="info"
-                        size={20}
-                        className="absolute top-1/2 -translate-y-1/2 right-3 hidden sm:block"
-                      />
+                      <button
+                        type="button"
+                        onClick={() => setIsHeavyItemsInfoOpen(true)}
+                        className="absolute top-1/2 -translate-y-1/2 right-3 sm:block cursor-pointer"
+                        aria-label="Heavy items info"
+                      >
+                        <Icon name="info" size={20} />
+                      </button>
                     </label>
                   </div>
                 )}
@@ -246,6 +260,11 @@ export default function LocationsPage() {
           </div>
         </div>
       </div>
+
+      <HeavyItemsInfoModal
+        open={isHeavyItemsInfoOpen}
+        onOpenChange={setIsHeavyItemsInfoOpen}
+      />
     </WidgetLayout>
   );
 }
