@@ -8,3 +8,11 @@ export interface PlaceSuggestion {
 export interface PlaceSearchResponse {
   suggestions: PlaceSuggestion[];
 }
+
+export interface ReviewItem {
+  id: string;
+  name: string;
+  description: string;
+  rating: number;
+  status: boolean;
+}

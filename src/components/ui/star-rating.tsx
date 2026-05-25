@@ -47,7 +47,7 @@ export function StarRating({
           return (
             <Star
               key={i}
-              className={`${starSize} text-amber-500`}
+              className={`${starSize} text-yellow-400`}
               fill="currentColor"
               stroke="currentColor"
               aria-hidden="true"
@@ -60,7 +60,7 @@ export function StarRating({
             <span key={i} className="relative inline-flex" aria-hidden="true">
               <Star className={`${starSize} text-muted-foreground/30`} />
               <Star
-                className={`absolute top-0 left-0 ${starSize} text-amber-500`}
+                className={`absolute top-0 left-0 ${starSize} text-yellow-400`}
                 fill="currentColor"
                 stroke="currentColor"
                 style={{ clipPath: "inset(0 50% 0 0)" }}

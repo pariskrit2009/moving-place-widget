@@ -2,6 +2,7 @@ import { useWidgetParams, useWidgetResize, useWidgetTheme } from "@/hooks";
 import StepProgress from "@/components/layout/StepProgress";
 import { Button } from "../ui/button";
 import { ArrowLeft } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface WidgetLayoutProps {
   children: React.ReactNode;
@@ -9,6 +10,7 @@ interface WidgetLayoutProps {
   navigateBack?: () => void;
   onContinue?: () => void;
   continueLabel?: string;
+  className?: string;
 }
 
 export function WidgetLayout({
@@ -17,16 +19,15 @@ export function WidgetLayout({
   onContinue,
   loading,
   continueLabel = "Continue",
+  className,
 }: WidgetLayoutProps) {
   const { hostOrigin } = useWidgetParams();
   useWidgetResize({ hostOrigin });
   useWidgetTheme();
 
   return (
-    <div id="widget-content" className="w-full bg-gray-100">
+    <div id="widget-content" className={cn("w-full bg-gray-100", className)}>
       <div className="min-h-[600px] max-h-[890px] overflow-auto relative w-full border border-[#b1bbc8] bg-white p-6 pt-0 flex flex-col">
-        <div className="space-y-1"></div>
-
         <div className="sticky top-0 flex justify-between gap-3 w-full pb-4 pt-6  bg-white z-20">
           {navigateBack && (
             <Button

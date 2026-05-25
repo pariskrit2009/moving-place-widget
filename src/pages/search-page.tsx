@@ -7,10 +7,17 @@ import { APIProvider } from "@vis.gl/react-google-maps";
 import { config } from "@/lib/config";
 import { useSearchForm } from "@/features/search/useSearchForm";
 import type { SelectedPlace } from "@/features/search/schema";
+import { ReviewCard } from "@/features/search/components/ReviewCard";
+import { AnimatePresence, motion } from "framer-motion";
+import type { ReviewItem } from "@/features/search/types";
+import { useState } from "react";
+import { Pagination } from "@/components/ui/pagination";
+
 export default function SearchPage() {
   const { navigateWithParams } = useNavigateWithParams();
   const selectedPlace = useWidgetStore((s) => s.selectedPlaces);
   const setSelectedPlace = useWidgetStore((s) => s.setSelectedPlace);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const handlePlaceSelect = (
     field: "startLocation" | "endLocation",
@@ -18,6 +25,49 @@ export default function SearchPage() {
   ) => {
     setSelectedPlace(field, place);
   };
+
+  const mockReviews: ReviewItem[] = [
+    {
+      id: "1",
+      name: "John Doe",
+      description:
+        "Excellent service and very professional team. Everything was handled smoothly from start to finish. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam perferendis, quaerat eveniet fugiat modi accusamus consectetur, quis, unde placeat nostrum tempore cumque praesentium! Ullam magnam dolorem tenetur voluptas sequi odit. Quam perferendis, quaerat eveniet fugiat modi accusamus consectetur, quis, unde placeat nostrum tempore cumque praesentium! Ullam magnam dolorem tenetur voluptas sequi odit. Quam perferendis, quaerat eveniet fugiat modi accusamus consectetur, quis, unde placeat nostrum tempore cumque praesentium! Ullam magnam dolorem tenetur voluptas sequi odit. Quam perferendis, quaerat eveniet fugiat modi accusamus consectetur, quis, unde placeat nostrum tempore cumque praesentium! Ullam magnam dolorem tenetur voluptas sequi odit.",
+      rating: 5,
+      status: true,
+    },
+    {
+      id: "2",
+      name: "Sarah Williams",
+      description:
+        "Good experience overall, but there was a slight delay during delivery  Quam perferendis, quaerat eveniet fugiat modi accusamus consectetur, quis, unde placeat nostrum tempore cumque praesentium! Ullam magnam dolorem tenetur voluptas sequi odit..",
+      rating: 4,
+      status: true,
+    },
+    {
+      id: "3",
+      name: "Michael Brown",
+      description:
+        "Average experience. Communication could have been better. Quam perferendis, quaerat eveniet fugiat modi accusamus consectetur, quis, unde placeat nostrum tempore cumque praesentium! Ullam magnam dolorem tenetur voluptas sequi odit.",
+      rating: 3,
+      status: false,
+    },
+    {
+      id: "4",
+      name: "Emily Johnson",
+      description:
+        "Very satisfied with the quality of service and customer support. Quam perferendis, quaerat eveniet fugiat modi accusamus consectetur, quis, unde placeat nostrum tempore cumque praesentium! Ullam magnam dolorem tenetur voluptas sequi odit.",
+      rating: 5,
+      status: true,
+    },
+    {
+      id: "5",
+      name: "David Wilson",
+      description:
+        "Not happy with the packaging. Some items arrived damaged. Quam perferendis, quaerat eveniet fugiat modi accusamus consectetur, quis, unde placeat nostrum tempore cumque praesentium! Ullam magnam dolorem tenetur voluptas sequi odit.",
+      rating: 2,
+      status: false,
+    },
+  ];
 
   const {
     handleSubmit,
@@ -50,129 +100,139 @@ export default function SearchPage() {
     }
   };
 
+  const nextReview = () => {
+    setActiveIndex((prev) => Math.min(prev + 1, mockReviews.length - 1));
+  };
+
+  const prevReview = () => {
+    setActiveIndex((prev) => Math.max(prev - 1, 0));
+  };
+
   return (
     <WidgetLayout onContinue={handleSubmit(onSubmit)}>
-      <div className="flex-1 flex flex-col">
-        <div className="flex-1 sm:space-y-6">
-          <p className="text-sm font-normal text-[#677890] mt-2 sm:mb-1">
-            Book your move in minutes
+      <div className="flex flex-col sm:pt-4">
+        {/* header section */}
+        <div>
+          <span className="pb-1">
+            Powered By
+            <Icon
+              name="moving-place-logo"
+              width={105.59}
+              height={20}
+              className="pl-[8.55px]"
+              aria-hidden="true"
+            />
+          </span>
+          <h2 className="text-2xl leading-8 py-0.5 sm:py-1">
+            Need help with your move?
+          </h2>
+          <p>
+            Tell us where you're moving and we'll match you with the right
+            movers.
           </p>
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold text-[#2e343e]">
-              Where do you need help?
-            </h2>
+        </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 pt-3">
-              <APIProvider apiKey={config.googlePlacesApiKey}>
-                <LocationSearchInput
-                  control={control}
-                  name="startLocation.fullAddress"
-                  label="Loading address"
-                  id="startLocation"
-                  placeholder="Zip code or street address"
-                  error={errors.startLocation?.message}
-                  onPlaceSelect={(place) =>
-                    handlePlaceSelect("startLocation", place)
-                  }
-                />
-
-                <LocationSearchInput
-                  control={control}
-                  name="endLocation.fullAddress"
-                  label="Unloading address"
-                  id="endLocation"
-                  placeholder="Zip code or street address"
-                  error={errors.endLocation?.message}
-                  onPlaceSelect={(place) =>
-                    handlePlaceSelect("endLocation", place)
-                  }
-                />
-              </APIProvider>
-            </div>
-
-            <div className="rounded-2xl border border-[#2d6671] bg-[#f1faf9] px-3 py-4">
-              <div className="flex items-center gap-3">
-                <Icon
-                  name="info"
-                  size={20}
-                  className="shrink-0 text-[#2d6671] mt-0.5"
-                />
-                <p className="text-sm font-normal leading-relaxed text-[#677890]">
-                  If you only need help with loading or unloading, just enter
-                  the relevant address. We&apos;ll match you with the right type
-                  of movers.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-[#F8F8F8] flex flex-col items-start sm:items-center sm:text-center p-6 rounded-2xl">
-            <Icon name="advantage" size={64} aria-hidden="true" />
-            <h3 className="font-bold text-xl whitespace-pre-line pt-3 ">
-              {
-                "Book with The Nation's Largest\nMarketplace of Professional Movers"
+        {/* input section */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:pt-3 pt-2 my-4">
+          <APIProvider apiKey={config.googlePlacesApiKey}>
+            <LocationSearchInput
+              control={control}
+              name="startLocation.fullAddress"
+              label="Loading address"
+              id="startLocation"
+              placeholder="Zip code or street address"
+              error={errors.startLocation?.message}
+              onPlaceSelect={(place) =>
+                handlePlaceSelect("startLocation", place)
               }
-            </h3>
-            <p className="text-[#2E343E] text-sm pt-1">
-              Every booking includes the MovingPlace Advantage
-            </p>
+            />
 
-            <span className="font-bold py-4">
-              4.8 out of 5 on{" "}
+            <LocationSearchInput
+              control={control}
+              name="endLocation.fullAddress"
+              label="Unloading address"
+              id="endLocation"
+              placeholder="Zip code or street address"
+              error={errors.endLocation?.message}
+              onPlaceSelect={(place) => handlePlaceSelect("endLocation", place)}
+            />
+          </APIProvider>
+        </div>
+
+        {/* info section */}
+        <div className="rounded-2xl border border-blue-100 bg-blue-50 px-3 py-4">
+          <div className="flex items-center gap-3">
+            <Icon
+              name="info"
+              size={20}
+              className="shrink-0 text-blue-500 mt-0.5"
+            />
+            <p className="text-sm font-normal leading-relaxed text-gray-500">
+              If you only need help with loading or unloading, just enter the
+              relevant address. We&apos;ll match you with the right type of
+              movers.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* review */}
+      <div className="mt-8 flex flex-col gap-4">
+        <div className="flex flex-wrap gap-1 justify-between">
+          <div className="flex flex-col sm:gap-1">
+            <h2 className="font-semibold text-base leading-5.5 sm:text-[18px]">
+              Why move with us
+            </h2>
+            <p className="text-sm sm:text-base leading-[150%]">
+              Real experiences from verified bookings
+            </p>
+          </div>
+          <div className="bg-teal-50 border h-fit w-fit border-teal-600 pl-3 pr-2 rounded-2xl">
+            <span className="text-center">4.8 out of 5 on</span>
+            <span>
               <Icon
                 name="trustpilot"
-                width={97.71}
-                height={24}
-                className=" mb-2 "
+                className="mb-1 sm:mb-[7px] sm:w-[97.7px] sm:h-[27px] h-4 w-[65.14px]"
                 aria-label="Trustpilot"
               ></Icon>
             </span>
-
-            <div className="flex md:flex-row flex-col gap-4" role="list">
-              <span>
-                <Icon
-                  name="shieldcheck"
-                  size={20}
-                  className="mb-1.5"
-                  aria-hidden="true"
-                />{" "}
-                Fully vetted movers
-              </span>
-              <span>
-                {" "}
-                <Icon
-                  name="star"
-                  size={20}
-                  className="mb-1.5"
-                  aria-hidden="true"
-                />{" "}
-                334,000+ authentic reviews
-              </span>
-              <span>
-                {" "}
-                <Icon
-                  name="tag"
-                  size={20}
-                  className="mb-1.5"
-                  aria-hidden="true"
-                />{" "}
-                No hidden fees
-              </span>
-            </div>
           </div>
         </div>
+        <div className="overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeIndex}
+              initial={{ x: 40, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -40, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex gap-4"
+            >
+              <div className="w-[75%] shrink-0">
+                <ReviewCard review={mockReviews[activeIndex]} />
+              </div>
 
-        {/* <StickyFooter className=" self-end">
-          <Button
-            type="submit"
-            variant="cta"
-            onClick={handleSubmit(onSubmit)}
-            disabled={isSubmitting}
-            className="h-12 self-end"
-          >
-            {isSubmitting ? "Loading..." : "Continue"}
-          </Button>
-        </StickyFooter> */}
+              {mockReviews[activeIndex + 1] && (
+                <div className="w-[20%] shrink-0">
+                  <ReviewCard
+                    review={mockReviews[activeIndex + 1]}
+                    className="min-w-[645px] !h-full md:whitespace-nowrap [&_button]:pointer-events-none [&_button]:opacity-40"
+                  />
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        <Pagination
+          data={mockReviews}
+          activeIndex={activeIndex}
+          onPageChange={setActiveIndex}
+          onNext={nextReview}
+          onPrev={prevReview}
+        />
+        <p className="text-center">
+          Only five steps. Takes less than 2 minutes
+        </p>
       </div>
     </WidgetLayout>
   );

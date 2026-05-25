@@ -67,7 +67,7 @@
   --accent-foreground: 222.2 47.4% 11.2%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
+  --border: var(--gray-300);
   --input: 214.3 31.8% 91.4%;
   --ring: 185 50% 43%;
   --radius: 0.5rem;
@@ -119,7 +119,9 @@
   /* ===================== */
   /* BLUE */
   /* ===================== */
+  --color-blue-50: hsl(var(--blue-50));
   --color-blue-100: hsl(var(--blue-100));
+  --color-blue-500: hsl(var(--blue-500));
 
   /* ===================== */
   /* GRAY */
@@ -170,10 +172,6 @@
 }
 
 /* Reset and base styles */
-* {
-  border-color: hsl(var(--border));
-}
-
 html {
   color-scheme: light;
 }
@@ -186,7 +184,10 @@ body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   font-family: var(--font-base);
-  font-size: 14px;
+  font-size: 12px;
+  @media (width >= 40rem /* 640px */) {
+    font-size: 14px;
+  }
 }
 
 h1,

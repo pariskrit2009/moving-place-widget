@@ -1,8 +1,8 @@
 import { StarRating } from "@/components/ui/star-rating";
 import { CrewSizeColumn } from "./CrewSizeColumn";
 import type { ServiceItem } from "../types";
-import { truncateMidLine } from "../helper";
 import { Button } from "@/components/ui/button";
+import { truncateMidLine } from "@/lib/utils/helper";
 
 export function ProviderBlock({ service }: { service: ServiceItem }) {
   return (
