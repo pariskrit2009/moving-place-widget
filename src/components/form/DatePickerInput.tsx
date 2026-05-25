@@ -41,10 +41,10 @@ export function DatePickerInput<T extends FieldValues>({
                     id={id}
                     readOnly
                     value={field.value ? formatIsoDate(field.value) : ""}
-                    placeholder="Select date"
+                    placeholder="mm/dd/yyyy"
                     className="cursor-pointer pr-10"
                   />
-                  <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                  <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none text-gray-500" />
                 </div>
                 <FieldError message={error} />
               </div>

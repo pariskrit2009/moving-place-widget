@@ -12,7 +12,10 @@ const separateDatesSchema = z.object({
 });
 
 export const movingDateSchema = z
-  .discriminatedUnion("hasDifferentDates", [singleDateSchema, separateDatesSchema])
+  .discriminatedUnion("hasDifferentDates", [
+    singleDateSchema,
+    separateDatesSchema,
+  ])
   .refine(
     (data) => {
       if (data.hasDifferentDates) {
@@ -26,7 +29,7 @@ export const movingDateSchema = z
     },
     {
       message: "Loading date must be before or equal to unloading date",
-      path: ["unloadingDate"],
+      path: ["loadingDate"],
     },
   );
 

@@ -7,6 +7,8 @@ import { useWidgetStore } from "@/store";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Controller } from "react-hook-form";
 import { useEstimation } from "@/features/estimation";
+import { Label } from "@/components/ui/label";
+import { Icon } from "@/components/ui/icon";
 
 export default function MovingPage() {
   const { navigateWithParams } = useNavigateWithParams();
@@ -57,11 +59,16 @@ export default function MovingPage() {
             <h2 className="text-xl font-bold text-[#2e343e]">
               When are you moving?
             </h2>
-            <p className="text-sm font-normal text-[#677890]">
-              Select your preferred moving date
-            </p>
+            <div className="flex items-center gap-1">
+              <Icon name="clock" className="text-teal-600" size={20} />
+              <p className="text-sm font-normal text-gray-800">
+                Free cancellation & rescheduling up to 48 hours
+              </p>
+            </div>
           </div>
-
+          <Label className="text-xl font-bold text-[#2e343e]">
+            <p className="mb-2">Moving Date</p>
+          </Label>
           {!hasDifferentDates && (
             <div className="w-full sm:w-1/2">
               <DatePickerInput
@@ -108,7 +115,7 @@ export default function MovingPage() {
                 />
                 <label
                   htmlFor="hasDifferentDates"
-                  className="text-sm font-medium text-[#2e343e] cursor-pointer"
+                  className="text-sm font-normal text-[#2e343e] cursor-pointer"
                 >
                   I need different dates for loading and unloading
                 </label>

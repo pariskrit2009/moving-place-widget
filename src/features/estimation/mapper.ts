@@ -45,7 +45,8 @@ function deriveHeavyItems(
   const items: HeavyItem[] = [];
 
   const pianoQty =
-    pianoDetails.baby_or_grand_pianos + pianoDetails.upright_pianos;
+    Number(pianoDetails.baby_or_grand_pianos) +
+    Number(pianoDetails.upright_pianos);
   if (!Number.isNaN(pianoQty) && +pianoQty > 0) {
     items.push({ itemType: "Pianos", quantity: +pianoQty });
   }
