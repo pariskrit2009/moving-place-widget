@@ -122,7 +122,7 @@ export function LocationSection({
                   <SelectField
                     id={`${propertyTypeName}-floors`}
                     label="Number of floors"
-                    value={field.value}
+                    value={field.value ?? ""}
                     onValueChange={field.onChange}
                     options={FLOOR_OPTIONS}
                     required
@@ -144,7 +144,7 @@ export function LocationSection({
                     <SelectField
                       id={`${propertyTypeName}-elevator`}
                       label="Elevator"
-                      value={field.value}
+                      value={field.value ?? ""}
                       onValueChange={field.onChange}
                       options={ELEVATOR_OPTIONS}
                       required
