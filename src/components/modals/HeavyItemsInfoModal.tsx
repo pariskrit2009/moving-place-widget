@@ -13,7 +13,6 @@ export function HeavyItemsInfoModal({
     <Modal
       open={open}
       onOpenChange={onOpenChange}
-      triggerLabel=""
       className="[&>button]:sr-only"
     >
       <p className="text-2xl font-bold text-[#2e343e] text-center">

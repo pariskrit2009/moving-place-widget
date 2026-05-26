@@ -158,10 +158,10 @@ export default function LocationsPage() {
                       <button
                         type="button"
                         onClick={() => setIsHeavyItemsInfoOpen(true)}
-                        className="absolute top-1/2 -translate-y-1/2 right-3 sm:block cursor-pointer"
+                        className="absolute top-1/2 -translate-y-1/2 right-3 hidden sm:block cursor-pointer"
                         aria-label="Heavy items info"
                       >
-                        <Icon name="info" size={20} />
+                        <Icon name="info" size={20} className="text-teal-600" />
                       </button>
                     </label>
                   </div>

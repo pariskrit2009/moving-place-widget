@@ -1,3 +1,5 @@
 export { ContactInfoSection } from "./ContactInfoSection";
-export { CrewSizeStepper } from "./CrewSizeStepper";
+export { Stepper } from "./CrewSizeStepper";
 export { MoveStepCard } from "./MoveStepCard";
+export { QuoteTimer } from "./QuoteTimer";
+export { JobBadge } from "./JobBadge";
