@@ -10,7 +10,11 @@ export const contactInfoSchema = z.object({
 export const moveStepSchema = z.object({
   address: z.string().min(1, "Address is required"),
   aptSuite: z.string().optional(),
+  city: z.string().min(1, "City is required"),
+  state: z.string().min(1, "State is required"),
+  zipCode: z.string().min(1, "Zip code is required"),
   crewSize: z.number().min(2).max(3),
+  hours: z.number().min(2),
   arrivalTime: z.string().min(1, "Select an arrival time"),
 });
 
