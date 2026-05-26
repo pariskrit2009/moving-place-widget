@@ -4,7 +4,6 @@ import WidgetLayout from "@/components/layout/WidgetLayout";
 import { Button } from "@/components/ui/button";
 import {
   MoverCard,
-  MoversHeader,
   MoversTrustBadges,
   SortDropdown,
 } from "@/features/movers/components";
@@ -15,6 +14,7 @@ import {
   sortProviders,
 } from "@/features/movers";
 import { useWidgetStore } from "@/store";
+import { HeaderWithQuote } from "@/components/layout/HeaderWithQuote";
 
 export default function AllMoversPage() {
   const { navigateWithParams } = useNavigateWithParams();
@@ -43,7 +43,7 @@ export default function AllMoversPage() {
     <WidgetLayout navigateBack={() => navigateWithParams("/movers")}>
       {/* Page header */}
 
-      <MoversHeader header={`${totalCount} available movers`} />
+      <HeaderWithQuote header={`${totalCount} available movers`} />
       <div className="flex flex-col flex-wrap md:flex-row md:items-center relative justify-between space-y-2 md:pt-3 md:pb-7 mt-3 mb-6 md:m-0">
         <MoversTrustBadges />
         <SortDropdown activeSort={activeSort} onSortChange={setActiveSort} />

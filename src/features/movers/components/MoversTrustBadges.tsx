@@ -1,5 +1,5 @@
 import { Icon } from "@/components/ui/icon";
-import { TrustBadge } from "./TrustBadge";
+import { TrustBadge } from "@/components/layout/TrustBadge";
 
 export function MoversTrustBadges() {
   return (

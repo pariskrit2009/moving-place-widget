@@ -21,6 +21,7 @@ import SofaIcon from "@/assets/sofa.svg?react";
 import TruckIcon from "@/assets/truck.svg?react";
 import ThumbsUp from "@/assets/thumbs-up.svg?react";
 import BoxCarry from "@/assets/box-carry.svg?react";
+import SupportIcon from "@/assets/support.svg?react";
 
 import MovingPlaceLogo from "@/assets/moving-place-logo.svg?react";
 import { cn } from "@/lib/utils";
@@ -49,6 +50,7 @@ const icons = {
   dolly: DollyIcon,
   thumbsUp: ThumbsUp,
   boxCarry: BoxCarry,
+  support: SupportIcon,
 } as const;
 
 export type IconName = keyof typeof icons;

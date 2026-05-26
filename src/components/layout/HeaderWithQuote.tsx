@@ -1,7 +1,7 @@
 import { useWidgetStore } from "@/store";
 import { Timer } from "./Timer";
 
-export function MoversHeader({
+export function HeaderWithQuote({
   header = "Out of 6 movers, here is our top pick for your move.",
 }: {
   header?: string;
@@ -9,9 +9,9 @@ export function MoversHeader({
   const selectedMoveOption = useWidgetStore((s) => s.selectedMoveOption);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <div className="flex items-start justify-between gap-4">
-        <h1 className="text-xl sm:text-2xl font-bold leading-8.5 text-gray-800 flex-1">
+        <h1 className="text-xl sm:text-2xl font-bold leading-8.5 whitespace-pre-line  text-gray-800 flex-1">
           {header}
         </h1>
         <Timer className="hidden md:block" />
