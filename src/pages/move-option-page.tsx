@@ -3,12 +3,13 @@ import WidgetLayout from "@/components/layout/WidgetLayout";
 import { useWidgetStore } from "@/store";
 import { MoveOptionCard, type MoveOptionData } from "@/features/move-option";
 import { Icon } from "@/components/ui/icon";
-import { TrustBadge } from "@/features/movers/components";
+
 import { useEffect } from "react";
 import {
   canUseTruckOption,
   reconcileMoveOption,
 } from "@/features/move-option/helper";
+import { TrustBadge } from "@/components/layout/TrustBadge";
 
 const MOVE_OPTIONS: MoveOptionData[] = [
   {

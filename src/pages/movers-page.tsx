@@ -4,7 +4,6 @@ import WidgetLayout from "@/components/layout/WidgetLayout";
 import { Button } from "@/components/ui/button";
 
 import {
-  MoversHeader,
   MoversTrustBadges,
   QuoteCard,
   SortTabs,
@@ -17,6 +16,7 @@ import {
 } from "@/features/movers";
 import { useWidgetStore } from "@/store";
 import { formatIsoDate } from "@/lib/utils/date";
+import { HeaderWithQuote } from "@/components/layout/HeaderWithQuote";
 
 export default function MoversPage() {
   const { navigateWithParams } = useNavigateWithParams();
@@ -58,7 +58,7 @@ export default function MoversPage() {
     <WidgetLayout navigateBack={() => navigateWithParams("/move-option")}>
       {/* Page header */}
       <div className="flex flex-col gap-4">
-        <MoversHeader
+        <HeaderWithQuote
           header={`Out of ${totalCount} movers, here is our top pick for your move.`}
         />
         <MoversTrustBadges />
