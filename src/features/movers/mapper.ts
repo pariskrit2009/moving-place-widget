@@ -46,7 +46,7 @@ export function mapToServiceProviderParams(
 
   let loadingParams: ServiceProviderParams | null = null;
 
-  if (loadingDate && loadLabor && locations.loadingDetails.floors) {
+  if (loadingDate && loadLabor && locations.loadingDetails?.floors) {
     loadingParams = {
       requestedDate: loadingDate,
       loadingZipCode: loadingZip,
@@ -74,7 +74,8 @@ export function mapToServiceProviderParams(
         crewSize: unloadLabor.crewSize,
         sortOrder: "QualityRating",
         serviceType: "Standard",
-        flightsOfStairs: parseInt(locations.unloadingDetails.floors, 10) || 0,
+        flightsOfStairs:
+          parseInt(locations.unloadingDetails?.floors ?? "", 10) || 0,
         onlyAvailable: true,
       };
     }

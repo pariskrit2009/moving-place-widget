@@ -34,6 +34,15 @@ export default function MovingPage() {
   }, [watch, setMovingDateData]);
 
   const hasDifferentDates = watch("hasDifferentDates");
+  const hasStartLocation = !!selectedAddress?.startLocation?.fullAddress;
+  const hasEndLocation = !!selectedAddress?.endLocation?.fullAddress;
+  const isSingleLocation = hasStartLocation !== hasEndLocation;
+
+  const dateLabel = !hasStartLocation
+    ? "Unloading Date"
+    : !hasEndLocation
+      ? "Loading Date"
+      : "Moving Date";
 
   const onSubmit = () => {
     navigateWithParams("/move-option");
@@ -67,14 +76,14 @@ export default function MovingPage() {
             </div>
           </div>
           <Label className="text-xl font-bold text-[#2e343e]">
-            <p className="mb-2">Moving Date</p>
+            <p className="mb-2">{dateLabel}</p>
           </Label>
           {!hasDifferentDates && (
             <div className="w-full sm:w-1/2">
               <DatePickerInput
                 control={control}
                 name="movingDate"
-                label="Moving date"
+                label={dateLabel}
                 id="movingDate"
                 error={errors.movingDate?.message}
                 minDate={new Date()}
@@ -112,6 +121,7 @@ export default function MovingPage() {
                   id="hasDifferentDates"
                   checked={field.value}
                   onCheckedChange={field.onChange}
+                  disabled={isSingleLocation}
                 />
                 <label
                   htmlFor="hasDifferentDates"

@@ -45,14 +45,14 @@ function deriveHeavyItems(
   const items: HeavyItem[] = [];
 
   const pianoQty =
-    Number(pianoDetails.baby_or_grand_pianos) +
-    Number(pianoDetails.upright_pianos);
+    Number(pianoDetails?.baby_or_grand_pianos) +
+    Number(pianoDetails?.upright_pianos);
   if (!Number.isNaN(pianoQty) && +pianoQty > 0) {
     items.push({ itemType: "Pianos", quantity: +pianoQty });
   }
 
   const fieldMap: Array<{
-    key: keyof LocationsFormData["pianoDetails"];
+    key: keyof NonNullable<LocationsFormData["pianoDetails"]>;
     itemType: HeavyItem["itemType"];
   }> = [
     { key: "300_to_450_lbs", itemType: "ItemBetweenThreeAndFourFifty" },
@@ -60,10 +60,12 @@ function deriveHeavyItems(
     { key: "over_600_lbs", itemType: "ItemsSixPlus" },
   ];
 
-  for (const { key, itemType } of fieldMap) {
-    const quantity = pianoDetails[key];
-    if (!Number.isNaN(quantity) && +quantity > 0) {
-      items.push({ itemType, quantity: +quantity });
+  if (pianoDetails) {
+    for (const { key, itemType } of fieldMap) {
+      const quantity = pianoDetails[key];
+      if (!Number.isNaN(quantity) && +quantity > 0) {
+        items.push({ itemType, quantity: +quantity });
+      }
     }
   }
 
@@ -87,7 +89,7 @@ export function mapToEstimationRequest(
   return {
     originZip: originZip ?? null,
     destinationZip: destinationZip ?? null,
-    originAddressType: locations.loadingPropertyType,
+    originAddressType: locations.loadingPropertyType ?? "",
     // originBedroomCount: parseBedroomCount(locations.loadingDetails.bedrooms),
     originBedroomCount: 2,
   };
@@ -102,7 +104,8 @@ export function mapToRecommendationsRequest(
   if (!locations) return null;
 
   const sqFt = parseBedroomCount(
-    +locations.loadingDetails.bedrooms || +locations.unloadingDetails.bedrooms,
+    +(locations.loadingDetails?.bedrooms ?? 0) ||
+      +(locations.unloadingDetails?.bedrooms ?? 0),
   );
   // const linearFeet = deriveLinearFeet(sqFt);
   const heavyItems = deriveHeavyItems(locations.pianoDetails);
@@ -111,7 +114,7 @@ export function mapToRecommendationsRequest(
     sqFt,
     linearFeet: null,
     heavyItems,
-    ...(locations.loadingDetails.floors
+    ...(locations.loadingDetails?.floors
       ? {
           load: {
             flightsOfStairs: parseFlightsOfStairs(
@@ -120,7 +123,7 @@ export function mapToRecommendationsRequest(
           },
         }
       : {}),
-    ...(locations.unloadingDetails.floors
+    ...(locations.unloadingDetails?.floors
       ? {
           unload: {
             flightsOfStairs: parseFlightsOfStairs(

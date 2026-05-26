@@ -1,11 +1,22 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { locationsSchema, type LocationsFormData } from "./schema";
+import {
+  createLocationsSchema,
+  type LocationsFormData,
+} from "./schema";
 import { LOCATIONS_DEFAULT_VALUES } from "./constant";
 
-export function useLocationsForm(defaultValues?: LocationsFormData) {
+interface FormOptions {
+  showLoading?: boolean;
+  showUnloading?: boolean;
+}
+
+export function useLocationsForm(
+  defaultValues?: LocationsFormData,
+  options?: FormOptions,
+) {
   return useForm<LocationsFormData>({
-    resolver: zodResolver(locationsSchema),
+    resolver: zodResolver(createLocationsSchema(options)),
     defaultValues: defaultValues ?? LOCATIONS_DEFAULT_VALUES,
   });
 }

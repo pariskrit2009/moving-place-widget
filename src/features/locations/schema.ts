@@ -16,61 +16,82 @@ const locationDetailsSchema = z.object({
   elevator: z.string(),
 });
 
-export const locationsSchema = z
-  .object({
-    loadingPropertyType: propertyTypeEnum,
-    unloadingPropertyType: propertyTypeEnum,
+interface SchemaOptions {
+  showLoading?: boolean;
+  showUnloading?: boolean;
+}
 
-    loadingDetails: locationDetailsSchema,
-    unloadingDetails: locationDetailsSchema,
+export function createLocationsSchema(options?: SchemaOptions) {
+  const showLoading = options?.showLoading !== false;
+  const showUnloading = options?.showUnloading !== false;
 
-    needsPacking: z.boolean(),
-    needsHeavyItems: z.boolean(),
+  return z
+    .object({
+      loadingPropertyType: propertyTypeEnum.optional(),
+      unloadingPropertyType: propertyTypeEnum.optional(),
 
-    pianoDetails: pianoDetailsSchema,
-  })
-  .superRefine((data, ctx) => {
-    const validate = (
-      type: z.infer<typeof propertyTypeEnum>,
-      details: typeof data.loadingDetails,
-      basePath: "loadingDetails" | "unloadingDetails",
-    ) => {
-      const needsBasic = type === "House" || type === "CondoApt";
+      loadingDetails: locationDetailsSchema.optional(),
+      unloadingDetails: locationDetailsSchema.optional(),
 
-      if (needsBasic) {
-        if (!details.bedrooms) {
-          ctx.addIssue({
-            code: "custom",
-            path: [basePath, "bedrooms"],
-            message: `Please select the number of bedrooms`,
-          });
+      needsPacking: z.boolean(),
+      needsHeavyItems: z.boolean(),
+
+      pianoDetails: pianoDetailsSchema.optional(),
+    })
+    .superRefine((data, ctx) => {
+      const validate = (
+        type: z.infer<typeof propertyTypeEnum>,
+        details: typeof data.loadingDetails,
+        basePath: "loadingDetails" | "unloadingDetails",
+      ) => {
+        const needsBasic = type === "House" || type === "CondoApt";
+
+        if (needsBasic) {
+          if (!details?.bedrooms) {
+            ctx.addIssue({
+              code: "custom",
+              path: [basePath, "bedrooms"],
+              message: `Please select the number of bedrooms`,
+            });
+          }
+
+          if (!details?.floors) {
+            ctx.addIssue({
+              code: "custom",
+              path: [basePath, "floors"],
+              message: `Please select the number of floors`,
+            });
+          }
+
+          if (!details?.elevator && type == "CondoApt") {
+            ctx.addIssue({
+              code: "custom",
+              path: [basePath, "elevator"],
+              message: `Please select the number of elevator`,
+            });
+          }
         }
-
-        if (!details.floors) {
-          ctx.addIssue({
-            code: "custom",
-            path: [basePath, "floors"],
-            message: `Please select the number of floors`,
-          });
-        }
-
-        if (!details.elevator && type == "CondoApt") {
-          ctx.addIssue({
-            code: "custom",
-            path: [basePath, "elevator"],
-            message: `Please select the number of elevator`,
-          });
-        }
+      };
+      if (showLoading) {
+        validate(
+          data.loadingPropertyType!,
+          data.loadingDetails,
+          "loadingDetails",
+        );
       }
-    };
 
-    validate(data.loadingPropertyType, data.loadingDetails, "loadingDetails");
+      if (showUnloading) {
+        validate(
+          data.unloadingPropertyType!,
+          data.unloadingDetails,
+          "unloadingDetails",
+        );
+      }
+    });
+}
 
-    validate(
-      data.unloadingPropertyType,
-      data.unloadingDetails,
-      "unloadingDetails",
-    );
-  });
+export const locationsSchema = createLocationsSchema();
 
-export type LocationsFormData = z.infer<typeof locationsSchema>;
+export type LocationsFormData = z.infer<
+  ReturnType<typeof createLocationsSchema>
+>;
