@@ -172,6 +172,10 @@
 }
 
 /* Reset and base styles */
+* {
+  border-color: hsl(var(--border));
+}
+
 html {
   color-scheme: light;
 }
