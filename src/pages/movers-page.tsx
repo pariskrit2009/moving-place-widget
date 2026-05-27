@@ -7,15 +7,18 @@ import {
   QuoteCard,
   SortTabs,
 } from "@/features/movers/components";
-import type { SortTab } from "@/features/movers/components";
-import { useServiceProviders, toMoverQuote } from "@/features/movers";
+import {
+  useServiceProviders,
+  toMoverQuote,
+  type SortOrder,
+} from "@/features/movers";
 import { useWidgetStore } from "@/store";
 import { formatIsoDate } from "@/lib/utils/date";
 import { HeaderWithQuote } from "@/components/layout/HeaderWithQuote";
 
 export default function MoversPage() {
   const { navigateWithParams } = useNavigateWithParams();
-  const [activeTab, setActiveTab] = useState<SortTab>("BestMatch");
+  const [activeTab, setActiveTab] = useState<SortOrder>("BestMatch");
 
   const { loadingQuery, unloadingQuery } = useServiceProviders(activeTab);
   const { data, isLoading, isError, refetch } = loadingQuery;

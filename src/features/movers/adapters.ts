@@ -5,7 +5,6 @@ import type {
   MoverQuote,
   ServiceItem,
 } from "@/features/movers/types";
-import type { SortTab } from "@/features/movers/components/SortTabs";
 import type { SortOption } from "@/features/movers/components/SortDropdown";
 
 export function toProvider(sp: ServiceProvider): Provider {
@@ -101,7 +100,7 @@ export function toMoverQuote(
 
 export function sortProviders(
   providers: ServiceProvider[],
-  sort: SortTab | SortOption,
+  sort: SortOption,
 ): ServiceProvider[] {
   const sorted = [...providers];
 

@@ -57,10 +57,8 @@ const PIANOS_OPTIONS = [
 ];
 
 const LOCATIONS_DEFAULT_VALUES: LocationsFormData = {
-  loadingPropertyType:
-    undefined as unknown as LocationsFormData["loadingPropertyType"],
-  unloadingPropertyType:
-    undefined as unknown as LocationsFormData["unloadingPropertyType"],
+  loadingPropertyType: undefined,
+  unloadingPropertyType: undefined,
   needsPacking: false,
   needsHeavyItems: false,
   loadingDetails: {
