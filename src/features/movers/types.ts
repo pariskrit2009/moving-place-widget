@@ -16,6 +16,7 @@ export interface ServiceItem {
   provider: Provider;
   movers: number;
   hours: number;
+  hasTruck: boolean;
 }
 
 export interface MoverQuote {
@@ -36,8 +37,13 @@ export interface MoverItem {
   hasTruck: boolean;
 }
 
-export type SortOrder = "QualityRating" | "PriceLowToHigh" | "PriceHighToLow";
-export type ServiceType = "Standard";
+export type SortOrder =
+  | "QualityRating"
+  | "PriceLowToHigh"
+  | "PriceHighToLow"
+  | "BestMatch";
+
+export type ServiceType = "Standard" | "Elite" | "MoversPlusTruck";
 
 export interface ServiceProviderParams {
   requestedDate: string;

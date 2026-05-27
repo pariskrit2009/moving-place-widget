@@ -191,6 +191,7 @@ function LocationSearchInner({
                       key={suggestion.placePrediction?.placeId}
                       value={suggestion.placePrediction?.placeId}
                       onSelect={() => handleSuggestionClick(suggestion)}
+                      className="cursor-pointer"
                     >
                       <MapPin className="h-4 w-4 shrink-0 text-[#677890]" />
                       <div className="truncate">

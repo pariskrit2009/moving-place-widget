@@ -61,11 +61,7 @@ export function MoveStepCard({ stepType, service, form }: MoveStepCardProps) {
             </div>
             <div className="flex items-center gap-2 mt-1">
               <div className="flex items-center gap-1">
-                <Icon
-                  name="circle-info"
-                  size={14}
-                  className="text-[#677890]"
-                />
+                <Icon name="circle-info" size={14} className="text-[#677890]" />
                 <span className="text-xs font-semibold text-[#2e343e]">
                   {service.provider.name}
                 </span>
@@ -91,7 +87,9 @@ export function MoveStepCard({ stepType, service, form }: MoveStepCardProps) {
           <div className="hidden sm:flex items-center gap-3">
             <div className="flex items-center gap-1 rounded-full border border-[#d5dae2] px-2.5 py-0.5">
               <Icon name="clock" size={12} className="text-[#677890]" />
-              <span className="text-xs text-[#677890]">{service.hours} hours</span>
+              <span className="text-xs text-[#677890]">
+                {service.hours} hours
+              </span>
             </div>
             <div className="flex items-center gap-1 rounded-full border border-[#d5dae2] px-2.5 py-0.5">
               <Icon name="person-dolly" size={12} className="text-[#677890]" />
@@ -127,7 +125,9 @@ export function MoveStepCard({ stepType, service, form }: MoveStepCardProps) {
               <Input
                 placeholder="123 Main St"
                 {...register(`${prefix}.address`)}
-                className={stepErrors?.address ? "border-red-400" : "border-[#b1bbc8]"}
+                className={
+                  stepErrors?.address ? "border-red-400" : "border-[#b1bbc8]"
+                }
               />
               {stepErrors?.address && (
                 <span className="text-xs text-red-500">
@@ -141,25 +141,39 @@ export function MoveStepCard({ stepType, service, form }: MoveStepCardProps) {
               className="border-[#b1bbc8]"
             />
             <div className="grid grid-cols-3 gap-3">
-              <FormField label="City or town" required error={stepErrors?.city?.message}>
+              <FormField
+                label="City or town"
+                required
+                error={stepErrors?.city?.message}
+              >
                 <Input
                   placeholder="San Francisco"
                   {...register(`${prefix}.city`)}
-                  className={stepErrors?.city ? "border-red-400" : "border-[#b1bbc8]"}
+                  className={
+                    stepErrors?.city ? "border-red-400" : "border-[#b1bbc8]"
+                  }
                 />
               </FormField>
-              <FormField label="State" required error={stepErrors?.state?.message}>
+              <FormField
+                label="State"
+                required
+                error={stepErrors?.state?.message}
+              >
                 <Input
                   placeholder="CA"
                   {...register(`${prefix}.state`)}
-                  className={stepErrors?.state ? "border-red-400" : "border-[#b1bbc8]"}
+                  className={
+                    stepErrors?.state ? "border-red-400" : "border-[#b1bbc8]"
+                  }
                 />
               </FormField>
               <FormField label="Zip code" error={stepErrors?.zipCode?.message}>
                 <Input
                   placeholder="94109"
                   {...register(`${prefix}.zipCode`)}
-                  className={stepErrors?.zipCode ? "border-red-400" : "border-[#b1bbc8]"}
+                  className={
+                    stepErrors?.zipCode ? "border-red-400" : "border-[#b1bbc8]"
+                  }
                 />
               </FormField>
             </div>
@@ -235,14 +249,18 @@ export function MoveStepCard({ stepType, service, form }: MoveStepCardProps) {
               />
             </div>
             <div className="flex items-start gap-2 rounded-lg bg-[#f8f9fb] p-3">
-              <Icon name="truck" size={16} className="text-[#677890] mt-0.5 shrink-0" />
+              <Icon
+                name="truck"
+                size={16}
+                className="text-[#677890] mt-0.5 shrink-0"
+              />
               <div className="flex flex-col gap-0.5">
                 <span className="text-xs text-[#2e343e]">
                   You provide transportation for your move
                 </span>
                 <span className="text-xs text-[#677890]">
-                  Mover's minimum crew: {service.movers} movers × {service.hours}{" "}
-                  hours
+                  Mover's minimum crew: {service.movers} movers ×{" "}
+                  {service.hours} hours
                 </span>
               </div>
             </div>

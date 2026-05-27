@@ -8,6 +8,7 @@ export function useServiceProviders() {
   const locations = useWidgetStore((s) => s.locations);
   const movingDateData = useWidgetStore((s) => s.movingDateData);
   const estimation = useWidgetStore((s) => s.estimation);
+  const moveOption = useWidgetStore((s) => s.selectedMoveOption);
   const setServiceProviders = useWidgetStore((s) => s.setServiceProviders);
 
   const { loadingParams, unloadingParams } = mapToServiceProviderParams({
@@ -15,6 +16,7 @@ export function useServiceProviders() {
     locations,
     movingDateData,
     estimation,
+    moveOption,
   });
 
   const loadingQuery = useQuery({

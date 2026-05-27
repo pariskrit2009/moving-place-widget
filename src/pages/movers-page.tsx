@@ -9,11 +9,7 @@ import {
   SortTabs,
 } from "@/features/movers/components";
 import type { SortTab } from "@/features/movers/components";
-import {
-  useServiceProviders,
-  toMoverQuote,
-  sortProviders,
-} from "@/features/movers";
+import { useServiceProviders, toMoverQuote } from "@/features/movers";
 import { useWidgetStore } from "@/store";
 import { formatIsoDate } from "@/lib/utils/date";
 import { HeaderWithQuote } from "@/components/layout/HeaderWithQuote";
@@ -22,15 +18,15 @@ export default function MoversPage() {
   const { navigateWithParams } = useNavigateWithParams();
   const [activeTab, setActiveTab] = useState<SortTab>("best-value");
 
-  const { loadingQuery } = useServiceProviders();
+  const { loadingQuery, unloadingQuery } = useServiceProviders();
   const { data, isLoading, isError, refetch } = loadingQuery;
   const search = useWidgetStore((s) => s.selectedPlaces);
   const movingDateData = useWidgetStore((s) => s.movingDateData);
 
-  const providers = useMemo(
-    () => sortProviders(data?.serviceProviders ?? [], activeTab),
-    [data?.serviceProviders, activeTab],
-  );
+  // const providers = useMemo(
+  //   () => sortProviders(data?.serviceProviders ?? [], activeTab),
+  //   [data?.serviceProviders, activeTab],
+  // );
 
   const storeContext = useMemo(() => {
     const loadingDate = movingDateData?.hasDifferentDates
@@ -48,8 +44,19 @@ export default function MoversPage() {
   }, [movingDateData, search]);
 
   const quote = useMemo(
-    () => (providers.length > 0 ? toMoverQuote(providers, storeContext) : null),
-    [providers, storeContext],
+    () =>
+      data?.serviceProviders && data?.serviceProviders.length > 0
+        ? toMoverQuote(
+            data?.serviceProviders,
+            unloadingQuery?.data?.serviceProviders ?? [],
+            storeContext,
+          )
+        : null,
+    [
+      data?.serviceProviders,
+      unloadingQuery?.data?.serviceProviders,
+      storeContext,
+    ],
   );
 
   const totalCount = data?.serviceProviders.length ?? 0;
