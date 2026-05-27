@@ -26,6 +26,7 @@ const mockLoadingService: ServiceItem = {
   },
   movers: 2,
   hours: 2,
+  hasTruck: true,
 };
 
 const mockUnloadingService: ServiceItem = {
@@ -43,6 +44,7 @@ const mockUnloadingService: ServiceItem = {
   },
   movers: 2,
   hours: 2,
+  hasTruck: true,
 };
 
 export default function CustomizePage() {

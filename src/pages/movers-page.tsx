@@ -2,17 +2,15 @@ import { useState, useMemo } from "react";
 import { useNavigateWithParams } from "@/hooks";
 import WidgetLayout from "@/components/layout/WidgetLayout";
 import { Button } from "@/components/ui/button";
-
 import {
   MoversTrustBadges,
   QuoteCard,
   SortTabs,
 } from "@/features/movers/components";
-import type { SortTab } from "@/features/movers/components";
 import {
   useServiceProviders,
   toMoverQuote,
-  sortProviders,
+  type SortOrder,
 } from "@/features/movers";
 import { useWidgetStore } from "@/store";
 import { formatIsoDate } from "@/lib/utils/date";
@@ -20,17 +18,12 @@ import { HeaderWithQuote } from "@/components/layout/HeaderWithQuote";
 
 export default function MoversPage() {
   const { navigateWithParams } = useNavigateWithParams();
-  const [activeTab, setActiveTab] = useState<SortTab>("best-value");
+  const [activeTab, setActiveTab] = useState<SortOrder>("BestMatch");
 
-  const { loadingQuery } = useServiceProviders();
+  const { loadingQuery, unloadingQuery } = useServiceProviders(activeTab);
   const { data, isLoading, isError, refetch } = loadingQuery;
   const search = useWidgetStore((s) => s.selectedPlaces);
   const movingDateData = useWidgetStore((s) => s.movingDateData);
-
-  const providers = useMemo(
-    () => sortProviders(data?.serviceProviders ?? [], activeTab),
-    [data?.serviceProviders, activeTab],
-  );
 
   const storeContext = useMemo(() => {
     const loadingDate = movingDateData?.hasDifferentDates
@@ -47,10 +40,14 @@ export default function MoversPage() {
     };
   }, [movingDateData, search]);
 
-  const quote = useMemo(
-    () => (providers.length > 0 ? toMoverQuote(providers, storeContext) : null),
-    [providers, storeContext],
-  );
+  const quote =
+    data?.serviceProviders && data?.serviceProviders.length > 0
+      ? toMoverQuote(
+          data?.serviceProviders,
+          unloadingQuery?.data?.serviceProviders ?? [],
+          storeContext,
+        )
+      : null;
 
   const totalCount = data?.serviceProviders.length ?? 0;
 

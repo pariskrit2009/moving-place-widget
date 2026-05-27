@@ -5,7 +5,6 @@ import type {
   MoverQuote,
   ServiceItem,
 } from "@/features/movers/types";
-import type { SortTab } from "@/features/movers/components/SortTabs";
 import type { SortOption } from "@/features/movers/components/SortDropdown";
 
 export function toProvider(sp: ServiceProvider): Provider {
@@ -65,18 +64,23 @@ export function toServiceItem(
     provider: toProvider(sp),
     movers: sp.actualCrewSize,
     hours: sp.actualNumHours,
+    hasTruck: Boolean(sp.transportOptionID),
   };
 }
 
 export function toMoverQuote(
   providers: ServiceProvider[],
+  unloadingProviders: ServiceProvider[],
   context: StoreContext,
 ): MoverQuote {
   const topPick = providers[0];
+  const unloadingTopPick = unloadingProviders[0];
 
   return {
     id: String(topPick.providerId),
-    totalPrice: topPick.internal_GrandTotalWithFees || topPick.price,
+    totalPrice:
+      topPick.internal_GrandTotalWithFees +
+        unloadingTopPick?.internal_GrandTotalWithFees || topPick.price,
     lowestPrice: Math.min(...providers.map((p) => p.price)),
     topRatedPrice:
       providers.find(
@@ -84,13 +88,19 @@ export function toMoverQuote(
           p.ratingAverage ===
           Math.max(...providers.map((r) => r.ratingAverage)),
       )?.price ?? topPick.price,
-    services: [toServiceItem(topPick, "loading", context)],
+    services:
+      unloadingProviders?.length > 0
+        ? [
+            toServiceItem(topPick, "loading", context),
+            toServiceItem(unloadingTopPick, "unloading", context),
+          ]
+        : [toServiceItem(topPick, "loading", context)],
   };
 }
 
 export function sortProviders(
   providers: ServiceProvider[],
-  sort: SortTab | SortOption,
+  sort: SortOption,
 ): ServiceProvider[] {
   const sorted = [...providers];
 

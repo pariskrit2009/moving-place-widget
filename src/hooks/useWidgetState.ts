@@ -8,13 +8,13 @@ const routeStepMap: Record<string, number> = {
   "/movers": 5,
   "/all-movers": 5,
   "/customize": 6,
-  "/quote": 7,
-  "/checkout": 8,
+  // "/quote": 7,
+  // "/checkout": 8,
 };
 
 export function useWidgetState() {
   const { pathname } = useLocation();
-  const totalSteps = 8;
+  const totalSteps = 6;
   const currentStep = routeStepMap[pathname] ?? 1;
 
   return {

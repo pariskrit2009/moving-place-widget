@@ -4,12 +4,20 @@ import type { MovingDateFormData } from "@/features/moving/schema";
 import type { UnifiedEstimationResponse } from "@/features/estimation/types";
 import type { ServiceProviderParams } from "./types";
 import type { SearchFormData } from "../search/schema";
+import type { MoveOption } from "../move-option/schema";
 
 interface ServiceProviderMapperInput {
   search: SearchFormData | null;
   locations: LocationsFormData | null;
   movingDateData: MovingDateFormData | null;
   estimation: UnifiedEstimationResponse | null;
+  moveOption: MoveOption | null;
+}
+
+function toServiceType(
+  moveOption: MoveOption | null,
+): ServiceProviderParams["serviceType"] {
+  return moveOption === "movers-truck" ? "MoversPlusTruck" : "Standard";
 }
 
 export interface ServiceProviderMapperResult {
@@ -20,7 +28,9 @@ export interface ServiceProviderMapperResult {
 export function mapToServiceProviderParams(
   input: ServiceProviderMapperInput,
 ): ServiceProviderMapperResult {
-  const { search, locations, movingDateData, estimation } = input;
+  const { search, locations, movingDateData, estimation, moveOption } = input;
+
+  const serviceType = toServiceType(moveOption);
   const empty: ServiceProviderMapperResult = {
     loadingParams: null,
     unloadingParams: null,
@@ -50,10 +60,11 @@ export function mapToServiceProviderParams(
     loadingParams = {
       requestedDate: loadingDate,
       loadingZipCode: loadingZip,
+      unloadingZipCode: unloadingZip,
       laborHours: loadLabor.laborHours,
       crewSize: loadLabor.crewSize,
-      sortOrder: "QualityRating",
-      serviceType: "Standard",
+      sortOrder: "BestMatch",
+      serviceType,
       flightsOfStairs: parseInt(locations.loadingDetails.floors, 10) || 0,
       onlyAvailable: true,
     };
@@ -61,25 +72,23 @@ export function mapToServiceProviderParams(
 
   // --- Unloading params (only when different dates) ---
   let unloadingParams: ServiceProviderParams | null = null;
-
-  if (!isSameDate && unloadingZip && unloadLabor) {
+  if (movingDateData.hasDifferentDates && unloadingZip && unloadLabor) {
     const unloadingDate = formatIsoDate(movingDateData.unloadingDate);
 
     if (unloadingDate) {
       unloadingParams = {
         requestedDate: unloadingDate,
-        loadingZipCode: "89109",
-        unloadingZipCode: "94551",
+        loadingZipCode: loadingZip,
+        unloadingZipCode: unloadingZip,
         laborHours: unloadLabor.laborHours,
         crewSize: unloadLabor.crewSize,
-        sortOrder: "QualityRating",
-        serviceType: "Standard",
+        sortOrder: "BestMatch",
+        serviceType,
         flightsOfStairs:
           parseInt(locations.unloadingDetails?.floors ?? "", 10) || 0,
         onlyAvailable: true,
       };
     }
   }
-
   return { loadingParams, unloadingParams };
 }

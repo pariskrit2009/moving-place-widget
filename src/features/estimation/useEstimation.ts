@@ -26,7 +26,6 @@ export function useEstimation() {
         input.search?.startLocation?.fullAddress &&
         input.search?.endLocation?.fullAddress
       );
-      console.log(input.search?.startLocation, input.search?.endLocation);
       if (!input.hasDifferentDates && hasBothLocations) {
         const request = mapToEstimationRequest({
           search: input.search,

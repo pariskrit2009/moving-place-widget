@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-const propertyTypeEnum = z.enum(["House", "CondoApt", "StorageUnit"]);
+const propertyTypeEnum = z.enum(["House", "CondoApt", "StorageUnit"], {
+  error: "Property type is required",
+});
 
 const pianoDetailsSchema = z.object({
   baby_or_grand_pianos: z.string(),
@@ -33,8 +35,8 @@ export function createLocationsSchema(options?: SchemaOptions) {
       loadingDetails: locationDetailsSchema.optional(),
       unloadingDetails: locationDetailsSchema.optional(),
 
-      needsPacking: z.boolean(),
-      needsHeavyItems: z.boolean(),
+      needsPacking: z.boolean().optional(),
+      needsHeavyItems: z.boolean().optional(),
 
       pianoDetails: pianoDetailsSchema.optional(),
     })
@@ -73,6 +75,13 @@ export function createLocationsSchema(options?: SchemaOptions) {
         }
       };
       if (showLoading) {
+        if (!data.loadingPropertyType) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["loadingPropertyType"],
+            message: "Please select a property type",
+          });
+        }
         validate(
           data.loadingPropertyType!,
           data.loadingDetails,
@@ -81,6 +90,13 @@ export function createLocationsSchema(options?: SchemaOptions) {
       }
 
       if (showUnloading) {
+        if (!data.unloadingPropertyType) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["unloadingPropertyType"],
+            message: "Please select a property type",
+          });
+        }
         validate(
           data.unloadingPropertyType!,
           data.unloadingDetails,

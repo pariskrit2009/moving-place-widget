@@ -3,9 +3,11 @@ import { Icon } from "@/components/ui/icon";
 export function CrewSizeColumn({
   movers,
   hours,
+  hasTruck = false,
 }: {
   movers: number;
   hours: number;
+  hasTruck?: boolean;
 }) {
   return (
     <div className="flex flex-col px-6 items-center gap-[6px] rounded-xl bg-gray-50 py-[10px]">
@@ -23,6 +25,14 @@ export function CrewSizeColumn({
             {hours} hours
           </span>
         </div>
+        {hasTruck && (
+          <div className="flex flex-col items-center gap-0">
+            <Icon name="truck" size={24} className="text-gray-800" />
+            <span className="text-xs font-bold text-gray-800 whitespace-nowrap">
+              1 truck
+            </span>
+          </div>
+        )}
       </div>
       <div className="flex items-center gap-0.5 leading-[16px] justify-center">
         <span className="text-[10px] font-normal text-teal-600 whitespace-nowrap">

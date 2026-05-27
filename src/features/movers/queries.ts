@@ -2,12 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useWidgetStore } from "@/store";
 import { getServiceProviders } from "./api";
 import { mapToServiceProviderParams } from "./mapper";
+import type { SortOrder } from "./types";
 
-export function useServiceProviders() {
+export function useServiceProviders(sortOrder: SortOrder = "BestMatch") {
   const search = useWidgetStore((s) => s.selectedPlaces);
   const locations = useWidgetStore((s) => s.locations);
   const movingDateData = useWidgetStore((s) => s.movingDateData);
   const estimation = useWidgetStore((s) => s.estimation);
+  const moveOption = useWidgetStore((s) => s.selectedMoveOption);
   const setServiceProviders = useWidgetStore((s) => s.setServiceProviders);
 
   const { loadingParams, unloadingParams } = mapToServiceProviderParams({
@@ -15,12 +17,13 @@ export function useServiceProviders() {
     locations,
     movingDateData,
     estimation,
+    moveOption,
   });
 
   const loadingQuery = useQuery({
-    queryKey: ["service-providers", "loading", loadingParams],
+    queryKey: ["service-providers", "loading", loadingParams, sortOrder],
     queryFn: async () => {
-      const data = await getServiceProviders(loadingParams!);
+      const data = await getServiceProviders({ ...loadingParams!, sortOrder });
       setServiceProviders("loading", data.serviceProviders);
       return data;
     },
@@ -29,9 +32,9 @@ export function useServiceProviders() {
   });
 
   const unloadingQuery = useQuery({
-    queryKey: ["service-providers", "unloading", unloadingParams],
+    queryKey: ["service-providers", "unloading", unloadingParams, sortOrder],
     queryFn: async () => {
-      const data = await getServiceProviders(unloadingParams!);
+      const data = await getServiceProviders({ ...unloadingParams!, sortOrder });
       setServiceProviders("unloading", data.serviceProviders);
       return data;
     },
