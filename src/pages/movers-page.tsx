@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import { useNavigateWithParams } from "@/hooks";
 import WidgetLayout from "@/components/layout/WidgetLayout";
 import { Button } from "@/components/ui/button";
-
 import {
   MoversTrustBadges,
   QuoteCard,
@@ -16,17 +15,12 @@ import { HeaderWithQuote } from "@/components/layout/HeaderWithQuote";
 
 export default function MoversPage() {
   const { navigateWithParams } = useNavigateWithParams();
-  const [activeTab, setActiveTab] = useState<SortTab>("best-value");
+  const [activeTab, setActiveTab] = useState<SortTab>("BestMatch");
 
-  const { loadingQuery, unloadingQuery } = useServiceProviders();
+  const { loadingQuery, unloadingQuery } = useServiceProviders(activeTab);
   const { data, isLoading, isError, refetch } = loadingQuery;
   const search = useWidgetStore((s) => s.selectedPlaces);
   const movingDateData = useWidgetStore((s) => s.movingDateData);
-
-  // const providers = useMemo(
-  //   () => sortProviders(data?.serviceProviders ?? [], activeTab),
-  //   [data?.serviceProviders, activeTab],
-  // );
 
   const storeContext = useMemo(() => {
     const loadingDate = movingDateData?.hasDifferentDates
@@ -43,21 +37,14 @@ export default function MoversPage() {
     };
   }, [movingDateData, search]);
 
-  const quote = useMemo(
-    () =>
-      data?.serviceProviders && data?.serviceProviders.length > 0
-        ? toMoverQuote(
-            data?.serviceProviders,
-            unloadingQuery?.data?.serviceProviders ?? [],
-            storeContext,
-          )
-        : null,
-    [
-      data?.serviceProviders,
-      unloadingQuery?.data?.serviceProviders,
-      storeContext,
-    ],
-  );
+  const quote =
+    data?.serviceProviders && data?.serviceProviders.length > 0
+      ? toMoverQuote(
+          data?.serviceProviders,
+          unloadingQuery?.data?.serviceProviders ?? [],
+          storeContext,
+        )
+      : null;
 
   const totalCount = data?.serviceProviders.length ?? 0;
 
