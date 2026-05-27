@@ -17,7 +17,7 @@ interface ServiceProviderMapperInput {
 function toServiceType(
   moveOption: MoveOption | null,
 ): ServiceProviderParams["serviceType"] {
-  return moveOption === "movers-truck" ? "MoversPlusTruck" : "Elite";
+  return moveOption === "movers-truck" ? "MoversPlusTruck" : "Standard";
 }
 
 export interface ServiceProviderMapperResult {
