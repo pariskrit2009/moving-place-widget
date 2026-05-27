@@ -8,7 +8,7 @@ import { useWidgetStore } from "@/store";
 export function MoverCard({ mover, onAction }: { mover: MoverItem; onAction?: (mover: MoverItem) => void }) {
   const selectedMoveOption = useWidgetStore((s) => s.selectedMoveOption);
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-4">
+    <div className="rounded-2xl border bg-white p-4">
       <div className="flex flex-col justify-between md:flex-row md:gap-8">
         {/* Provider info row */}
         <div className="flex flex-1 items-start gap-2">

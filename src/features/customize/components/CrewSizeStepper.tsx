@@ -1,7 +1,10 @@
+import { Icon, type IconName } from "@/components/ui/icon";
+import { cn } from "@/lib/utils";
 import { Minus, Plus } from "lucide-react";
 
 interface StepperProps {
-  label: string;
+  icon: string;
+  className?: string;
   value: number;
   min: number;
   max: number;
@@ -10,42 +13,44 @@ interface StepperProps {
 }
 
 export function Stepper({
-  label,
+  icon,
   value,
   min,
   max,
   onChange,
+  className,
   displayText,
 }: StepperProps) {
   return (
-    <div className="flex flex-col gap-2">
-      <span className="text-sm font-bold text-[#2e343e]">{label}</span>
-      <div className="flex items-center gap-3">
+    <div className={cn("flex flex-col items-center gap-2", className)}>
+      <Icon name={icon as IconName} size={30} className="text-gray-500" />
+
+      <div className="flex items-center bg-gray-50 rounded-[36px] py-0.5 px-[6.5px] gap-3">
         <button
           type="button"
           onClick={() => onChange(Math.max(min, value - 1))}
           disabled={value <= min}
-          className="flex size-8 items-center justify-center rounded-full border border-[#b1bbc8] text-[#677890] transition-colors hover:bg-gray-50 disabled:opacity-30 disabled:hover:bg-transparent"
+          className="transition-colors text-teal-500 cursor-pointer hover:text-teal-800 disabled:text-gray-200 disabled:cursor-not-allowed "
         >
-          <Minus className="size-4" />
+          <Minus className="size-[15px]" />
         </button>
-        <div className="flex flex-col items-center min-w-10">
-          <span className="text-lg font-bold text-[#2e343e]">{value}</span>
-          {displayText && (
-            <span className="text-xs text-[#677890]">
-              {displayText(value)}
-            </span>
-          )}
+        <div className="flex flex-col items-center">
+          <span className="text-base font-bold">{value}</span>
         </div>
         <button
           type="button"
           onClick={() => onChange(Math.min(max, value + 1))}
           disabled={value >= max}
-          className="flex size-8 items-center justify-center rounded-full border border-[#b1bbc8] text-[#677890] transition-colors hover:bg-gray-50 disabled:opacity-30 disabled:hover:bg-transparent"
+          className="transition-colors text-teal-500 cursor-pointer hover:text-teal-800 disabled:text-gray-200 disabled:cursor-not-allowed "
         >
-          <Plus className="size-4" />
+          <Plus className="size-[15px]" />
         </button>
       </div>
+      {displayText && (
+        <span className="text-xs font-bold capitalize text-center">
+          {displayText(value)}
+        </span>
+      )}
     </div>
   );
 }

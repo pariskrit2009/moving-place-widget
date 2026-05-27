@@ -1,0 +1,94 @@
+import { useFormContext } from "react-hook-form";
+import { Stepper } from "./CrewSizeStepper";
+import type { CustomizeFormData } from "../schema";
+import type { ServiceItem } from "@/features/movers/types";
+import { Icon } from "@/components/ui/icon";
+import { useWidgetStore } from "@/store";
+import { Button } from "@/components/ui/button";
+
+interface LoadingOrUnloadingCrewProps {
+  stepType?: "loading" | "unloading";
+  service: ServiceItem;
+}
+
+export function LoadingOrUnloadingCrew({
+  stepType = "loading",
+  service,
+}: LoadingOrUnloadingCrewProps) {
+  const { setValue, watch } = useFormContext<CustomizeFormData>();
+  const selectedMoveOption = useWidgetStore((s) => s.selectedMoveOption);
+
+  const prefix = stepType;
+  const crewSize = watch(`${prefix}.crewSize`) ?? 2;
+  const hours = watch(`${prefix}.hours`) ?? service.hours;
+
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <h3 className="text-sm font-bold text-[#2e343e]">
+        Confirm your {stepType} crew
+      </h3>
+      <div className="flex items-start gap-2">
+        <Stepper
+          icon="clock"
+          value={hours}
+          min={2}
+          max={8}
+          onChange={(v) =>
+            setValue(`${prefix}.hours`, v, { shouldValidate: true })
+          }
+          displayText={(v) => `hour${v > 1 ? "s" : ""}`}
+        />
+        <Stepper
+          icon="movers-icon"
+          value={crewSize}
+          min={2}
+          max={3}
+          onChange={(v) =>
+            setValue(`${prefix}.crewSize`, v, {
+              shouldValidate: true,
+            })
+          }
+          displayText={(v) => `mover${v > 1 ? "s" : ""}`}
+        />
+        {selectedMoveOption === "movers-only" && (
+          <Stepper
+            icon="truck"
+            value={crewSize}
+            min={2}
+            max={3}
+            onChange={(v) =>
+              setValue(`${prefix}.crewSize`, v, {
+                shouldValidate: true,
+              })
+            }
+            displayText={() => `Truck (20')`}
+          />
+        )}
+      </div>
+      <Button
+        onClick={() => {}}
+        className="text-teal-600 cursor-pointer !text-base !p-0 min-h-fit w-fit cursor-pointer"
+      >
+        Customize your plan
+      </Button>
+
+      <div className="flex flex-col gap-1 items-center">
+        {selectedMoveOption === "movers-only" && (
+          <div className="flex items-start gap-2 rounded-lg">
+            <Icon
+              name="truck-slash"
+              size={16}
+              className="text-red-400 shrink-0"
+            />
+            <span className="text-xs text-[#2e343e]">
+              You provide transportation for your move
+            </span>
+          </div>
+        )}
+        <span className="text-xs text-[#677890]">
+          Mover's minimum crew: {service.movers} movers × {service.hours} hours
+        </span>
+      </div>
+    </div>
+  );
+}

@@ -18,7 +18,7 @@
   --yellow-100: 47 100% 89%;
   --yellow-200: 47 100% 77%;
   --yellow-300: 45 100% 66%;
-  --yellow-400: 43 73% 55%;
+  --yellow-400: 45 100% 53%;
   --yellow-500: 40 75% 49%;
   --yellow-600: 36 78% 42%;
   --yellow-700: 31 74% 35%;
@@ -52,7 +52,7 @@
 
   /* Base theme variables - Light mode (default) */
   --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
+  --foreground: var(--gray-800);
   --card: 0 0% 100%;
   --card-foreground: 222.2 84% 4.9%;
   --popover: 0 0% 100%;
@@ -67,7 +67,7 @@
   --accent-foreground: 222.2 47.4% 11.2%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 210 40% 98%;
-  --border: var(--gray-300);
+  --border: var(--gray-200);
   --input: 214.3 31.8% 91.4%;
   --ring: 185 50% 43%;
   --radius: 0.5rem;
