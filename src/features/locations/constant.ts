@@ -7,12 +7,12 @@ const PROPERTY_OPTIONS = [
 ] as const;
 
 const BEDROOM_OPTIONS = [
-  { value: "300", label: "No Bedrooms" },
-  { value: "400", label: "1 Bedroom" },
-  { value: "500", label: "2 Bedrooms" },
-  { value: "600", label: "3 Bedrooms" },
-  { value: "700", label: "4 Bedrooms" },
-  { value: "800", label: "5 Bedrooms" },
+  { value: "300", label: "No Bedrooms", number: 0 },
+  { value: "400", label: "1 Bedroom", number: 1 },
+  { value: "500", label: "2 Bedrooms", number: 2 },
+  { value: "600", label: "3 Bedrooms", number: 3 },
+  { value: "700", label: "4 Bedrooms", number: 4 },
+  { value: "800", label: "5 Bedrooms", number: 5 },
 ] as const;
 
 const FLOOR_OPTIONS = [
