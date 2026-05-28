@@ -49,7 +49,8 @@ const PERSIST_KEYS: (keyof WidgetStore)[] = [
   "estimation",
   "loadingServiceProviders",
   "unloadingServiceProviders",
-  "selectedProviderId",
+  "selectedLoadingProviderId",
+  "selectedUnloadingProviderId",
 ];
 
 export const useWidgetStore = create<WidgetStore>()(

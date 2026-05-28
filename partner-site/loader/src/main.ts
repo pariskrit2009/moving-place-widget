@@ -1,5 +1,6 @@
 type LoaderConfig = {
-  widgetKey: string;
+  publicToken: string;
+  partnerDomain: string;
   containerId: string;
   widgetOrigin: string;
   apiUrl?: string;
@@ -14,7 +15,8 @@ function getCurrentScript(): HTMLScriptElement | null {
 }
 
 function readConfig(script: HTMLScriptElement): LoaderConfig | null {
-  const widgetKey = script.dataset.widgetKey;
+  const publicToken = script.dataset.publicToken;
+  const partnerDomain = script.dataset.partnerDomain;
   const containerId = script.dataset.containerId || "moving-place-widget";
   const widgetOrigin = script.dataset.widgetOrigin || "";
   const apiUrl = script.dataset.apiUrl;
@@ -23,13 +25,19 @@ function readConfig(script: HTMLScriptElement): LoaderConfig | null {
   const secondaryColor = script.dataset.secondaryColor;
   const height = script.dataset.height || "";
 
-  if (!widgetKey) {
-    console.error("[MovingPlaceWidget] Missing data-widget-key");
+  if (!publicToken) {
+    console.error("[MovingPlaceWidget] Missing data-public-token");
+    return null;
+  }
+
+  if (!partnerDomain) {
+    console.error("[MovingPlaceWidget] Missing data-partner-domain");
     return null;
   }
 
   return {
-    widgetKey,
+    publicToken,
+    partnerDomain,
     containerId,
     widgetOrigin,
     apiUrl,
@@ -42,7 +50,8 @@ function readConfig(script: HTMLScriptElement): LoaderConfig | null {
 
 function createIframe(config: LoaderConfig): HTMLIFrameElement {
   const params = new URLSearchParams({
-    widgetKey: config.widgetKey,
+    publicToken: config.publicToken,
+    partnerDomain: config.partnerDomain,
     theme: config.theme || "light",
     hostOrigin: window.location.origin,
   });

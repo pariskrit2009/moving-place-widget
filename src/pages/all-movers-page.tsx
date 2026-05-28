@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useNavigateWithParams } from "@/hooks";
 import WidgetLayout from "@/components/layout/WidgetLayout";
 import { Button } from "@/components/ui/button";
@@ -7,43 +8,79 @@ import {
   MoversTrustBadges,
   SortDropdown,
 } from "@/features/movers/components";
-import type { SortOption } from "@/features/movers/components/SortDropdown";
 import {
   useServiceProviders,
   toMoverItem,
-  sortProviders,
+  type SortOrder,
+  SORT_ORDER,
 } from "@/features/movers";
 import { useWidgetStore } from "@/store";
 import { HeaderWithQuote } from "@/components/layout/HeaderWithQuote";
 
 export default function AllMoversPage() {
+  const [searchParams] = useSearchParams();
   const { navigateWithParams } = useNavigateWithParams();
-  const [activeSort, setActiveSort] = useState<SortOption>("best-value");
+  const [activeSort, setActiveSort] = useState<SortOrder>(SORT_ORDER.BestMatch);
 
-  const { loadingQuery } = useServiceProviders();
-  const { data, isLoading, isError, refetch } = loadingQuery;
+  const movingDateData = useWidgetStore((s) => s.movingDateData);
   const selectedMoveOption = useWidgetStore((s) => s.selectedMoveOption);
-
-  const sortedProviders = useMemo(
-    () => sortProviders(data?.serviceProviders ?? [], activeSort),
-    [data?.serviceProviders, activeSort],
+  const selectUnloadingProvider = useWidgetStore(
+    (s) => s.selectUnloadingProvider,
   );
+  const isTwoPhase = movingDateData?.hasDifferentDates === true;
+  const phase = searchParams.get("phase");
+
+  const { loadingQuery, unloadingQuery } = useServiceProviders(activeSort);
+
+  const activeQuery = (() => {
+    if (!isTwoPhase) return loadingQuery;
+    if (phase === "unloading") return unloadingQuery;
+    return loadingQuery;
+  })();
+
+  const { data, isLoading, isError, refetch } = activeQuery;
 
   const moverItems = useMemo(
     () =>
-      sortedProviders.map((sp) =>
+      data?.serviceProviders?.map((sp) =>
         toMoverItem(sp, selectedMoveOption ?? "movers-only"),
       ),
-    [sortedProviders, selectedMoveOption],
+    [data?.serviceProviders, selectedMoveOption],
   );
 
-  const totalCount = data?.serviceProviders.length ?? 0;
+  const totalCount = data?.serviceProviders?.length ?? 0;
+
+  const headerText = isTwoPhase
+    ? phase === "unloading"
+      ? `${totalCount} other similar movers for unloading`
+      : `${totalCount} other similar movers for loading`
+    : `${totalCount} other similar movers`;
+
+  const handleSelectMover = (mover: { id: string }) => {
+    const providerId = Number(mover.id);
+
+    if (!isTwoPhase) {
+      useWidgetStore.getState().selectLoadingProvider(providerId);
+      navigateWithParams("/customize");
+      return;
+    }
+
+    if (phase !== "unloading") {
+      useWidgetStore.getState().selectLoadingProvider(providerId);
+      navigateWithParams("/all-movers", {
+        searchParams: { phase: "unloading" },
+      });
+    } else {
+      selectUnloadingProvider(providerId);
+      navigateWithParams("/customize");
+    }
+  };
 
   return (
     <WidgetLayout navigateBack={() => navigateWithParams("/movers")}>
       {/* Page header */}
 
-      <HeaderWithQuote header={`${totalCount} available movers`} />
+      <HeaderWithQuote header={headerText} />
       <div className="flex flex-col flex-wrap md:flex-row md:items-center relative justify-between space-y-2 md:pt-3 md:pb-7 mt-3 mb-6 md:m-0">
         <MoversTrustBadges />
         <SortDropdown activeSort={activeSort} onSortChange={setActiveSort} />
@@ -66,10 +103,14 @@ export default function AllMoversPage() {
         </div>
       )}
 
-      {!isLoading && !isError && (
+      {!isLoading && !isError && moverItems && (
         <div className="flex flex-col gap-3">
           {moverItems.map((mover) => (
-            <MoverCard key={mover.id} mover={mover} />
+            <MoverCard
+              key={mover.id}
+              mover={mover}
+              onAction={handleSelectMover}
+            />
           ))}
         </div>
       )}

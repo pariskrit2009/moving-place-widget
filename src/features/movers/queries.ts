@@ -3,8 +3,9 @@ import { useWidgetStore } from "@/store";
 import { getServiceProviders } from "./api";
 import { mapToServiceProviderParams } from "./mapper";
 import type { SortOrder } from "./types";
+import { SORT_ORDER } from "./types";
 
-export function useServiceProviders(sortOrder: SortOrder = "BestMatch") {
+export function useServiceProviders(sortOrder: SortOrder = SORT_ORDER.BestMatch) {
   const search = useWidgetStore((s) => s.selectedPlaces);
   const locations = useWidgetStore((s) => s.locations);
   const movingDateData = useWidgetStore((s) => s.movingDateData);

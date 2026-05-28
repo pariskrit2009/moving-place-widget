@@ -34,10 +34,10 @@ export default function MoveOptionPage() {
 
   const moversPlusTruckData: MoveOptionData = {
     id: "movers-truck",
-    moversAvailable: moversPlusTruckQuery.data?.serviceProviders.length ?? 0,
+    moversAvailable: moversPlusTruckQuery.data?.serviceProviders?.length ?? 0,
     startingPrice:
       moversPlusTruckQuery.data?.serviceProviders[0]
-        .internal_GrandTotalWithFees ?? 0,
+        ?.internal_GrandTotalWithFees ?? 0,
     label: "Movers + Truck",
     description:
       "Licensed and vetted professional movers handle loading, transport, and unloading for a full-service move.",
@@ -48,9 +48,9 @@ export default function MoveOptionPage() {
     label: "Movers Only",
     description:
       "Vetted, professional moving labor handle loading and unload of your truck or container.",
-    moversAvailable: moversOnlyQuery.data?.serviceProviders.length ?? 0,
+    moversAvailable: moversOnlyQuery.data?.serviceProviders?.length ?? 0,
     startingPrice:
-      moversOnlyQuery.data?.serviceProviders[0].internal_GrandTotalWithFees ??
+      moversOnlyQuery.data?.serviceProviders[0]?.internal_GrandTotalWithFees ??
       0,
   };
 

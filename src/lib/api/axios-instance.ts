@@ -29,10 +29,17 @@ axiosInstance.interceptors.request.use(
   (config) => {
     // Extract widgetKey from URL search params
     const searchParams = new URLSearchParams(window.location.search);
-    const widgetKey = searchParams.get("widgetKey");
-    config.headers["Authorization-Token"] = configuration.apiAuthorizationToken;
-    // Add widgetKey to headers if present
-    if (widgetKey) {
+    const publicToken = searchParams.get("publicToken");
+    config.headers["Authorization-Token"] = configuration.apiAuthorizationToken; // DELETE THIS LATER AFTER BACKEND SERVER DEPLOYED
+
+    /** UNCOMMENT THIS AFTER BACKEND SERVER DEPLOYED, ALSO THE VALUES SHOULD BE PASSED FROM THE PARTNER SITE **/
+    // const partnerDomain = searchParams.get("partnerDomain");
+    // config.headers["X-Widget-Domain"] = "www.affiliate301-demo.com";
+    // config.headers["X-Public-Token"] =
+    //   "pk_test_301_2C1FA149CF434650BCD1CD7316FF9287";
+
+    // Add publicToken to headers if present
+    if (publicToken) {
       config.headers = config.headers || {};
     }
 
@@ -42,7 +49,7 @@ axiosInstance.interceptors.request.use(
       {
         params: config.params,
         hasData: !!config.data,
-        hasAuth: !!widgetKey,
+        hasAuth: !!publicToken,
       },
     );
 

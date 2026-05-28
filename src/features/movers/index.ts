@@ -9,6 +9,8 @@ export type {
   Credential,
 } from "./types";
 
+export { SORT_ORDER } from "./types";
+
 export { getServiceProviders } from "./api";
 export {
   mapToServiceProviderParams,

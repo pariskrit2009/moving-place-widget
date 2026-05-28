@@ -1,4 +1,5 @@
 import type { SortOrder } from "../types";
+import { SORT_ORDER } from "../types";
 
 interface SortTabsProps {
   activeTab: SortOrder;
@@ -14,9 +15,9 @@ export function SortTabs({
   topRatedPrice,
 }: SortTabsProps) {
   const tabs: { key: SortOrder; label: string; price?: number }[] = [
-    { key: "PriceLowToHigh", label: "Lowest price", price: lowestPrice },
-    { key: "BestMatch", label: "Best Value" },
-    { key: "QualityRating", label: "Top rated", price: topRatedPrice },
+    { key: SORT_ORDER.PriceLowToHigh, label: "Lowest price", price: lowestPrice },
+    { key: SORT_ORDER.BestMatch, label: "Best Value" },
+    { key: SORT_ORDER.QualityRating, label: "Top rated", price: topRatedPrice },
   ];
 
   return (
