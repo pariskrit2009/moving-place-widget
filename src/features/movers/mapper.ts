@@ -3,6 +3,7 @@ import type { LocationsFormData } from "@/features/locations/schema";
 import type { MovingDateFormData } from "@/features/moving/schema";
 import type { UnifiedEstimationResponse } from "@/features/estimation/types";
 import type { ServiceProviderParams } from "./types";
+import { SORT_ORDER } from "./types";
 import type { SearchFormData } from "../search/schema";
 import type { MoveOption } from "../move-option/schema";
 
@@ -63,7 +64,7 @@ export function mapToServiceProviderParams(
       unloadingZipCode: unloadingZip,
       laborHours: loadLabor.laborHours,
       crewSize: loadLabor.crewSize,
-      sortOrder: "BestMatch",
+      sortOrder: SORT_ORDER.BestMatch,
       serviceType,
       flightsOfStairs: parseInt(locations.loadingDetails.floors, 10) || 0,
       onlyAvailable: true,
@@ -82,7 +83,7 @@ export function mapToServiceProviderParams(
         unloadingZipCode: unloadingZip,
         laborHours: unloadLabor.laborHours,
         crewSize: unloadLabor.crewSize,
-        sortOrder: "BestMatch",
+        sortOrder: SORT_ORDER.BestMatch,
         serviceType,
         flightsOfStairs:
           parseInt(locations.unloadingDetails?.floors ?? "", 10) || 0,

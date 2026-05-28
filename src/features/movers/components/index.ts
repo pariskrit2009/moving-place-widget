@@ -4,5 +4,4 @@ export { CrewSizeColumn } from "./CrewSizeColumn";
 export { SortTabs } from "./SortTabs";
 export { MoverCard } from "./MoverCard";
 export { SortDropdown } from "./SortDropdown";
-export type { SortOption } from "./SortDropdown";
 export { MoversTrustBadges } from "./MoversTrustBadges";

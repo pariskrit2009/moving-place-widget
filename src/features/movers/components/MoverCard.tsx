@@ -5,14 +5,16 @@ import { Info } from "lucide-react";
 import type { MoverItem } from "../types";
 import { useWidgetStore } from "@/store";
 
-export function MoverCard({ mover }: { mover: MoverItem }) {
+export function MoverCard({ mover, onAction }: { mover: MoverItem; onAction?: (mover: MoverItem) => void }) {
   const selectedMoveOption = useWidgetStore((s) => s.selectedMoveOption);
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-4">
       <div className="flex flex-col justify-between md:flex-row md:gap-8">
         {/* Provider info row */}
-        <div className="flex items-start gap-2">
-          <div className="size-10 rounded-lg bg-gray-100 shrink-0" />
+        <div className="flex flex-1 items-start gap-2">
+          <div className="size-10 rounded-lg bg-gray-100 shrink-0">
+            <img src={mover.avatar} alt={mover.id} />
+          </div>
           <div className="flex flex-col gap-0.5 min-w-0 flex-1">
             <span className="text-sm font-bold text-teal-600">
               {mover.provider.name}
@@ -83,7 +85,7 @@ export function MoverCard({ mover }: { mover: MoverItem }) {
         </div>
 
         {/* Price and CTA */}
-        <div className="flex flex-col justify-between md:items-end">
+        <div className="flex flex-1 flex-col justify-between md:items-end">
           <span className="text-xl hidden md:block font-bold text-gray-800">
             ${mover.price}
           </span>
@@ -102,6 +104,7 @@ export function MoverCard({ mover }: { mover: MoverItem }) {
             variant="cta"
             size={"sm"}
             className="mt-2 text-sm md:text-xs lg:text-sm leading-[125%]"
+            onClick={() => onAction?.(mover)}
           >
             <span className="hidden md:block">Select & Review</span>
             <span className="block md:hidden">

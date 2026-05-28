@@ -2,33 +2,38 @@ import { useQuery } from "@tanstack/react-query";
 import { useWidgetStore } from "@/store";
 import { getServiceProviders } from "@/features/movers/api";
 import { mapToServiceProviderParams } from "@/features/movers/mapper";
+import { SORT_ORDER } from "@/features/movers/types";
 
 export function useMoveOptionProviders() {
   const search = useWidgetStore((s) => s.selectedPlaces);
   const locations = useWidgetStore((s) => s.locations);
   const movingDateData = useWidgetStore((s) => s.movingDateData);
   const estimation = useWidgetStore((s) => s.estimation);
-  const moveOption = useWidgetStore((s) => s.selectedMoveOption);
+  // const moveOption = useWidgetStore((s) => s.selectedMoveOption);
 
   const { loadingParams: baseLoadingParams } = mapToServiceProviderParams({
     search,
     locations,
     movingDateData,
     estimation,
-    moveOption,
+    moveOption: null,
   });
-
+  console.log(movingDateData?.hasDifferentDates, "diffeernt Dates");
   const moversPlusTruckQuery = useQuery({
     queryKey: ["move-option-providers", "movers-truck", baseLoadingParams],
     queryFn: async () => {
       const params = {
         ...baseLoadingParams!,
         serviceType: "MoversPlusTruck" as const,
-        sortOrder: "PriceLowToHigh" as const,
+        sortOrder: SORT_ORDER.PriceLowToHigh,
       };
       return getServiceProviders(params);
     },
-    enabled: !!baseLoadingParams && !movingDateData?.hasDifferentDates,
+    enabled:
+      !!baseLoadingParams &&
+      !movingDateData?.hasDifferentDates &&
+      !!search?.startLocation?.fullAddress &&
+      !!search.endLocation?.fullAddress,
     staleTime: 1000 * 60 * 5,
   });
 
@@ -38,7 +43,7 @@ export function useMoveOptionProviders() {
       const params = {
         ...baseLoadingParams!,
         serviceType: "Standard" as const,
-        sortOrder: "PriceLowToHigh" as const,
+        sortOrder: SORT_ORDER.PriceLowToHigh,
       };
       return getServiceProviders(params);
     },

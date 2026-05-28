@@ -1,11 +1,11 @@
-import type { ServiceProvider } from "./types";
+import type { ServiceProvider, SortOrder } from "./types";
+import { SORT_ORDER } from "./types";
 import type {
   Provider,
   MoverItem,
   MoverQuote,
   ServiceItem,
 } from "@/features/movers/types";
-import type { SortOption } from "@/features/movers/components/SortDropdown";
 
 export function toProvider(sp: ServiceProvider): Provider {
   return {
@@ -35,6 +35,7 @@ export function toMoverItem(
     movers: sp.actualCrewSize,
     hours: sp.actualNumHours,
     hasTruck: Boolean(sp.transportOptionID),
+    avatar: sp.profileImageUrl,
   };
 }
 
@@ -100,16 +101,16 @@ export function toMoverQuote(
 
 export function sortProviders(
   providers: ServiceProvider[],
-  sort: SortOption,
+  sort: SortOrder,
 ): ServiceProvider[] {
   const sorted = [...providers];
 
   switch (sort) {
-    case "lowest":
+    case SORT_ORDER.PriceLowToHigh:
       return sorted.sort((a, b) => a.price - b.price);
-    case "top-rated":
+    case SORT_ORDER.QualityRating:
       return sorted.sort((a, b) => b.ratingAverage - a.ratingAverage);
-    case "best-value":
+    case SORT_ORDER.BestMatch:
     default:
       return sorted.sort((a, b) => a.ranking - b.ranking);
   }

@@ -35,13 +35,17 @@ export interface MoverItem {
   movers: number;
   hours: number;
   hasTruck: boolean;
+  avatar: string;
 }
 
-export type SortOrder =
-  | "QualityRating"
-  | "PriceLowToHigh"
-  | "PriceHighToLow"
-  | "BestMatch";
+export const SORT_ORDER = {
+  BestMatch: "BestMatch",
+  PriceLowToHigh: "PriceLowToHigh",
+  PriceHighToLow: "PriceHighToLow",
+  QualityRating: "QualityRating",
+} as const;
+
+export type SortOrder = (typeof SORT_ORDER)[keyof typeof SORT_ORDER];
 
 export type ServiceType = "Standard" | "Elite" | "MoversPlusTruck";
 

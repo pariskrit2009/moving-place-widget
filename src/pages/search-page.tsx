@@ -17,6 +17,9 @@ export default function SearchPage() {
   const { navigateWithParams } = useNavigateWithParams();
   const selectedPlace = useWidgetStore((s) => s.selectedPlaces);
   const setSelectedPlace = useWidgetStore((s) => s.setSelectedPlace);
+  const setMovingDate = useWidgetStore((s) => s.setMovingDateData);
+  const setLocations = useWidgetStore((s) => s.setLocations);
+
   const [activeIndex, setActiveIndex] = useState(0);
 
   const handlePlaceSelect = (
@@ -94,6 +97,18 @@ export default function SearchPage() {
 
   const onSubmit = async () => {
     try {
+      if (!selectedPlace?.startLocation?.fullAddress.trim())
+        setLocations({
+          loadingPropertyType: undefined,
+          loadingDetails: undefined,
+        });
+      console.log(selectedPlace, "selectedPlace");
+      if (!selectedPlace?.endLocation?.fullAddress.trim())
+        setLocations({
+          unloadingPropertyType: undefined,
+          unloadingDetails: undefined,
+        });
+      setMovingDate({ hasDifferentDates: false, movingDate: "" });
       navigateWithParams("/location");
     } catch (error) {
       console.error("Failed to submit locations:", error);

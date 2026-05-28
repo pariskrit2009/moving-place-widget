@@ -10,15 +10,16 @@ import {
 import {
   useServiceProviders,
   toMoverQuote,
-  type SortOrder,
+  SORT_ORDER,
 } from "@/features/movers";
+import type { SortOrder } from "@/features/movers";
 import { useWidgetStore } from "@/store";
 import { formatIsoDate } from "@/lib/utils/date";
 import { HeaderWithQuote } from "@/components/layout/HeaderWithQuote";
 
 export default function MoversPage() {
   const { navigateWithParams } = useNavigateWithParams();
-  const [activeTab, setActiveTab] = useState<SortOrder>("BestMatch");
+  const [activeTab, setActiveTab] = useState<SortOrder>(SORT_ORDER.BestMatch);
 
   const { loadingQuery, unloadingQuery } = useServiceProviders(activeTab);
   const { data, isLoading, isError, refetch } = loadingQuery;
@@ -96,7 +97,13 @@ export default function MoversPage() {
         <Button
           variant="outline"
           className="rounded-full self-center mt-4"
-          onClick={() => navigateWithParams("/all-movers")}
+          onClick={() =>
+            navigateWithParams("/all-movers", {
+              searchParams: movingDateData?.hasDifferentDates
+                ? { phase: "loading" }
+                : undefined,
+            })
+          }
         >
           View all {totalCount} available movers
         </Button>
