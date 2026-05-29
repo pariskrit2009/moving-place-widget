@@ -4,12 +4,14 @@ import { useWidgetStore } from "@/store";
 import { useCustomizeForm } from "@/features/customize/useCustomizeForm";
 import {
   ContactInfoSection,
-  MoveStepCard,
+  OneAddressWithOneDateOnlyCard,
+  TwoAddressWithOneDateOnlyCard,
 } from "@/features/customize/components";
 import { Icon } from "@/components/ui/icon";
 import type { ServiceItem } from "@/features/movers/types";
 import { HeaderWithQuote } from "@/components/layout/HeaderWithQuote";
 import { TrustBadge } from "@/components/layout/TrustBadge";
+import { FormProvider } from "react-hook-form";
 
 const mockLoadingService: ServiceItem = {
   type: "loading",
@@ -57,6 +59,16 @@ export default function CustomizePage() {
     navigateWithParams("/quote");
   });
 
+  const hasDifferentDates = useWidgetStore(
+    (s) => s.movingDateData?.hasDifferentDates,
+  );
+  const hasLoadingAddress = useWidgetStore(
+    (s) => s.selectedPlaces?.startLocation,
+  );
+  const hasUnLoadingAddress = useWidgetStore(
+    (s) => s.selectedPlaces?.endLocation,
+  );
+
   return (
     <WidgetLayout
       onContinue={onSubmit}
@@ -78,23 +90,35 @@ export default function CustomizePage() {
             </TrustBadge>
           </div>
         </div>
+        <FormProvider {...form}>
+          {/* Contact info */}
+          <ContactInfoSection form={form} />
 
-        {/* Contact info */}
-        <ContactInfoSection form={form} />
+          {/* - both loading and unloading address, two different dates, movers only -> two sections 
+          - only loading or unloading, two different dates, movers only -> only one section
+          - both loading and unloading, one date, movers only || both loading and unloading, one date, movers + truck(same design except the crew member section with and without truck) -> one section including addressinfosection */}
 
-        {/* Loading step card */}
-        <MoveStepCard
-          stepType="loading"
-          service={mockLoadingService}
-          form={form}
-        />
-
-        {/* Unloading step card */}
-        <MoveStepCard
-          stepType="unloading"
-          service={mockUnloadingService}
-          form={form}
-        />
+          {hasDifferentDates ? (
+            <>
+              {/* Loading step card */}
+              {hasLoadingAddress && (
+                <OneAddressWithOneDateOnlyCard
+                  stepType="loading"
+                  service={mockLoadingService}
+                />
+              )}
+              {/* Unloading step card */}
+              {hasUnLoadingAddress && (
+                <OneAddressWithOneDateOnlyCard
+                  stepType="unloading"
+                  service={mockUnloadingService}
+                />
+              )}
+            </>
+          ) : (
+            <TwoAddressWithOneDateOnlyCard service={mockUnloadingService} />
+          )}
+        </FormProvider>
       </div>
     </WidgetLayout>
   );

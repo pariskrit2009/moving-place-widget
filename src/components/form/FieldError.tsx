@@ -6,9 +6,5 @@ interface FieldErrorProps {
 export default function FieldError({ message, className }: FieldErrorProps) {
   if (!message) return null;
 
-  return (
-    <p className={`text-sm text-red-500 ${className || ""}`}>
-      {message}
-    </p>
-  );
+  return <p className={`text-xs text-red-500 ${className || ""}`}>{message}</p>;
 }
