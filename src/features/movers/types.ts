@@ -59,6 +59,11 @@ export interface ServiceProviderParams {
   serviceType: ServiceType;
   flightsOfStairs: number;
   onlyAvailable: boolean;
+  heavyItemsUprightPianosQty?: number;
+  heavyItemsBabyGrandPianosQty?: number;
+  heavyItemsBetweenThreeAndFourFiftyQty?: number;
+  heavyItemsBetweenFourFiftyAndSixQty?: number;
+  heavyItemsSixPlusQty?: number;
 }
 
 export interface ReviewStat {
