@@ -14,9 +14,10 @@ function LabelStackedField({
   id,
   required = false,
   children,
+  className,
 }: LabelStackedFieldProps) {
   return (
-    <div className="relative w-full leading-[130%]">
+    <div className={cn("relative w-full leading-[130%]", className)}>
       {label && (
         <label
           htmlFor={id}

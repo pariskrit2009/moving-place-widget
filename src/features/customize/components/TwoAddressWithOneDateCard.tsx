@@ -4,7 +4,8 @@ import type { ServiceItem } from "@/features/movers/types";
 import { AddressInfoSection } from "./AddressInfoSection";
 import { MoversArrivalTime } from "./MoversArrivalTime";
 import { CustomizeButton } from "./CustomizeButton";
-import { LoadingOrUnloadingCrew } from "./LoadingCrew";
+import { LoadingOrUnloadingCrew } from "./LoadingOrUnloadingCrew";
+import { useWidgetStore } from "@/store";
 
 interface TwoAddressWithOneDateOnlyCardProps {
   service: ServiceItem;
@@ -14,6 +15,13 @@ export function TwoAddressWithOneDateOnlyCard({
   service,
 }: TwoAddressWithOneDateOnlyCardProps) {
   const [isExpanded, setIsExpanded] = useState(true);
+
+  const endLocation = useWidgetStore(
+    (s) => s.selectedPlaces?.endLocation?.fullAddress,
+  );
+  const startLocation = useWidgetStore(
+    (s) => s.selectedPlaces?.startLocation?.fullAddress,
+  );
 
   //   const { setValue, watch } = useFormContext<CustomizeFormData>();
 
@@ -28,13 +36,17 @@ export function TwoAddressWithOneDateOnlyCard({
       <div className="flex items-center gap-1 text-sm">
         <span className="font-bold text-[#2e343e]">{service.date}</span>
         <span className="text-[#677890]">·</span>
-        <span className="truncate text-[#2e343e] capitalize">
-          Loading at {service.location}
-        </span>
+        {startLocation && (
+          <span className="truncate text-[#2e343e] capitalize">
+            Loading at {service.location}
+          </span>
+        )}
         <span className="text-[#677890]">·</span>
-        <span className="truncate text-[#2e343e] capitalize">
-          UnLoading at {service.location}
-        </span>
+        {endLocation && (
+          <span className="truncate text-[#2e343e] capitalize">
+            UnLoading at {service.location}
+          </span>
+        )}
       </div>
       <CustomizeButton
         onCollapsibleButtonClick={onCollapsibleButtonClick}
@@ -43,15 +55,15 @@ export function TwoAddressWithOneDateOnlyCard({
       >
         {/* Expandable content */}
         {isExpanded && (
-          <div className=" px-4 py-4 flex justify-start items-center mt-1 ">
-            <div className="flex w-1/2 flex-col gap-5">
+          <div className="px-4 py-4 flex flex-col md:flex-row md:justify-start gap-9 md:items-center mt-1 ">
+            <div className="flex md:w-1/2 flex-col gap-6">
               {/* Address section */}
-              <AddressInfoSection stepType={"loading"} />
-              <AddressInfoSection stepType={"unloading"} />
+              {startLocation && <AddressInfoSection stepType={"loading"} />}
+              {endLocation && <AddressInfoSection stepType={"unloading"} />}
               {/* Arrival time section */}
               <MoversArrivalTime stepType={"loading"} />
             </div>
-            <div className="w-1/2">
+            <div className="md:w-1/2">
               <LoadingOrUnloadingCrew service={service} />
             </div>
           </div>

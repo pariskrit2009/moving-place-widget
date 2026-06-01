@@ -3,9 +3,12 @@ import { z } from "zod";
 export const selectedPlaceSchema = z.object({
   fullAddress: z.string(),
   zip: z.string(),
+  street: z.string().optional(),
+  street2: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
 });
 
-// Full locations schema
 export const searchSchema = z
   .object({
     startLocation: selectedPlaceSchema.optional(),
@@ -22,11 +25,3 @@ export const searchSchema = z
   );
 export type SearchFormData = z.infer<typeof searchSchema>;
 export type SelectedPlace = z.infer<typeof selectedPlaceSchema>;
-
-export interface MoverQuote {
-  id: string;
-  company: string;
-  price: number;
-  rating: number;
-  services: string[];
-}

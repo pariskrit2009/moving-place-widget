@@ -100,6 +100,10 @@ function LocationSearchInner({
       onPlaceSelect({
         fullAddress: "",
         zip: "",
+        street: "",
+        street2: "",
+        city: "",
+        state: "",
       });
   };
 
@@ -123,18 +127,51 @@ function LocationSearchInner({
     await place.fetchFields({
       fields: ["formattedAddress", "addressComponents"],
     });
+
+    let streetNumber = "";
+    let route = "";
+    let city = "";
+    let state = "";
+
+    // Map through Google Components to pull exact sub-strings
+    place.addressComponents?.forEach((component) => {
+      const types = component.types;
+      if (types?.includes("street_number")) {
+        streetNumber = component.longText ?? "";
+      }
+      if (types?.includes("route")) {
+        route = component.longText ?? "";
+      }
+      if (types?.includes("locality")) {
+        city = component.longText ?? "";
+      }
+      if (types?.includes("administrative_area_level_1")) {
+        state = component.shortText ?? ""; // Short notation like "OH" or "CA"
+      }
+    });
+
     const postalCode = place.addressComponents?.find((c) =>
       c.types?.includes("postal_code"),
     )?.longText;
+
     const fullAddress = place.formattedAddress ?? "";
     setInputValue(fullAddress);
     // calling fetchFields invalidates the session-token, so we now have to call
     // resetSession() so a new one gets created for further search
     resetSession();
+
+    // Combine street number and route. If they picked just a ZIP code,
+    // both variables will be empty, making combinedStreet equal "" automatically.
+    const combinedStreet = streetNumber ? `${streetNumber} ${route}` : route;
+
     if (onPlaceSelect)
       onPlaceSelect({
-        fullAddress: place.formattedAddress ?? "",
+        fullAddress,
         zip: postalCode ?? "",
+        street: combinedStreet, // Will naturally be "" if it's a ZIP code selection
+        street2: "",
+        city,
+        state,
       });
 
     setIsOpen(false);
