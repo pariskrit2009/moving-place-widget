@@ -80,10 +80,18 @@ export default function SearchPage() {
     startLocation: selectedPlace?.startLocation || {
       fullAddress: "",
       zip: "",
+      street: "",
+      street2: "",
+      city: "",
+      state: "",
     },
     endLocation: selectedPlace?.endLocation || {
       fullAddress: "",
       zip: "",
+      street: "",
+      street2: "",
+      city: "",
+      state: "",
     },
   });
 

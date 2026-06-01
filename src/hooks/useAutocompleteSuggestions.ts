@@ -93,6 +93,7 @@ export function useAutocompleteSuggestions(
       input: inputString,
       sessionToken: sessionTokenRef.current,
       region: "us",
+      includedRegionCodes: ["US"],
     };
     fetchSuggestions(request, AutocompleteSuggestion);
     // setIsLoading(true);

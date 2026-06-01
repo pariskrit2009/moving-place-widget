@@ -65,7 +65,7 @@ export default function CustomizePage() {
   const hasLoadingAddress = useWidgetStore(
     (s) => s.selectedPlaces?.startLocation,
   );
-  const hasUnLoadingAddress = useWidgetStore(
+  const hasUnloadingAddress = useWidgetStore(
     (s) => s.selectedPlaces?.endLocation,
   );
 
@@ -108,7 +108,7 @@ export default function CustomizePage() {
                 />
               )}
               {/* Unloading step card */}
-              {hasUnLoadingAddress && (
+              {hasUnloadingAddress && (
                 <OneAddressWithOneDateOnlyCard
                   stepType="unloading"
                   service={mockUnloadingService}

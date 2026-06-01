@@ -50,7 +50,7 @@ export function LocationSection({
   return (
     <div className="space-y-2">
       <p className="text-sm font-normal text-gray-500 m-0">{locationAddress}</p>
-      <Label className="text-xl font-bold text-[#2e343e]">{title}</Label>
+      <Label className="text-xl font-bold">{title}</Label>
 
       {/* Property Type */}
       <div className="pt-4 pb-2">

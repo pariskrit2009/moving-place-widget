@@ -6,6 +6,13 @@ import { useWidgetStore } from "@/store";
 
 export function useCustomizeForm() {
   const storedCustomization = useWidgetStore((s) => s.customization);
+  // 1. Grab BOTH locations from the store
+  const startLocation = useWidgetStore(
+    (state) => state.selectedPlaces?.startLocation,
+  );
+  const endLocation = useWidgetStore(
+    (state) => state.selectedPlaces?.endLocation,
+  );
 
   return useForm<CustomizeFormData>({
     resolver: zodResolver(customizeSchema),
@@ -17,21 +24,21 @@ export function useCustomizeForm() {
         phone: "",
       },
       loading: {
-        address: "",
-        aptSuite: "",
-        city: "",
-        state: "",
-        zipCode: "",
+        address: startLocation?.street || "",
+        aptSuite: startLocation?.street2 || "",
+        city: startLocation?.city || "",
+        state: startLocation?.state || "",
+        zipCode: startLocation?.zip || "",
         crewSize: 2,
         hours: 2,
         arrivalTime: "",
       },
       unloading: {
-        address: "",
-        aptSuite: "",
-        city: "",
-        state: "",
-        zipCode: "",
+        address: endLocation?.street || "",
+        aptSuite: endLocation?.street2 || "",
+        city: endLocation?.city || "",
+        state: endLocation?.state || "",
+        zipCode: endLocation?.zip || "",
         crewSize: 2,
         hours: 2,
         arrivalTime: "",

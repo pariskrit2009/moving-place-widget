@@ -49,8 +49,11 @@ export function AddressInfoSection({ stepType }: AddressInfoSectionProps) {
         </LabelStackedField>
       </FormField>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <FormField error={stepErrors?.city?.message}>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <FormField
+          error={stepErrors?.city?.message}
+          className="col-span-2 sm:col-span-1 "
+        >
           <LabelStackedField id={`${prefix}.city`} label="City or town">
             <Input
               placeholder="San Francisco"
@@ -58,7 +61,6 @@ export function AddressInfoSection({ stepType }: AddressInfoSectionProps) {
             />
           </LabelStackedField>
         </FormField>
-
         <FormField error={stepErrors?.state?.message}>
           <LabelStackedField id={`${prefix}.state`} label="State">
             <Input placeholder="CA" {...register(`${prefix}.state`)} />
@@ -67,7 +69,12 @@ export function AddressInfoSection({ stepType }: AddressInfoSectionProps) {
 
         <FormField error={stepErrors?.zipCode?.message}>
           <LabelStackedField id={`${prefix}.zipCode`} label="Zip code">
-            <Input placeholder="94109" {...register(`${prefix}.zipCode`)} />
+            <Input
+              placeholder="94109"
+              {...register(`${prefix}.zipCode`)}
+              className="bg-gray-50 border-none cursor-not-allowed"
+              readOnly
+            />
           </LabelStackedField>
         </FormField>
       </div>

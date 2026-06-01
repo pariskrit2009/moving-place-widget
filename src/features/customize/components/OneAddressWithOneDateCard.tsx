@@ -3,7 +3,7 @@ import type { ServiceItem } from "@/features/movers/types";
 import { AddressInfoSection } from "./AddressInfoSection";
 import { MoversArrivalTime } from "./MoversArrivalTime";
 import { CustomizeButton } from "./CustomizeButton";
-import { LoadingOrUnloadingCrew } from "./LoadingCrew";
+import { LoadingOrUnloadingCrew } from "./LoadingOrUnloadingCrew";
 
 interface OneAddressWithOneDateOnlyCardProps {
   stepType: "loading" | "unloading";
@@ -34,7 +34,7 @@ export function OneAddressWithOneDateOnlyCard({
       >
         {/* Expandable content */}
         {isExpanded && (
-          <div className=" px-4 py-4 flex justify-start items-center mt-1 ">
+          <div className="px-4 py-4 flex flex-col md:flex-row md:justify-start gap-9 md:items-center mt-1 ">
             <div className="flex flex-col gap-5">
               {/* Address section */}
               <AddressInfoSection stepType={stepType} />

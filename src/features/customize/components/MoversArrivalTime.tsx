@@ -20,9 +20,10 @@ export function MoversArrivalTime({
 
   return (
     <div className="flex flex-col gap-2">
-      <h3 className="text-sm font-bold text-[#2e343e]">
+      <h3 className="text-base leading-[125%] font-bold">
         Confirm your mover's arrival time
       </h3>
+
       <FormField>
         <LabelStackedField label=" Preferred arrival time">
           <Select
@@ -33,7 +34,7 @@ export function MoversArrivalTime({
               })
             }
           >
-            <SelectTrigger>
+            <SelectTrigger className="h-14 pb-[7px] pt-7">
               <SelectValue placeholder="Select a time slot" />
             </SelectTrigger>
             <SelectContent>
