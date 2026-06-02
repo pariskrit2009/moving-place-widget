@@ -22,20 +22,33 @@ export function toProvider(sp: ServiceProvider): Provider {
 export function toMoverItem(
   sp: ServiceProvider,
   moveOption: string,
+  providerAction: string | null = null,
 ): MoverItem {
   const isMoversOnly = moveOption === "movers-only";
+
+  let priceLabel = "Loading, unloading & transport";
+
+  if (isMoversOnly) {
+    priceLabel = "Loading & unloading (no transport)";
+
+    if (providerAction === "loading") {
+      priceLabel = "Loading service (no transport)";
+    }
+    if (providerAction === "unloading") {
+      priceLabel = "Unloading service (no transport)";
+    }
+  }
 
   return {
     id: String(sp.providerId),
     provider: toProvider(sp),
     price: sp.internal_GrandTotalWithFees || sp.price,
-    priceLabel: isMoversOnly
-      ? "Loading & unloading (no transport)"
-      : "Loading, transport & unloading",
+    priceLabel: priceLabel,
     movers: sp.actualCrewSize,
     hours: sp.actualNumHours,
     hasTruck: Boolean(sp.transportOptionID),
     avatar: sp.profileImageUrl,
+    availableEquipement: sp.availableEquipment,
   };
 }
 
@@ -79,9 +92,12 @@ export function toMoverQuote(
 
   return {
     id: String(topPick.providerId),
-    totalPrice:
-      topPick.internal_GrandTotalWithFees +
-        unloadingTopPick?.internal_GrandTotalWithFees || topPick.price,
+    totalPrice: parseFloat(
+      (
+        topPick.internal_GrandTotalWithFees +
+          (unloadingTopPick?.internal_GrandTotalWithFees ?? 0) || topPick.price
+      ).toFixed(2),
+    ),
     lowestPrice: Math.min(...providers.map((p) => p.price)),
     topRatedPrice:
       providers.find(

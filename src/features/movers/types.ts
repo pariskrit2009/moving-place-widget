@@ -36,6 +36,7 @@ export interface MoverItem {
   hours: number;
   hasTruck: boolean;
   avatar: string;
+  availableEquipement: AvailableEquipment[];
 }
 
 export const SORT_ORDER = {
