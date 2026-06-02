@@ -4,6 +4,13 @@ import { StarRating } from "@/components/ui/star-rating";
 import { Info } from "lucide-react";
 import type { MoverItem } from "../types";
 import { useWidgetStore } from "@/store";
+import type { IconName } from "@/components/ui/icon";
+
+const EQUIPMENT_ICON_MAP: Record<string, IconName> = {
+  "Furniture dolly or straps": "trolley",
+  "Hand truck": "dolly",
+  "Plastic wrap": "sofa",
+};
 
 export function MoverCard({
   mover,
@@ -47,9 +54,18 @@ export function MoverCard({
             {/* Included services */}
             <div className="flex items-center gap-1 pt-1.5">
               <span className="text-xs text-gray-500">Included</span>
-              <Icon name="trolley" size={24} className="text-teal-600" />
-              <Icon name="sofa" size={24} className="text-teal-600" />
-              <Icon name="dolly" size={24} className="text-teal-600" />
+              {mover.availableEquipement?.map((eq) => {
+                const iconName = EQUIPMENT_ICON_MAP[eq.name];
+                if (!iconName) return null;
+                return (
+                  <Icon
+                    key={eq.name}
+                    name={iconName}
+                    size={24}
+                    className="text-teal-600"
+                  />
+                );
+              })}
             </div>
           </div>
         </div>
@@ -69,14 +85,14 @@ export function MoverCard({
               <Icon
                 name={mover.hasTruck ? "truck" : "truck-slash"}
                 size={30}
-                className="text-gray-500"
+                className={mover.hasTruck ? "text-gray-500" : "text-gray-200"}
               />
 
               <div className="flex items-center gap-1">
                 <span className="whitespace-nowrap">
-                  {mover.hasTruck ? "Truck included" : "No truck"}
+                  {mover.hasTruck ? "1 Truck (20')" : "No truck"}
                 </span>
-                <Icon name="circle-info" size={10} className="text-[#D9292E]" />
+                {/* <Icon name="circle-info" size={10} className="text-[#D9292E]" /> */}
               </div>
             </div>
           </div>
