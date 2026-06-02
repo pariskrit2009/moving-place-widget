@@ -24,6 +24,7 @@ export default function MovingPage() {
     formState: { errors },
     control,
     watch,
+    setValue,
   } = useMovingDateForm(movingDateData ?? undefined);
 
   useEffect(() => {
@@ -34,6 +35,19 @@ export default function MovingPage() {
   }, [watch, setMovingDateData]);
 
   const hasDifferentDates = watch("hasDifferentDates");
+  const loadingDate = watch("loadingDate");
+
+  const unloadingMinDate = loadingDate
+    ? new Date(new Date(loadingDate).getTime() + 86400000)
+    : new Date();
+
+  useEffect(() => {
+    if (hasDifferentDates && loadingDate) {
+      const nextDay = new Date(new Date(loadingDate).getTime() + 86400000);
+      setValue("unloadingDate", nextDay.toISOString());
+    }
+  }, [loadingDate, hasDifferentDates, setValue]);
+
   const hasStartLocation = !!selectedAddress?.startLocation?.fullAddress;
   const hasEndLocation = !!selectedAddress?.endLocation?.fullAddress;
   const isSingleLocation = hasStartLocation !== hasEndLocation;
@@ -107,7 +121,7 @@ export default function MovingPage() {
                 label="Unloading date"
                 id="unloadingDate"
                 error={errors.unloadingDate?.message}
-                minDate={new Date()}
+                minDate={unloadingMinDate}
               />
             </div>
           )}
