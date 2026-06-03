@@ -2,7 +2,6 @@ export {
   customizeSchema,
   contactInfoSchema,
   moveStepSchema,
-  arrivalTimeOptions,
   type CustomizeFormData,
   type ContactInfo,
   type MoveStepData,

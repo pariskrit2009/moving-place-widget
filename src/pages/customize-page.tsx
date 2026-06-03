@@ -60,7 +60,11 @@ export default function CustomizePage() {
     <WidgetLayout
       onContinue={onSubmit}
       navigateBack={() => navigateWithParams("/movers")}
-      continueLabel="Proceed to Checkout"
+      continueLabel={
+        <>
+          <span className="hidden sm:inline">Proceed to</span> Checkout
+        </>
+      }
     >
       <div className="flex flex-col gap-6">
         {/* Page header */}
@@ -68,7 +72,7 @@ export default function CustomizePage() {
           <HeaderWithQuote
             header={`Add contact details and review your move to finalize \n your transparent quote.`}
           />
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center sm:gap-6">
             <TrustBadge label="Free cancellation & rescheduling up to 48 hours">
               <Icon name="clock" size={13.33} className="text-teal-500" />
             </TrustBadge>

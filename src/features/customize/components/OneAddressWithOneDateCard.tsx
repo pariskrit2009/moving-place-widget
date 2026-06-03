@@ -4,6 +4,7 @@ import { AddressInfoSection } from "./AddressInfoSection";
 import { MoversArrivalTime } from "./MoversArrivalTime";
 import { CustomizeButton } from "./CustomizeButton";
 import { LoadingOrUnloadingCrew } from "./LoadingOrUnloadingCrew";
+import { formatShortDate } from "@/lib/utils/date";
 
 interface OneAddressWithOneDateOnlyCardProps {
   stepType: "loading" | "unloading";
@@ -17,14 +18,14 @@ export function OneAddressWithOneDateOnlyCard({
   const [isExpanded, setIsExpanded] = useState(true);
 
   const onCollapsibleButtonClick = () => setIsExpanded(!isExpanded);
+  const formattedDate = formatShortDate(service.date);
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-1 text-sm">
-        <span className="font-bold text-[#2e343e]">{service.date}</span>
-        <span className="text-[#677890]">·</span>
-        <span className="truncate text-[#2e343e] capitalize">
-          {stepType} at {service.location}
+      <div className="flex items-center gap-1 text-sm font-bold flex-wrap">
+        <span>{formattedDate}</span>
+        <span className="truncate capitalize">
+          . {stepType} at {service.location}
         </span>
       </div>
       <CustomizeButton

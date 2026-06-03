@@ -17,6 +17,7 @@ export interface ServiceItem {
   movers: number;
   hours: number;
   hasTruck: boolean;
+  minHours: number;
 }
 
 export interface MoverQuote {

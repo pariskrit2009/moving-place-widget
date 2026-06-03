@@ -79,6 +79,7 @@ export function toServiceItem(
     movers: sp.actualCrewSize,
     hours: sp.actualNumHours,
     hasTruck: Boolean(sp.transportOptionID),
+    minHours: sp.minHours ?? 2,
   };
 }
 
