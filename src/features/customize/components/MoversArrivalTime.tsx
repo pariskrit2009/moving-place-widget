@@ -7,8 +7,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { arrivalTimeOptions, type CustomizeFormData } from "../schema";
+import { type CustomizeFormData } from "../schema";
 import { useFormContext } from "react-hook-form";
+import { useWidgetStore } from "@/store";
+import { useMemo } from "react";
 
 export function MoversArrivalTime({
   stepType,
@@ -17,6 +19,23 @@ export function MoversArrivalTime({
 }) {
   const { setValue, watch } = useFormContext<CustomizeFormData>();
   const prefix = stepType;
+  const loadingProvider = useWidgetStore((s) => s.selectedLoadingProvider);
+  const unloadingProvider = useWidgetStore((s) => s.selectedUnloadingProvider);
+  const arrivalTimeOptions = useMemo(
+    () =>
+      stepType === "loading"
+        ? loadingProvider?.availableArrivalWindows
+        : unloadingProvider?.availableArrivalWindows,
+    [
+      loadingProvider?.availableArrivalWindows,
+      unloadingProvider?.availableArrivalWindows,
+      stepType,
+    ],
+  );
+
+  if (!arrivalTimeOptions?.length) {
+    return <p className="text-sm text-gray-500">No time slots available</p>;
+  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -38,7 +57,7 @@ export function MoversArrivalTime({
               <SelectValue placeholder="Select a time slot" />
             </SelectTrigger>
             <SelectContent>
-              {arrivalTimeOptions.map((time) => (
+              {arrivalTimeOptions?.map((time) => (
                 <SelectItem key={time} value={time}>
                   {time}
                 </SelectItem>

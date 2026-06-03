@@ -9,7 +9,7 @@ interface WidgetLayoutProps {
   loading?: boolean;
   navigateBack?: () => void;
   onContinue?: () => void;
-  continueLabel?: string;
+  continueLabel?: string | React.ReactNode;
   className?: string;
 }
 

@@ -27,16 +27,3 @@ export const customizeSchema = z.object({
 export type ContactInfo = z.infer<typeof contactInfoSchema>;
 export type MoveStepData = z.infer<typeof moveStepSchema>;
 export type CustomizeFormData = z.infer<typeof customizeSchema>;
-
-export const arrivalTimeOptions = [
-  "7:00 - 8:00 AM",
-  "8:00 - 9:00 AM",
-  "9:00 - 10:00 AM",
-  "10:00 - 11:00 AM",
-  "11:00 AM - 12:00 PM",
-  "12:00 - 1:00 PM",
-  "1:00 - 2:00 PM",
-  "2:00 - 3:00 PM",
-  "3:00 - 4:00 PM",
-  "4:00 - 5:00 PM",
-];

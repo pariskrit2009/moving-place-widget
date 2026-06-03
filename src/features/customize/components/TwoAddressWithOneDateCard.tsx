@@ -6,6 +6,7 @@ import { MoversArrivalTime } from "./MoversArrivalTime";
 import { CustomizeButton } from "./CustomizeButton";
 import { LoadingOrUnloadingCrew } from "./LoadingOrUnloadingCrew";
 import { useWidgetStore } from "@/store";
+import { formatShortDate } from "@/lib/utils/date";
 
 interface TwoAddressWithOneDateOnlyCardProps {
   service: ServiceItem;
@@ -23,29 +24,18 @@ export function TwoAddressWithOneDateOnlyCard({
     (s) => s.selectedPlaces?.startLocation?.fullAddress,
   );
 
-  //   const { setValue, watch } = useFormContext<CustomizeFormData>();
-
-  //   const prefix = stepType;
-  //   const crewSize = watch(`${prefix}.crewSize`) ?? 2;
-  //   const hours = watch(`${prefix}.hours`) ?? service.hours;
-
   const onCollapsibleButtonClick = () => setIsExpanded(!isExpanded);
+  const formattedDate = formatShortDate(service.date);
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-1 text-sm">
-        <span className="font-bold text-[#2e343e]">{service.date}</span>
-        <span className="text-[#677890]">·</span>
+      <div className="flex items-center gap-1 text-sm flex-wrap font-bold">
+        <span>{formattedDate}</span>
         {startLocation && (
-          <span className="truncate text-[#2e343e] capitalize">
-            Loading at {startLocation}
-          </span>
+          <span className="capitalize"> . Loading at {startLocation}</span>
         )}
-        <span className="text-[#677890]">·</span>
         {endLocation && (
-          <span className="truncate text-[#2e343e] capitalize">
-            UnLoading at {endLocation}
-          </span>
+          <span className="capitalize"> . Unloading at {endLocation}</span>
         )}
       </div>
       <CustomizeButton

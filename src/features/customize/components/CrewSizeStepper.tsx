@@ -7,7 +7,6 @@ interface StepperProps {
   className?: string;
   value: number;
   min: number;
-  max: number;
   onChange: (value: number) => void;
   displayText?: (value: number) => string;
   editable?: boolean;
@@ -17,7 +16,6 @@ export function Stepper({
   icon,
   value,
   min,
-  max,
   onChange,
   className,
   displayText,
@@ -41,8 +39,7 @@ export function Stepper({
             <span className="text-base font-bold">{value}</span>
             <button
               type="button"
-              onClick={() => onChange(Math.min(max, value + 1))}
-              disabled={value >= max}
+              onClick={() => onChange(value + 1)}
               className="transition-colors text-teal-500 cursor-pointer hover:text-teal-800 disabled:text-gray-200 disabled:cursor-not-allowed "
             >
               <Plus className="size-[15px]" />

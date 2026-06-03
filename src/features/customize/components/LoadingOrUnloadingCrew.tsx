@@ -63,8 +63,7 @@ export function LoadingOrUnloadingCrew({
           icon="clock"
           value={hours}
           editable={isCustomizing}
-          min={2}
-          max={8}
+          min={service.minHours}
           onChange={(v) =>
             setValue(`${prefix}.hours`, v, { shouldValidate: true })
           }
@@ -75,7 +74,6 @@ export function LoadingOrUnloadingCrew({
           editable={isCustomizing}
           value={crewSize}
           min={2}
-          max={3}
           onChange={(v) =>
             setValue(`${prefix}.crewSize`, v, {
               shouldValidate: true,
@@ -89,7 +87,6 @@ export function LoadingOrUnloadingCrew({
             icon="truck"
             value={crewSize}
             min={2}
-            max={3}
             onChange={(v) =>
               setValue(`${prefix}.crewSize`, v, {
                 shouldValidate: true,

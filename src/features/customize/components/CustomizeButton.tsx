@@ -22,7 +22,7 @@ export function CustomizeButton({
       <button
         type="button"
         onClick={onCollapsibleButtonClick}
-        className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-gray-100/50 transition-colors cursor-pointer"
+        className="w-full flex items-center flex-wrap justify-between gap-3 px-4 py-3 text-left hover:bg-gray-100/50 transition-colors cursor-pointer"
       >
         <div className="flex flex-col sm:gap-1">
           <div className="flex items-center gap-1 text-teal-600">
