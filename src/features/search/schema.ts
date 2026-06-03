@@ -7,6 +7,7 @@ export const selectedPlaceSchema = z.object({
   street2: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
+  isAddressComplete: z.boolean().optional(),
 });
 
 export const searchSchema = z

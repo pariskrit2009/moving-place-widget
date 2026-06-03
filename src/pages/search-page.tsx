@@ -84,6 +84,7 @@ export default function SearchPage() {
       street2: "",
       city: "",
       state: "",
+      isAddressComplete: false,
     },
     endLocation: selectedPlace?.endLocation || {
       fullAddress: "",
@@ -92,6 +93,7 @@ export default function SearchPage() {
       street2: "",
       city: "",
       state: "",
+      isAddressComplete: false,
     },
   });
 

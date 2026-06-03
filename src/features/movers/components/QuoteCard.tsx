@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Info } from "lucide-react";
 import { ProviderBlock } from "./ProviderBlock";
 import type { MoverQuote } from "../types";
-import { useNavigateWithParams } from "@/hooks";
+
 import { PriceDetailsModal } from "@/components/modals";
 import { useState } from "react";
 
@@ -14,8 +14,13 @@ function Divider() {
   );
 }
 
-export function QuoteCard({ quote }: { quote: MoverQuote }) {
-  const { navigateWithParams } = useNavigateWithParams();
+export function QuoteCard({
+  quote,
+  handleSelectQuote,
+}: {
+  quote: MoverQuote;
+  handleSelectQuote: () => void;
+}) {
   const [isPriceDetailsOpen, setIsPriceDetailsOpen] = useState(false);
 
   return (
@@ -38,7 +43,7 @@ export function QuoteCard({ quote }: { quote: MoverQuote }) {
             <Button
               variant="cta"
               className="px-3 py-3"
-              onClick={() => navigateWithParams("/customize")}
+              onClick={handleSelectQuote}
             >
               Select & Review
             </Button>

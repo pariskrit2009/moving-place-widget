@@ -38,13 +38,13 @@ export function TwoAddressWithOneDateOnlyCard({
         <span className="text-[#677890]">·</span>
         {startLocation && (
           <span className="truncate text-[#2e343e] capitalize">
-            Loading at {service.location}
+            Loading at {startLocation}
           </span>
         )}
         <span className="text-[#677890]">·</span>
         {endLocation && (
           <span className="truncate text-[#2e343e] capitalize">
-            UnLoading at {service.location}
+            UnLoading at {endLocation}
           </span>
         )}
       </div>

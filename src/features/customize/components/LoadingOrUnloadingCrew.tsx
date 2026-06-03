@@ -102,14 +102,14 @@ export function LoadingOrUnloadingCrew({
 
       {isCustomizing ? (
         <Button
-          className="text-teal-600 cursor-pointer !text-base !p-0 min-h-fit w-fit cursor-pointer"
+          className="text-teal-600 cursor-pointer !text-base !p-0 min-h-fit w-fit"
           onClick={handleBackToRecommended}
         >
           Back to recommended
         </Button>
       ) : (
         <Button
-          className="text-teal-600 cursor-pointer !text-base !p-0 min-h-fit w-fit cursor-pointer"
+          className="text-teal-600 cursor-pointer !text-base !p-0 min-h-fit w-fit"
           onClick={handleCustomize}
         >
           Customize your plan

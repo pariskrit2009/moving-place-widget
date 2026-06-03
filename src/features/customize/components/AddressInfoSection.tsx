@@ -3,13 +3,19 @@ import { LabelStackedField } from "@/components/form/LabelStackedField";
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
 import type { CustomizeFormData } from "../schema";
+import { useWidgetStore } from "@/store";
 
 interface AddressInfoSectionProps {
   stepType: "loading" | "unloading";
 }
 
+type LocationKey = "startLocation" | "endLocation";
+
 export function AddressInfoSection({ stepType }: AddressInfoSectionProps) {
   const prefix = stepType;
+  const location = useWidgetStore((s) => s.selectedPlaces);
+  const point =
+    stepType === "loading" ? "startLocation" : ("endLocation" as LocationKey);
 
   const {
     register,
@@ -21,7 +27,8 @@ export function AddressInfoSection({ stepType }: AddressInfoSectionProps) {
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-sm sm:text-base font-bold leading-[125%]">
-        Complete your {stepType} address
+        {location?.[point]?.isAddressComplete ? "Confirm" : "Complete"} your{" "}
+        {stepType} address
       </h3>
 
       <FormField error={stepErrors?.address?.message}>
@@ -38,7 +45,6 @@ export function AddressInfoSection({ stepType }: AddressInfoSectionProps) {
 
       <FormField error={stepErrors?.aptSuite?.message}>
         <LabelStackedField
-          required
           id={`${prefix}.aptSuite`}
           label={"Apartment, suite, etc. (Optional)"}
         >
@@ -54,26 +60,32 @@ export function AddressInfoSection({ stepType }: AddressInfoSectionProps) {
           error={stepErrors?.city?.message}
           className="col-span-2 sm:col-span-1 "
         >
-          <LabelStackedField id={`${prefix}.city`} label="City or town">
+          <LabelStackedField
+            id={`${prefix}.city`}
+            label="City or town"
+            required
+          >
             <Input
               placeholder="San Francisco"
               {...register(`${prefix}.city`)}
+              required
             />
           </LabelStackedField>
         </FormField>
         <FormField error={stepErrors?.state?.message}>
-          <LabelStackedField id={`${prefix}.state`} label="State">
-            <Input placeholder="CA" {...register(`${prefix}.state`)} />
+          <LabelStackedField id={`${prefix}.state`} label="State" required>
+            <Input placeholder="CA" {...register(`${prefix}.state`)} required />
           </LabelStackedField>
         </FormField>
 
         <FormField error={stepErrors?.zipCode?.message}>
-          <LabelStackedField id={`${prefix}.zipCode`} label="Zip code">
+          <LabelStackedField id={`${prefix}.zipCode`} label="Zip code" required>
             <Input
               placeholder="94109"
               {...register(`${prefix}.zipCode`)}
               className="bg-gray-50 border-none cursor-not-allowed"
               readOnly
+              required
             />
           </LabelStackedField>
         </FormField>
