@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { StarRating } from "@/components/ui/star-rating";
 import { CrewSizeColumn } from "./CrewSizeColumn";
 import type { ServiceItem } from "../types";
@@ -6,8 +7,10 @@ import { truncateMidLine } from "@/lib/utils/helper";
 import { useWidgetStore } from "@/store";
 import { extractCityZip } from "@/lib/utils/extract-city-zip";
 import { formatShortDate } from "@/lib/utils/date";
+import { ProviderDetailModal } from "./ProviderDetailModal";
 
 export function ProviderBlock({ service }: { service: ServiceItem }) {
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const locations = useWidgetStore((s) => s.selectedPlaces);
   const movingDateData = useWidgetStore((s) => s.movingDateData);
   const loadingAddress = extractCityZip(
@@ -53,7 +56,10 @@ export function ProviderBlock({ service }: { service: ServiceItem }) {
             </div>
 
             <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="text-sm font-bold text-teal-600 truncate">
+              <span
+                className="text-sm font-bold text-teal-600 truncate cursor-pointer"
+                onClick={() => setIsDetailOpen(true)}
+              >
                 {service.provider.name}
               </span>
               <span className="text-xs text-gray-500">
@@ -91,6 +97,12 @@ export function ProviderBlock({ service }: { service: ServiceItem }) {
       </div>
 
       <CrewSizeColumn movers={service.movers} hours={service.hours} hasTruck={service.hasTruck} />
+
+      <ProviderDetailModal
+        open={isDetailOpen}
+        onOpenChange={setIsDetailOpen}
+        provider={service.provider}
+      />
     </div>
   );
 }
