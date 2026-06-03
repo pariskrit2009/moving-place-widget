@@ -17,6 +17,7 @@ const DEFAULT_VALUES: MovingFormFields = {
 
 export function useMovingDateForm(defaultValues?: MovingDateFormData) {
   const form = useForm<MovingFormFields>({
+    mode: "onChange",
     resolver: zodResolver(movingDateSchema) as Resolver<MovingFormFields>,
     defaultValues: defaultValues ?? DEFAULT_VALUES,
   });

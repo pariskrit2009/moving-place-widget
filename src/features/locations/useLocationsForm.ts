@@ -16,6 +16,7 @@ export function useLocationsForm(
   options?: FormOptions,
 ) {
   return useForm<LocationsFormData>({
+    mode: "onChange",
     resolver: zodResolver(createLocationsSchema(options)),
     defaultValues: defaultValues ?? LOCATIONS_DEFAULT_VALUES,
   });

@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 
 interface WidgetLayoutProps {
   children: React.ReactNode;
+  disabled?: boolean;
   loading?: boolean;
   navigateBack?: () => void;
   onContinue?: () => void;
@@ -17,6 +18,7 @@ export function WidgetLayout({
   children,
   navigateBack,
   onContinue,
+  disabled,
   loading,
   continueLabel = "Continue",
   className,
@@ -24,7 +26,6 @@ export function WidgetLayout({
   const { hostOrigin } = useWidgetParams();
   useWidgetResize({ hostOrigin });
   useWidgetTheme();
-
   return (
     <div id="widget-content" className={cn("w-full bg-gray-100", className)}>
       <div className="min-h-[600px] max-h-[890px] overflow-auto relative w-full border border-[#b1bbc8] bg-white p-6 pt-0 flex flex-col">
@@ -41,7 +42,11 @@ export function WidgetLayout({
           )}
           <StepProgress />
           {onContinue && (
-            <Button variant="cta" onClick={onContinue} disabled={loading}>
+            <Button
+              variant="cta"
+              onClick={onContinue}
+              disabled={loading || disabled}
+            >
               {continueLabel}
             </Button>
           )}
