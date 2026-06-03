@@ -8,46 +8,11 @@ import {
   TwoAddressWithOneDateOnlyCard,
 } from "@/features/customize/components";
 import { Icon } from "@/components/ui/icon";
-import type { ServiceItem } from "@/features/movers/types";
+
 import { HeaderWithQuote } from "@/components/layout/HeaderWithQuote";
 import { TrustBadge } from "@/components/layout/TrustBadge";
 import { FormProvider } from "react-hook-form";
-
-const mockLoadingService: ServiceItem = {
-  type: "loading",
-  date: "Apr 28",
-  location: "San Francisco, CA 94109",
-  startingPrice: 420,
-  provider: {
-    name: "ProLoad",
-    moves: 34,
-    yearsInBusiness: 12,
-    rating: 4.6,
-    reviews: 51,
-    summary: "ProLoad stands out most for their reliability and flexibility.",
-  },
-  movers: 2,
-  hours: 2,
-  hasTruck: true,
-};
-
-const mockUnloadingService: ServiceItem = {
-  type: "unloading",
-  date: "May 3",
-  location: "San Francisco, CA 94133",
-  startingPrice: 420,
-  provider: {
-    name: "ProLoad",
-    moves: 34,
-    yearsInBusiness: 12,
-    rating: 4.6,
-    reviews: 51,
-    summary: "ProLoad stands out most for their reliability and flexibility.",
-  },
-  movers: 2,
-  hours: 2,
-  hasTruck: true,
-};
+import { toServiceItem } from "@/features/movers";
 
 export default function CustomizePage() {
   const { navigateWithParams } = useNavigateWithParams();
@@ -59,15 +24,37 @@ export default function CustomizePage() {
     navigateWithParams("/quote");
   });
 
-  const hasDifferentDates = useWidgetStore(
-    (s) => s.movingDateData?.hasDifferentDates,
-  );
+  const movingDateData = useWidgetStore((s) => s.movingDateData);
   const hasLoadingAddress = useWidgetStore(
-    (s) => s.selectedPlaces?.startLocation,
+    (s) => s.selectedPlaces?.startLocation?.fullAddress,
   );
   const hasUnloadingAddress = useWidgetStore(
-    (s) => s.selectedPlaces?.endLocation,
+    (s) => s.selectedPlaces?.endLocation?.fullAddress,
   );
+  const loadingProvider = useWidgetStore((s) => s.selectedLoadingProvider);
+  const unloadingProvider = useWidgetStore((s) => s.selectedUnloadingProvider);
+  const startDate = movingDateData?.hasDifferentDates
+    ? movingDateData.loadingDate
+    : movingDateData?.movingDate;
+
+  const endDate = movingDateData?.hasDifferentDates
+    ? movingDateData?.unloadingDate
+    : movingDateData?.movingDate;
+
+  const context = {
+    loadingDate: startDate ?? "",
+    unloadingDate: endDate ?? "",
+    loadingLocation: hasLoadingAddress ?? "",
+    unloadingLocation: hasUnloadingAddress ?? "",
+  };
+
+  const loadingService = loadingProvider
+    ? toServiceItem(loadingProvider, "loading", context)
+    : null;
+
+  const unloadingService = unloadingProvider
+    ? toServiceItem(unloadingProvider, "unloading", context)
+    : null;
 
   return (
     <WidgetLayout
@@ -98,25 +85,29 @@ export default function CustomizePage() {
           - only loading or unloading, two different dates, movers only -> only one section
           - both loading and unloading, one date, movers only || both loading and unloading, one date, movers + truck(same design except the crew member section with and without truck) -> one section including addressinfosection */}
 
-          {hasDifferentDates ? (
+          {movingDateData?.hasDifferentDates ? (
             <>
               {/* Loading step card */}
-              {hasLoadingAddress && (
+              {hasLoadingAddress && loadingService && (
                 <OneAddressWithOneDateOnlyCard
                   stepType="loading"
-                  service={mockLoadingService}
+                  service={loadingService}
                 />
               )}
               {/* Unloading step card */}
-              {hasUnloadingAddress && (
+              {hasUnloadingAddress && unloadingService && (
                 <OneAddressWithOneDateOnlyCard
                   stepType="unloading"
-                  service={mockUnloadingService}
+                  service={unloadingService}
                 />
               )}
             </>
           ) : (
-            <TwoAddressWithOneDateOnlyCard service={mockUnloadingService} />
+            <>
+              {loadingService && (
+                <TwoAddressWithOneDateOnlyCard service={loadingService} />
+              )}
+            </>
           )}
         </FormProvider>
       </div>

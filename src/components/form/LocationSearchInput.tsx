@@ -104,6 +104,7 @@ function LocationSearchInner({
         street2: "",
         city: "",
         state: "",
+        isAddressComplete: false,
       });
   };
 
@@ -132,6 +133,10 @@ function LocationSearchInner({
     let route = "";
     let city = "";
     let state = "";
+    let street2 = "";
+    let sublocality = "";
+    let postalTown = "";
+    let adminLevel3 = "";
 
     // Map through Google Components to pull exact sub-strings
     place.addressComponents?.forEach((component) => {
@@ -142,9 +147,17 @@ function LocationSearchInner({
       if (types?.includes("route")) {
         route = component.longText ?? "";
       }
+      if (types?.includes("subpremise")) {
+        street2 = component.longText ?? "";
+      }
       if (types?.includes("locality")) {
         city = component.longText ?? "";
       }
+      if (types?.includes("postal_town")) postalTown = component.longText ?? "";
+      if (types?.includes("sublocality_level_1"))
+        sublocality = component.longText ?? "";
+      if (types?.includes("administrative_area_level_3"))
+        adminLevel3 = component.longText ?? "";
       if (types?.includes("administrative_area_level_1")) {
         state = component.shortText ?? ""; // Short notation like "OH" or "CA"
       }
@@ -164,14 +177,26 @@ function LocationSearchInner({
     // both variables will be empty, making combinedStreet equal "" automatically.
     const combinedStreet = streetNumber ? `${streetNumber} ${route}` : route;
 
+    // Fallback cascade to catch cases just like West Chester
+    const rawCity = city || postalTown || sublocality || adminLevel3;
+
+    const isAddressComplete = !!(
+      streetNumber &&
+      route &&
+      rawCity &&
+      state &&
+      postalCode
+    );
+
     if (onPlaceSelect)
       onPlaceSelect({
         fullAddress,
         zip: postalCode ?? "",
         street: combinedStreet, // Will naturally be "" if it's a ZIP code selection
-        street2: "",
-        city,
+        street2,
+        city: rawCity,
         state,
+        isAddressComplete: isAddressComplete,
       });
 
     setIsOpen(false);

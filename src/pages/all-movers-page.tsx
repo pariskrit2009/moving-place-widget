@@ -16,6 +16,7 @@ import {
 } from "@/features/movers";
 import { useWidgetStore } from "@/store";
 import { HeaderWithQuote } from "@/components/layout/HeaderWithQuote";
+import type { ServiceProvider } from "@/features/movers/types";
 
 export default function AllMoversPage() {
   const [searchParams] = useSearchParams();
@@ -25,7 +26,7 @@ export default function AllMoversPage() {
   const movingDateData = useWidgetStore((s) => s.movingDateData);
   const selectedMoveOption = useWidgetStore((s) => s.selectedMoveOption);
   const selectUnloadingProvider = useWidgetStore(
-    (s) => s.selectUnloadingProvider,
+    (s) => s.setSelectedUnloadingProvider,
   );
   const isTwoPhase = movingDateData?.hasDifferentDates === true;
   const phase = searchParams.get("phase");
@@ -42,9 +43,10 @@ export default function AllMoversPage() {
 
   const moverItems = useMemo(
     () =>
-      data?.serviceProviders?.map((sp) =>
-        toMoverItem(sp, selectedMoveOption ?? "movers-only"),
-      ),
+      data?.serviceProviders?.map((sp) => ({
+        provider: sp,
+        mover: toMoverItem(sp, selectedMoveOption ?? "movers-only"),
+      })),
     [data?.serviceProviders, selectedMoveOption],
   );
 
@@ -56,22 +58,20 @@ export default function AllMoversPage() {
       : `${totalCount} other similar movers for loading`
     : `${totalCount} other similar movers`;
 
-  const handleSelectMover = (mover: { id: string }) => {
-    const providerId = Number(mover.id);
-
+  const handleSelectMover = (mover: ServiceProvider) => {
     if (!isTwoPhase) {
-      useWidgetStore.getState().selectLoadingProvider(providerId);
+      useWidgetStore.getState().setSelectedLoadingProvider(mover);
       navigateWithParams("/customize");
       return;
     }
 
     if (phase !== "unloading") {
-      useWidgetStore.getState().selectLoadingProvider(providerId);
+      useWidgetStore.getState().setSelectedLoadingProvider(mover);
       navigateWithParams("/all-movers", {
         searchParams: { phase: "unloading" },
       });
     } else {
-      selectUnloadingProvider(providerId);
+      selectUnloadingProvider(mover);
       navigateWithParams("/customize");
     }
   };
@@ -105,11 +105,11 @@ export default function AllMoversPage() {
 
       {!isLoading && !isError && moverItems && (
         <div className="flex flex-col gap-3">
-          {moverItems.map((mover) => (
+          {moverItems.map(({ provider, mover }) => (
             <MoverCard
               key={mover.id}
               mover={mover}
-              onAction={handleSelectMover}
+              onAction={() => handleSelectMover(provider)}
             />
           ))}
         </div>

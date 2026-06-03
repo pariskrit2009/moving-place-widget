@@ -52,6 +52,25 @@ export default function MoversPage() {
 
   const totalCount = data?.serviceProviders.length ?? 0;
 
+  const handleSelectQuote = () => {
+    const loading = quote?.services.find((s) => s.type === "loading");
+    const unloading = quote?.services.find((s) => s.type === "unloading");
+
+    const store = useWidgetStore.getState();
+
+    if (loading?.provider && data) {
+      store.setSelectedLoadingProvider(data?.serviceProviders[0]); // ServiceProvider
+    }
+
+    if (unloading?.provider && unloadingQuery?.data) {
+      store.setSelectedUnloadingProvider(
+        unloadingQuery?.data?.serviceProviders[0],
+      );
+    }
+
+    navigateWithParams("/customize");
+  };
+
   return (
     <WidgetLayout navigateBack={() => navigateWithParams("/move-option")}>
       {/* Page header */}
@@ -85,7 +104,9 @@ export default function MoversPage() {
         </div>
       )}
 
-      {!isLoading && !isError && quote && <QuoteCard quote={quote} />}
+      {!isLoading && !isError && quote && (
+        <QuoteCard quote={quote} handleSelectQuote={handleSelectQuote} />
+      )}
 
       {!isLoading && !isError && totalCount === 0 && (
         <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center text-gray-500">

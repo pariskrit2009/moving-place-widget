@@ -5,7 +5,13 @@ import { Info } from "lucide-react";
 import type { MoverItem } from "../types";
 import { useWidgetStore } from "@/store";
 
-export function MoverCard({ mover, onAction }: { mover: MoverItem; onAction?: (mover: MoverItem) => void }) {
+export function MoverCard({
+  mover,
+  onAction,
+}: {
+  mover: MoverItem;
+  onAction?: () => void;
+}) {
   const selectedMoveOption = useWidgetStore((s) => s.selectedMoveOption);
   return (
     <div className="rounded-2xl border bg-white p-4">
@@ -104,7 +110,7 @@ export function MoverCard({ mover, onAction }: { mover: MoverItem; onAction?: (m
             variant="cta"
             size={"sm"}
             className="mt-2 text-sm md:text-xs lg:text-sm leading-[125%]"
-            onClick={() => onAction?.(mover)}
+            onClick={onAction}
           >
             <span className="hidden md:block">Select & Review</span>
             <span className="block md:hidden">
