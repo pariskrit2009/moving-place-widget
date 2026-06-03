@@ -13,16 +13,17 @@ import { HeaderWithQuote } from "@/components/layout/HeaderWithQuote";
 import { TrustBadge } from "@/components/layout/TrustBadge";
 import { FormProvider } from "react-hook-form";
 import { toServiceItem } from "@/features/movers";
+import { useCreateMarketplaceQuoteCheckout } from "@/features/customize/mutations";
+import { formatIsoDate } from "@/lib/utils";
 
 export default function CustomizePage() {
   const { navigateWithParams } = useNavigateWithParams();
   const storeSetCustomization = useWidgetStore((s) => s.setCustomization);
   const form = useCustomizeForm();
-
-  const onSubmit = form.handleSubmit((data) => {
-    storeSetCustomization(data);
-    navigateWithParams("/quote");
-  });
+  const { mutate } = useCreateMarketplaceQuoteCheckout();
+  const loadingServiceProvider = useWidgetStore(
+    (s) => s.selectedLoadingProvider,
+  );
 
   const movingDateData = useWidgetStore((s) => s.movingDateData);
   const hasLoadingAddress = useWidgetStore(
@@ -55,6 +56,61 @@ export default function CustomizePage() {
   const unloadingService = unloadingProvider
     ? toServiceItem(unloadingProvider, "unloading", context)
     : null;
+
+  const onSubmit = form.handleSubmit((data) => {
+    storeSetCustomization(data);
+    const payload = {
+      origin: {
+        flightsOfStairs: Number(
+          useWidgetStore.getState().locations?.loadingDetails?.floors ?? 0,
+        ),
+        bedrooms: 2,
+        street: data.loading.address ?? "",
+        city: data.loading.city ?? "",
+        state: data.loading.state ?? "",
+        zip: data.loading.zipCode ?? "",
+        streetLineTwo: data.loading.aptSuite ?? "",
+      },
+
+      destination: {
+        flightsOfStairs: Number(
+          useWidgetStore.getState().locations?.unloadingDetails?.floors ?? 0,
+        ),
+        bedrooms: 2,
+        street: data.unloading.address ?? "",
+        streetLineTwo: data.unloading.aptSuite ?? "",
+        city: data.unloading.city ?? "",
+        state: data.unloading.state ?? "",
+        zip: data.unloading.zipCode ?? "",
+      },
+
+      requestedDate: startDate
+        ? formatIsoDate(startDate)
+        : endDate
+          ? formatIsoDate(endDate)
+          : "",
+      desiredArrivalWindow: data.loading.arrivalTime ?? "",
+
+      laborHours: data.loading.hours ?? 2,
+      crewSize: data.loading.crewSize ?? 2,
+
+      providerLocationId: loadingServiceProvider?.workerLocationId ?? 0,
+      transportOptionId: loadingServiceProvider?.transportOptionID ?? 0,
+
+      contactInformation: {
+        secondaryPhoneNumber: data.contactInfo.phone ?? "",
+        firstName: data.contactInfo.firstName ?? "",
+        lastName: data.contactInfo.lastName ?? "",
+        emailAddress: data.contactInfo.email ?? "",
+        phoneNumber: data.contactInfo.phone ?? "",
+      },
+      // notes: "",
+      // customReference: "string",
+      // bookingAgent: "string",
+      // partnerPostBookingUrl: "https://www.movingplace.com",
+    };
+    mutate(payload);
+  });
 
   return (
     <WidgetLayout

@@ -18,7 +18,7 @@ export function MoversArrivalTime({
   stepType: "loading" | "unloading";
 }) {
   const { setValue, watch } = useFormContext<CustomizeFormData>();
-  const prefix = stepType;
+  const prefix = stepType as "loading" | "unloading";
   const loadingProvider = useWidgetStore((s) => s.selectedLoadingProvider);
   const unloadingProvider = useWidgetStore((s) => s.selectedUnloadingProvider);
   const arrivalTimeOptions = useMemo(

@@ -15,7 +15,7 @@ export const moveStepSchema = z.object({
   zipCode: z.string().min(1, "Zip code is required"),
   crewSize: z.number().min(2).max(3),
   hours: z.number().min(2),
-  arrivalTime: z.string().min(1, "Select an arrival time"),
+  arrivalTime: z.string().optional(),
 });
 
 export const customizeSchema = z.object({
@@ -27,3 +27,49 @@ export const customizeSchema = z.object({
 export type ContactInfo = z.infer<typeof contactInfoSchema>;
 export type MoveStepData = z.infer<typeof moveStepSchema>;
 export type CustomizeFormData = z.infer<typeof customizeSchema>;
+
+type HeavyItem = {
+  itemType: string;
+  quantity: number;
+};
+
+type Address = {
+  street: string;
+  streetLineTwo?: string;
+  city: string;
+  state: string;
+  zip: string;
+  flightsOfStairs: number;
+  bedrooms: number;
+};
+
+type ContactInformation = {
+  firstName: string;
+  lastName: string;
+  emailAddress: string;
+  phoneNumber: string;
+  secondaryPhoneNumber?: string;
+};
+
+export type MarketplaceQuoteRequest = {
+  origin: Address;
+  destination: Address;
+  requestedDate: string;
+  desiredArrivalWindow: string;
+  laborHours: number;
+  providerLocationId: number;
+  crewSize: number;
+  transportOptionId: number | null;
+  customReference?: string;
+  bookingAgent?: string;
+  partnerPostBookingUrl?: string;
+  contactInformation: ContactInformation;
+  heavyItems?: HeavyItem[];
+  notes?: string;
+};
+
+export type MarketplaceQuoteResponse = {
+  quotePublicKey: string;
+  grandTotal: number;
+  finishCheckoutUrl: string;
+};
