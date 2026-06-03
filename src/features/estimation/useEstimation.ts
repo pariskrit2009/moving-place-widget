@@ -26,6 +26,8 @@ export function useEstimation() {
         input.search?.startLocation?.fullAddress &&
         input.search?.endLocation?.fullAddress
       );
+
+      // Case: same date + both locations → estimations-lfs (unchanged)
       if (!input.hasDifferentDates && hasBothLocations) {
         const request = mapToEstimationRequest({
           search: input.search,
@@ -36,6 +38,39 @@ export function useEstimation() {
         return normalizeLfsResponse(response);
       }
 
+      // Case: different dates + both locations → dual recommendations calls
+      if (input.hasDifferentDates && hasBothLocations) {
+        const [loadingReq, unloadingReq] = [
+          mapToRecommendationsRequest(
+            { locations: input.locations },
+            "loading",
+          ),
+          mapToRecommendationsRequest(
+            { locations: input.locations },
+            "unloading",
+          ),
+        ];
+
+        if (!loadingReq || !unloadingReq)
+          throw new Error("Unable to build recommendations requests");
+
+        const [loadingRes, unloadingRes] = await Promise.all([
+          getRecommendations(loadingReq),
+          getRecommendations(unloadingReq),
+        ]);
+
+        const loadingNorm = normalizeRecommendationsResponse(loadingRes);
+        const unloadingNorm = normalizeRecommendationsResponse(unloadingRes);
+
+        return {
+          source: "recommendations",
+          load: loadingNorm.load,
+          unload: unloadingNorm.unload,
+          resultMessage: unloadingNorm.resultMessage,
+        } satisfies UnifiedEstimationResponse;
+      }
+
+      // Case: single address or fallback → single recommendations call
       const request = mapToRecommendationsRequest({
         locations: input.locations,
       });

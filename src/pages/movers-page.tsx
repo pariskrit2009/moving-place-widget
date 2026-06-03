@@ -50,7 +50,9 @@ export default function MoversPage() {
         )
       : null;
 
-  const totalCount = data?.serviceProviders.length ?? 0;
+  const totalCount =
+    (data?.serviceProviders.length ?? 0) +
+    (unloadingQuery.data?.serviceProviders?.length ?? 0);
 
   const handleSelectQuote = () => {
     const loading = quote?.services.find((s) => s.type === "loading");

@@ -12,7 +12,6 @@ import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
 import { LocationSection } from "@/features/locations/locationSection";
 import { SelectField } from "@/components/form/SelectField";
-import { extractCityZip } from "@/lib/utils/extract-city-zip";
 import { PIANOS_OPTIONS } from "@/features/locations/constant";
 import { HeavyItemsInfoModal } from "@/components/modals";
 
@@ -24,12 +23,8 @@ export default function LocationsPage() {
   const selectedPlaces = useWidgetStore((s) => s.selectedPlaces);
   const hasStartLocation = !!selectedPlaces?.startLocation?.fullAddress;
   const hasEndLocation = !!selectedPlaces?.endLocation?.fullAddress;
-  const loadingCityZip = extractCityZip(
-    selectedPlaces?.startLocation?.fullAddress ?? "",
-  );
-  const unloadingCityZip = extractCityZip(
-    selectedPlaces?.endLocation?.fullAddress ?? "",
-  );
+  const loadingCityZip = selectedPlaces?.startLocation?.fullAddress;
+  const unloadingCityZip = selectedPlaces?.endLocation?.fullAddress;
 
   const {
     handleSubmit,
@@ -138,7 +133,10 @@ export default function LocationsPage() {
                     <label className="flex items-center gap-3 relative">
                       <Checkbox
                         checked={field.value}
-                        onCheckedChange={field.onChange}
+                        onCheckedChange={(val) => {
+                          field.onChange(val);
+                          if (!val) setValue(`pianoDetails`, undefined);
+                        }}
                       />
                       <span className="size-[30px] bg-teal-100 text-center rounded-full hidden sm:block">
                         <Icon name="extras" />
@@ -180,7 +178,7 @@ export default function LocationsPage() {
                         <SelectField
                           id="baby-grand-pianos"
                           label="Baby or grand pianos"
-                          value={field.value ?? ""}
+                          value={field.value ? String(field.value) : ""}
                           onValueChange={field.onChange}
                           options={PIANOS_OPTIONS}
                         />
@@ -194,7 +192,7 @@ export default function LocationsPage() {
                         <SelectField
                           id="upright-pianos"
                           label="Upright pianos"
-                          value={field.value ?? ""}
+                          value={field.value ? String(field.value) : ""}
                           onValueChange={field.onChange}
                           options={PIANOS_OPTIONS}
                         />
@@ -214,7 +212,7 @@ export default function LocationsPage() {
                         <SelectField
                           id="300-450"
                           label="300–450 lbs"
-                          value={field.value ?? ""}
+                          value={field.value ? String(field.value) : ""}
                           onValueChange={field.onChange}
                           options={PIANOS_OPTIONS}
                         />
@@ -228,7 +226,7 @@ export default function LocationsPage() {
                         <SelectField
                           id="450-600"
                           label="450–600 lbs"
-                          value={field.value ?? ""}
+                          value={field.value ? String(field.value) : ""}
                           onValueChange={field.onChange}
                           options={PIANOS_OPTIONS}
                         />
@@ -242,7 +240,7 @@ export default function LocationsPage() {
                         <SelectField
                           id="over-600"
                           label="Over 600 lbs"
-                          value={field.value ?? ""}
+                          value={field.value ? String(field.value) : ""}
                           onValueChange={field.onChange}
                           options={PIANOS_OPTIONS}
                         />

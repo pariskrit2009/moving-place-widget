@@ -5,11 +5,11 @@ const propertyTypeEnum = z.enum(["House", "CondoApt", "StorageUnit"], {
 });
 
 const pianoDetailsSchema = z.object({
-  baby_or_grand_pianos: z.string(),
-  upright_pianos: z.string(),
-  "300_to_450_lbs": z.string(),
-  "450_to_600_lbs": z.string(),
-  over_600_lbs: z.string(),
+  baby_or_grand_pianos: z.number().or(z.string()).optional(),
+  upright_pianos: z.number().or(z.string()).optional(),
+  "300_to_450_lbs": z.number().or(z.string()).optional(),
+  "450_to_600_lbs": z.number().or(z.string()).optional(),
+  over_600_lbs: z.number().or(z.string()).optional(),
 });
 
 const locationDetailsSchema = z.object({

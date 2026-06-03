@@ -14,7 +14,8 @@ import { useMoveOptionProviders } from "@/features/move-option";
 
 export default function MoveOptionPage() {
   const { navigateWithParams } = useNavigateWithParams();
-  const { moversPlusTruckQuery, moversOnlyQuery } = useMoveOptionProviders();
+  const { moversPlusTruckQuery, moversOnlyLoadingQuery, moversOnlyUnloadingQuery } =
+    useMoveOptionProviders();
   const selectedMoveOption = useWidgetStore((s) => s.selectedMoveOption);
   const setSelectedMoveOption = useWidgetStore((s) => s.setSelectedMoveOption);
   const startLocation = useWidgetStore(
@@ -48,10 +49,12 @@ export default function MoveOptionPage() {
     label: "Movers Only",
     description:
       "Vetted, professional moving labor handle loading and unload of your truck or container.",
-    moversAvailable: moversOnlyQuery.data?.serviceProviders?.length ?? 0,
+    moversAvailable:
+      (moversOnlyLoadingQuery.data?.serviceProviders?.length ?? 0) +
+      (moversOnlyUnloadingQuery.data?.serviceProviders?.length ?? 0),
     startingPrice:
-      moversOnlyQuery.data?.serviceProviders[0]?.internal_GrandTotalWithFees ??
-      0,
+      moversOnlyLoadingQuery.data?.serviceProviders[0]
+        ?.internal_GrandTotalWithFees ?? 0,
   };
 
   useEffect(() => {

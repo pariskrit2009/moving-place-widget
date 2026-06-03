@@ -6,6 +6,7 @@ import type { ServiceProviderParams } from "./types";
 import { SORT_ORDER } from "./types";
 import type { SearchFormData } from "../search/schema";
 import type { MoveOption } from "../move-option/schema";
+import { stripNullish } from "@/lib/utils";
 
 interface ServiceProviderMapperInput {
   search: SearchFormData | null;
@@ -56,7 +57,35 @@ export function mapToServiceProviderParams(
     : formatIsoDate(movingDateData.loadingDate);
 
   let loadingParams: ServiceProviderParams | null = null;
+  const filteredPianoDetails = locations?.pianoDetails
+    ? stripNullish({
+        heavyItemsUprightPianosQty:
+          typeof locations.pianoDetails?.upright_pianos === "string"
+            ? Number(locations.pianoDetails?.upright_pianos)
+            : 0,
 
+        heavyItemsBabyGrandPianosQty:
+          typeof locations.pianoDetails?.baby_or_grand_pianos === "string"
+            ? Number(locations.pianoDetails?.baby_or_grand_pianos)
+            : 0,
+
+        heavyItemsBetweenThreeAndFourFiftyQty:
+          typeof locations.pianoDetails?.["300_to_450_lbs"] === "string"
+            ? Number(locations.pianoDetails?.["300_to_450_lbs"])
+            : 0,
+
+        heavyItemsBetweenFourFiftyAndSixQty:
+          typeof locations.pianoDetails?.["450_to_600_lbs"] === "string"
+            ? Number(locations.pianoDetails?.["450_to_600_lbs"])
+            : 0,
+
+        heavyItemsSixPlusQty:
+          typeof locations.pianoDetails?.over_600_lbs === "string"
+            ? Number(locations.pianoDetails?.over_600_lbs)
+            : 0,
+      })
+    : null;
+  console.log(filteredPianoDetails, "pianodetailssss");
   if (loadingDate && loadLabor && locations.loadingDetails?.floors) {
     loadingParams = {
       requestedDate: loadingDate,
@@ -68,6 +97,7 @@ export function mapToServiceProviderParams(
       serviceType,
       flightsOfStairs: parseInt(locations.loadingDetails.floors, 10) || 0,
       onlyAvailable: true,
+      ...filteredPianoDetails,
     };
   }
 
@@ -88,6 +118,7 @@ export function mapToServiceProviderParams(
         flightsOfStairs:
           parseInt(locations.unloadingDetails?.floors ?? "", 10) || 0,
         onlyAvailable: true,
+        ...filteredPianoDetails,
       };
     }
   }

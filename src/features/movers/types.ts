@@ -36,6 +36,7 @@ export interface MoverItem {
   hours: number;
   hasTruck: boolean;
   avatar: string;
+  availableEquipement: AvailableEquipment[];
 }
 
 export const SORT_ORDER = {
@@ -59,6 +60,11 @@ export interface ServiceProviderParams {
   serviceType: ServiceType;
   flightsOfStairs: number;
   onlyAvailable: boolean;
+  heavyItemsUprightPianosQty?: number;
+  heavyItemsBabyGrandPianosQty?: number;
+  heavyItemsBetweenThreeAndFourFiftyQty?: number;
+  heavyItemsBetweenFourFiftyAndSixQty?: number;
+  heavyItemsSixPlusQty?: number;
 }
 
 export interface ReviewStat {

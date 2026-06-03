@@ -2,7 +2,7 @@ export function extractCityZip(address: string) {
   const splittedAddress = address.split(", ");
   const cityZip =
     !splittedAddress[1] || !splittedAddress[2]
-      ? ""
+      ? address
       : `${splittedAddress[1]}, ${splittedAddress[2]}`;
   return cityZip;
 }
