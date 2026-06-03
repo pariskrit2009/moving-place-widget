@@ -28,7 +28,7 @@ export default function LocationsPage() {
 
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     control,
     watch,
     setValue,
@@ -65,11 +65,11 @@ export default function LocationsPage() {
   const navigateBack = () => {
     navigateWithParams("/");
   };
-
   return (
     <WidgetLayout
       onContinue={handleSubmit(onSubmit)}
       navigateBack={navigateBack}
+      disabled={!isValid}
     >
       <div className="flex-1 flex flex-col">
         <div className="flex-1 space-y-6">

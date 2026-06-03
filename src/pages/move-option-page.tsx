@@ -14,8 +14,11 @@ import { useMoveOptionProviders } from "@/features/move-option";
 
 export default function MoveOptionPage() {
   const { navigateWithParams } = useNavigateWithParams();
-  const { moversPlusTruckQuery, moversOnlyLoadingQuery, moversOnlyUnloadingQuery } =
-    useMoveOptionProviders();
+  const {
+    moversPlusTruckQuery,
+    moversOnlyLoadingQuery,
+    moversOnlyUnloadingQuery,
+  } = useMoveOptionProviders();
   const selectedMoveOption = useWidgetStore((s) => s.selectedMoveOption);
   const setSelectedMoveOption = useWidgetStore((s) => s.setSelectedMoveOption);
   const startLocation = useWidgetStore(
@@ -77,8 +80,14 @@ export default function MoveOptionPage() {
     navigateWithParams("/moving");
   };
 
+  const isContinueDisabled = selectedMoveOption === null;
+
   return (
-    <WidgetLayout onContinue={handleContinue} navigateBack={navigateBack}>
+    <WidgetLayout
+      onContinue={handleContinue}
+      navigateBack={navigateBack}
+      disabled={isContinueDisabled}
+    >
       <div className="flex flex-col">
         <div className="flex flex-col space-y-2 ">
           <h2 className="text-xl leading-6">Choose a move option</h2>
