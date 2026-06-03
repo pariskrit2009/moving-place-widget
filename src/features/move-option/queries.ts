@@ -9,47 +9,79 @@ export function useMoveOptionProviders() {
   const locations = useWidgetStore((s) => s.locations);
   const movingDateData = useWidgetStore((s) => s.movingDateData);
   const estimation = useWidgetStore((s) => s.estimation);
-  // const moveOption = useWidgetStore((s) => s.selectedMoveOption);
+  const setServiceProviders = useWidgetStore((s) => s.setServiceProviders);
 
-  const { loadingParams: baseLoadingParams } = mapToServiceProviderParams({
+  const { loadingParams, unloadingParams } = mapToServiceProviderParams({
     search,
     locations,
     movingDateData,
     estimation,
     moveOption: null,
   });
-  console.log(movingDateData?.hasDifferentDates, "diffeernt Dates");
+
+  const hasDifferentDates = !!movingDateData?.hasDifferentDates;
+  const hasBothLocations =
+    !!search?.startLocation?.fullAddress && !!search?.endLocation?.fullAddress;
+
+  // Movers + Truck: only available when same date + both locations
   const moversPlusTruckQuery = useQuery({
-    queryKey: ["move-option-providers", "movers-truck", baseLoadingParams],
+    queryKey: ["move-option-providers", "movers-truck", loadingParams],
     queryFn: async () => {
       const params = {
-        ...baseLoadingParams!,
+        ...loadingParams!,
         serviceType: "MoversPlusTruck" as const,
         sortOrder: SORT_ORDER.PriceLowToHigh,
       };
       return getServiceProviders(params);
     },
     enabled:
-      !!baseLoadingParams &&
-      !movingDateData?.hasDifferentDates &&
-      !!search?.startLocation?.fullAddress &&
-      !!search.endLocation?.fullAddress,
+      !!loadingParams && !hasDifferentDates && hasBothLocations,
     staleTime: 1000 * 60 * 5,
   });
 
-  const moversOnlyQuery = useQuery({
-    queryKey: ["move-option-providers", "movers-only", baseLoadingParams],
+  // Movers Only — loading phase
+  const moversOnlyLoadingQuery = useQuery({
+    queryKey: [
+      "move-option-providers",
+      "movers-only",
+      "loading",
+      loadingParams,
+    ],
     queryFn: async () => {
       const params = {
-        ...baseLoadingParams!,
+        ...loadingParams!,
         serviceType: "Standard" as const,
         sortOrder: SORT_ORDER.PriceLowToHigh,
       };
-      return getServiceProviders(params);
+      const data = await getServiceProviders(params);
+      setServiceProviders("loading", data.serviceProviders);
+      return data;
     },
-    enabled: !!baseLoadingParams,
+    enabled: !!loadingParams,
     staleTime: 1000 * 60 * 5,
   });
 
-  return { moversPlusTruckQuery, moversOnlyQuery };
+  // Movers Only — unloading phase (only when different dates + both locations)
+  const moversOnlyUnloadingQuery = useQuery({
+    queryKey: [
+      "move-option-providers",
+      "movers-only",
+      "unloading",
+      unloadingParams,
+    ],
+    queryFn: async () => {
+      const params = {
+        ...unloadingParams!,
+        serviceType: "Standard" as const,
+        sortOrder: SORT_ORDER.PriceLowToHigh,
+      };
+      const data = await getServiceProviders(params);
+      setServiceProviders("unloading", data.serviceProviders);
+      return data;
+    },
+    enabled: !!unloadingParams && hasDifferentDates && hasBothLocations,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  return { moversPlusTruckQuery, moversOnlyLoadingQuery, moversOnlyUnloadingQuery };
 }

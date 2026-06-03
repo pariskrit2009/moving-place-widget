@@ -63,7 +63,7 @@ function deriveHeavyItems(
   if (pianoDetails) {
     for (const { key, itemType } of fieldMap) {
       const quantity = pianoDetails[key];
-      if (!Number.isNaN(quantity) && +quantity > 0) {
+      if (quantity && !Number.isNaN(quantity) && +quantity > 0) {
         items.push({ itemType, quantity: +quantity });
       }
     }
@@ -99,39 +99,57 @@ export function mapToEstimationRequest(
 
 export function mapToRecommendationsRequest(
   input: RecommendationsInput,
+  phase?: "loading" | "unloading",
 ): RecommendationsRequest | null {
   const { locations } = input;
   if (!locations) return null;
 
+  const details =
+    phase === "unloading"
+      ? locations.unloadingDetails
+      : phase === "loading"
+        ? locations.loadingDetails
+        : null;
+
   const sqFt = parseBedroomCount(
-    +(locations.loadingDetails?.bedrooms ?? 0) ||
+    +(details?.bedrooms ?? 0) ||
+      +(locations.loadingDetails?.bedrooms ?? 0) ||
       +(locations.unloadingDetails?.bedrooms ?? 0),
   );
-  // const linearFeet = deriveLinearFeet(sqFt);
   const heavyItems = deriveHeavyItems(locations.pianoDetails);
+
+  const includeLoad =
+    !phase || phase === "loading"
+      ? locations.loadingDetails?.floors
+        ? {
+            load: {
+              flightsOfStairs: parseFlightsOfStairs(
+                locations.loadingDetails.floors,
+              ),
+            },
+          }
+        : {}
+      : {};
+
+  const includeUnload =
+    !phase || phase === "unloading"
+      ? locations.unloadingDetails?.floors
+        ? {
+            unload: {
+              flightsOfStairs: parseFlightsOfStairs(
+                locations.unloadingDetails.floors,
+              ),
+            },
+          }
+        : {}
+      : {};
 
   return {
     sqFt,
     linearFeet: null,
     heavyItems,
-    ...(locations.loadingDetails?.floors
-      ? {
-          load: {
-            flightsOfStairs: parseFlightsOfStairs(
-              locations.loadingDetails.floors,
-            ),
-          },
-        }
-      : {}),
-    ...(locations.unloadingDetails?.floors
-      ? {
-          unload: {
-            flightsOfStairs: parseFlightsOfStairs(
-              locations.unloadingDetails.floors,
-            ),
-          },
-        }
-      : {}),
+    ...includeLoad,
+    ...includeUnload,
   };
 }
 
