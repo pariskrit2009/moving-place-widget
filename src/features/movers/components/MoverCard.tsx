@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { StarRating } from "@/components/ui/star-rating";
@@ -5,6 +6,7 @@ import { Info } from "lucide-react";
 import type { MoverItem } from "../types";
 import { useWidgetStore } from "@/store";
 import type { IconName } from "@/components/ui/icon";
+import { ProviderDetailModal } from "./ProviderDetailModal";
 
 const EQUIPMENT_ICON_MAP: Record<string, IconName> = {
   "Furniture dolly or straps": "trolley",
@@ -20,6 +22,7 @@ export function MoverCard({
   onAction?: () => void;
 }) {
   const selectedMoveOption = useWidgetStore((s) => s.selectedMoveOption);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
   return (
     <div className="rounded-2xl border bg-white p-4">
       <div className="flex flex-col justify-between md:flex-row md:gap-8">
@@ -29,7 +32,10 @@ export function MoverCard({
             <img src={mover.avatar} alt={mover.id} />
           </div>
           <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-            <span className="text-sm font-bold text-teal-600">
+            <span
+              className="text-sm font-bold text-teal-600 cursor-pointer"
+              onClick={() => setIsDetailOpen(true)}
+            >
               {mover.provider.name}
             </span>
             <div className="flex items-center gap-1">
@@ -146,6 +152,12 @@ export function MoverCard({
           </button>
         </div>
       </div>
+
+      <ProviderDetailModal
+        open={isDetailOpen}
+        onOpenChange={setIsDetailOpen}
+        provider={mover.provider}
+      />
     </div>
   );
 }
