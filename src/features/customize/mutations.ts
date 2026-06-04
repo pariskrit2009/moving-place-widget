@@ -1,10 +1,25 @@
 import { useMutation } from "@tanstack/react-query";
-import { createMarketplaceQuoteCheckout } from "./api";
 import type { AxiosError } from "axios";
+import {
+  createMarketplaceQuoteCheckoutLFS,
+  createMarketplaceQuoteCheckoutLO,
+} from "./api";
 
-export function useCreateMarketplaceQuoteCheckout() {
+export function useCreateMarketplaceQuoteCheckoutLFS() {
   return useMutation({
-    mutationFn: createMarketplaceQuoteCheckout,
+    mutationFn: createMarketplaceQuoteCheckoutLFS,
+    onSuccess: (res) => {
+      window.location.href = res.finishCheckoutUrl;
+    },
+    onError: (error: AxiosError) => {
+      console.log(error.response?.data);
+    },
+  });
+}
+
+export function useCreateMarketplaceQuoteCheckoutLO() {
+  return useMutation({
+    mutationFn: createMarketplaceQuoteCheckoutLO,
     onSuccess: (res) => {
       window.location.href = res.finishCheckoutUrl;
     },
