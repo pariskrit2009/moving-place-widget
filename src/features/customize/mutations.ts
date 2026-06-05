@@ -21,7 +21,9 @@ export function useCreateMarketplaceQuoteCheckoutLO() {
   return useMutation({
     mutationFn: createMarketplaceQuoteCheckoutLO,
     onSuccess: (res) => {
-      window.location.href = res.finishCheckoutUrl;
+      console.log(res);
+
+      // window.location.href = res.finishCheckoutUrl;
     },
     onError: (error: AxiosError) => {
       console.log(error.response?.data);

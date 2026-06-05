@@ -61,6 +61,7 @@ export default function AllMoversPage() {
   const handleSelectMover = (mover: ServiceProvider) => {
     if (!isTwoPhase) {
       useWidgetStore.getState().setSelectedLoadingProvider(mover);
+      useWidgetStore.getState().setSelectedUnloadingProvider(mover);
       navigateWithParams("/customize");
       return;
     }

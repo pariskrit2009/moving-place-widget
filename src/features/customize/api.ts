@@ -14,5 +14,5 @@ export async function createMarketplaceQuoteCheckoutLFS(
 export async function createMarketplaceQuoteCheckoutLO(
   data: MarketplaceLOQuoteRequest,
 ) {
-  return post<MarketplaceQuoteResponse>("/quote/", data);
+  return post<MarketplaceQuoteResponse>("/quote/marketplace", data);
 }

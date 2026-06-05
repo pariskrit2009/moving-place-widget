@@ -21,7 +21,7 @@ export function ProviderBlock({ service }: { service: ServiceItem }) {
   );
   const isloadingProvider = service.type === "loading";
   const isDifferentDates = movingDateData?.hasDifferentDates;
-  console.log(service, "services");
+
   return (
     <div className="flex flex-col md:flex-row gap-4">
       <div className="flex flex-1 flex-col gap-3 min-w-0">
@@ -29,11 +29,13 @@ export function ProviderBlock({ service }: { service: ServiceItem }) {
           <div className="flex items-center gap-1">
             <span className="font-bold">{formatShortDate(service.date)}</span>
             <span className="font-bold">·</span>
-            {isloadingProvider && (
+            {isloadingProvider && loadingAddress && (
               <span className="font-normal">Loading at {loadingAddress}</span>
             )}
-            {!isDifferentDates && <span className="font-bold">·</span>}
-            {(!isDifferentDates || !isloadingProvider) && (
+            {!isDifferentDates && unloadingAddress && (
+              <span className="font-bold">·</span>
+            )}
+            {(!isDifferentDates || !isloadingProvider) && unloadingAddress && (
               <span className="font-normal">
                 Unloading at {unloadingAddress}
               </span>
@@ -96,7 +98,11 @@ export function ProviderBlock({ service }: { service: ServiceItem }) {
         </div>
       </div>
 
-      <CrewSizeColumn movers={service.movers} hours={service.hours} hasTruck={service.hasTruck} />
+      <CrewSizeColumn
+        movers={service.movers}
+        hours={service.hours}
+        hasTruck={service.hasTruck}
+      />
 
       <ProviderDetailModal
         open={isDetailOpen}

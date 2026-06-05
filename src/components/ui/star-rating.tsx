@@ -1,7 +1,7 @@
 import { Star } from "lucide-react";
 
 interface StarRatingProps {
-  rating: number;
+  rating?: number;
   maxStars?: number;
   size?: "sm" | "md";
   showValue?: boolean;
@@ -30,7 +30,7 @@ export function StarRating({
   showValue = true,
 }: StarRatingProps) {
   const clamped = Math.min(
-    Math.max(Number.isNaN(rating) ? 0 : rating, 0),
+    Math.max(Number.isNaN(rating) ? 0 : (rating ?? 0), 0),
     maxStars,
   );
   const states = getStarStates(clamped, maxStars);

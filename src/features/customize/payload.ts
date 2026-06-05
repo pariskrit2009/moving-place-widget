@@ -139,6 +139,6 @@ export const buildLOPayload = (
     //     quantity: 100,
     //   },
     // ],
-    // serviceType: "Unknown",
+    serviceType: "Standard",
   };
 };
