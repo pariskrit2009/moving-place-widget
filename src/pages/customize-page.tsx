@@ -13,16 +13,25 @@ import { HeaderWithQuote } from "@/components/layout/HeaderWithQuote";
 import { TrustBadge } from "@/components/layout/TrustBadge";
 import { FormProvider } from "react-hook-form";
 import { toServiceItem } from "@/features/movers";
-import { useCreateMarketplaceQuoteCheckout } from "@/features/customize/mutations";
-import { formatIsoDate } from "@/lib/utils";
+import {
+  useCreateMarketplaceQuoteCheckoutLFS,
+  useCreateMarketplaceQuoteCheckoutLO,
+} from "@/features/customize/mutations";
+
+import { buildLFSPayload, buildLOPayload } from "@/features/customize/payload";
 
 export default function CustomizePage() {
   const { navigateWithParams } = useNavigateWithParams();
+  const isLFS = useWidgetStore((s) => s.selectedMoveOption);
   const storeSetCustomization = useWidgetStore((s) => s.setCustomization);
   const form = useCustomizeForm();
-  const { mutate } = useCreateMarketplaceQuoteCheckout();
+  const { mutate: mutateLFS } = useCreateMarketplaceQuoteCheckoutLFS();
+  const { mutate: mutateLO } = useCreateMarketplaceQuoteCheckoutLO();
   const loadingServiceProvider = useWidgetStore(
     (s) => s.selectedLoadingProvider,
+  );
+  const unloadingServiceProvider = useWidgetStore(
+    (s) => s.selectedUnloadingProvider,
   );
 
   const movingDateData = useWidgetStore((s) => s.movingDateData);
@@ -57,59 +66,18 @@ export default function CustomizePage() {
     ? toServiceItem(unloadingProvider, "unloading", context)
     : null;
 
+  const storeContext = {
+    loadingDate: startDate ?? "",
+    unloadingDate: endDate ?? "",
+    loadingServiceProvider: loadingServiceProvider ?? null,
+    unloadingServiceProvider: unloadingServiceProvider ?? null,
+  };
+
   const onSubmit = form.handleSubmit((data) => {
     storeSetCustomization(data);
-    const payload = {
-      origin: {
-        flightsOfStairs: Number(
-          useWidgetStore.getState().locations?.loadingDetails?.floors ?? 0,
-        ),
-        bedrooms: 2,
-        street: data.loading.address ?? "",
-        city: data.loading.city ?? "",
-        state: data.loading.state ?? "",
-        zip: data.loading.zipCode ?? "",
-        streetLineTwo: data.loading.aptSuite ?? "",
-      },
-
-      destination: {
-        flightsOfStairs: Number(
-          useWidgetStore.getState().locations?.unloadingDetails?.floors ?? 0,
-        ),
-        bedrooms: 2,
-        street: data.unloading.address ?? "",
-        streetLineTwo: data.unloading.aptSuite ?? "",
-        city: data.unloading.city ?? "",
-        state: data.unloading.state ?? "",
-        zip: data.unloading.zipCode ?? "",
-      },
-
-      requestedDate: startDate
-        ? formatIsoDate(startDate)
-        : endDate
-          ? formatIsoDate(endDate)
-          : "",
-      desiredArrivalWindow: data.loading.arrivalTime ?? "",
-
-      laborHours: data.loading.hours ?? 2,
-      crewSize: data.loading.crewSize ?? 2,
-
-      providerLocationId: loadingServiceProvider?.workerLocationId ?? 0,
-      transportOptionId: loadingServiceProvider?.transportOptionID ?? 0,
-
-      contactInformation: {
-        secondaryPhoneNumber: data.contactInfo.phone ?? "",
-        firstName: data.contactInfo.firstName ?? "",
-        lastName: data.contactInfo.lastName ?? "",
-        emailAddress: data.contactInfo.email ?? "",
-        phoneNumber: data.contactInfo.phone ?? "",
-      },
-      // notes: "",
-      // customReference: "string",
-      // bookingAgent: "string",
-      // partnerPostBookingUrl: "https://www.movingplace.com",
-    };
-    mutate(payload);
+    if (isLFS === "movers-truck")
+      mutateLFS(buildLFSPayload(data, storeContext));
+    else mutateLO(buildLOPayload(data, storeContext));
   });
 
   return (
@@ -164,9 +132,12 @@ export default function CustomizePage() {
             </>
           ) : (
             <>
-              {loadingService && (
-                <TwoAddressWithOneDateOnlyCard service={loadingService} />
-              )}
+              {loadingService ||
+                (unloadingService && (
+                  <TwoAddressWithOneDateOnlyCard
+                    service={loadingService || unloadingService}
+                  />
+                ))}
             </>
           )}
         </FormProvider>

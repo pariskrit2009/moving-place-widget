@@ -51,7 +51,7 @@ type ContactInformation = {
   secondaryPhoneNumber?: string;
 };
 
-export type MarketplaceQuoteRequest = {
+export type MarketplaceLFSQuoteRequest = {
   origin: Address;
   destination: Address;
   requestedDate: string;
@@ -66,6 +66,57 @@ export type MarketplaceQuoteRequest = {
   contactInformation: ContactInformation;
   heavyItems?: HeavyItem[];
   notes?: string;
+};
+
+export type MarketplaceLOQuoteRequest = {
+  load: {
+    address: {
+      street: string;
+      city: string;
+      state: string;
+      zip: string;
+      streetLineTwo: string;
+    };
+    desiredArrivalWindow: string;
+    notes?: string;
+    requestedDate: string;
+    laborHours: number;
+    workerLocationID: number;
+    crewSize: number;
+    flightsOfStairs: number;
+  };
+  unload: {
+    address: {
+      street: string;
+      city: string;
+      state: string;
+      zip: string;
+      streetLineTwo: string;
+    };
+    desiredArrivalWindow: string;
+    notes?: string;
+    requestedDate: string;
+    laborHours: number;
+    workerLocationID: number;
+    crewSize: number;
+    flightsOfStairs: number;
+  };
+  transports?: {
+    areWeMovingRentalTruck: true;
+    areWeMovingContainer: true;
+    areWeMovingFreightTrailer: true;
+  };
+  // customReference: "string";
+  // bookingAgent: "string";
+  // partnerPostBookingUrl: "string";
+  contactInformation: ContactInformation;
+  heavyItems?: [
+    {
+      itemType: unknown;
+      quantity: number;
+    },
+  ];
+  serviceType?: unknown;
 };
 
 export type MarketplaceQuoteResponse = {
