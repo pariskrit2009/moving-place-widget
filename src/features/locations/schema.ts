@@ -13,7 +13,10 @@ const pianoDetailsSchema = z.object({
 });
 
 const locationDetailsSchema = z.object({
-  bedrooms: z.union([z.number(), z.string()]),
+  bedrooms: z.object({
+    sqFt: z.union([z.number(), z.string()]),
+    count:z.union([z.number(), z.string()]).optional()
+  }),
   floors: z.string(),
   elevator: z.string(),
 });

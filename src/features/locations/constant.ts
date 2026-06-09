@@ -8,11 +8,22 @@ const PROPERTY_OPTIONS = [
 
 const BEDROOM_OPTIONS = [
   { value: "300", label: "No Bedrooms", number: 0 },
-  { value: "400", label: "1 Bedroom", number: 1 },
-  { value: "500", label: "2 Bedrooms", number: 2 },
-  { value: "600", label: "3 Bedrooms", number: 3 },
-  { value: "700", label: "4 Bedrooms", number: 4 },
-  { value: "800", label: "5 Bedrooms", number: 5 },
+  { value: "850", label: "1 Bedroom", number: 1 },
+  { value: "1250", label: "2 Bedrooms", number: 2 },
+  { value: "1850", label: "3 Bedrooms", number: 3 },
+  { value: "2600", label: "4 Bedrooms", number: 4 },
+  { value: "3500", label: "5 Bedrooms", number: 5 },
+  { value: "4750", label: "6 Bedrooms", number: 6 },
+] as const;
+
+const APARTMENT_OPTIONS = [
+  { value: "500", label: "No Bedrooms", number: 0 },
+  { value: "750", label: "1 Bedroom", number: 1 },
+  { value: "1050", label: "2 Bedrooms", number: 2 },
+  { value: "1400", label: "3 Bedrooms", number: 3 },
+  { value: "1900", label: "4 Bedrooms", number: 4 },
+  { value: "2500", label: "5 Bedrooms", number: 5 },
+  { value: "3150", label: "6 Bedrooms", number: 6 },
 ] as const;
 
 const FLOOR_OPTIONS = [
@@ -62,12 +73,18 @@ const LOCATIONS_DEFAULT_VALUES: LocationsFormData = {
   needsPacking: false,
   needsHeavyItems: false,
   loadingDetails: {
-    bedrooms: "",
+    bedrooms: {
+      sqFt:'',
+      count:''
+    },
     floors: "",
     elevator: "",
   },
   unloadingDetails: {
-    bedrooms: "",
+    bedrooms: {
+      sqFt:'',
+      count:''
+    },
     floors: "",
     elevator: "",
   },
@@ -87,4 +104,5 @@ export {
   PROPERTY_OPTIONS,
   PIANOS_OPTIONS,
   LOCATIONS_DEFAULT_VALUES,
+  APARTMENT_OPTIONS
 };

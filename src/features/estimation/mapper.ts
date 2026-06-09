@@ -1,3 +1,4 @@
+import { APARTMENT_OPTIONS, BEDROOM_OPTIONS } from "../locations/constant";
 import type { SearchFormData } from "../search/schema";
 import type {
   EstimationRequest,
@@ -85,13 +86,13 @@ export function mapToEstimationRequest(
   const destinationZip = search.endLocation?.zip;
 
   // if (!originZip || !destinationZip) return null;
-
+  const isPropertyApartment = locations.loadingPropertyType === "CondoApt";
+  const originBedroomCount = (isPropertyApartment?APARTMENT_OPTIONS:BEDROOM_OPTIONS).find(option => option.value === locations.loadingDetails?.bedrooms.sqFt)?.number ?? 0;
   return {
     originZip: originZip ?? null,
     destinationZip: destinationZip ?? null,
     originAddressType: locations.loadingPropertyType ?? "",
-    // originBedroomCount: parseBedroomCount(locations.loadingDetails.bedrooms),
-    originBedroomCount: 2,
+    originBedroomCount,
   };
 }
 
@@ -112,9 +113,9 @@ export function mapToRecommendationsRequest(
         : null;
 
   const sqFt = parseBedroomCount(
-    +(details?.bedrooms ?? 0) ||
-      +(locations.loadingDetails?.bedrooms ?? 0) ||
-      +(locations.unloadingDetails?.bedrooms ?? 0),
+    +(details?.bedrooms.sqFt ?? 0) ||
+      +(locations.loadingDetails?.bedrooms.sqFt ?? 0) ||
+      +(locations.unloadingDetails?.bedrooms.sqFt ?? 0),
   );
   const heavyItems = deriveHeavyItems(locations.pianoDetails);
 

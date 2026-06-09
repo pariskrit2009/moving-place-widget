@@ -12,6 +12,7 @@ import {
 import FieldError from "@/components/form/FieldError";
 import { SelectField } from "@/components/form/SelectField";
 import {
+  APARTMENT_OPTIONS,
   BEDROOM_OPTIONS,
   ELEVATOR_OPTIONS,
   FLOOR_OPTIONS,
@@ -46,6 +47,8 @@ export function LocationSection({
     propertyTypeName === "loadingPropertyType"
       ? "loadingDetails"
       : "unloadingDetails";
+
+  const bedroomOptions = isApartment?APARTMENT_OPTIONS:BEDROOM_OPTIONS
 
   return (
     <div className="space-y-2">
@@ -96,7 +99,7 @@ export function LocationSection({
             {/* Bedrooms */}
             <Controller
               control={control}
-              name={`${detailsPrefix}.bedrooms`}
+              name={`${detailsPrefix}.bedrooms.sqFt`}
               render={({ field, fieldState }) => (
                 <div className="flex-1">
                   <SelectField
@@ -104,7 +107,7 @@ export function LocationSection({
                     label="Number of bedrooms"
                     value={String(field.value)}
                     onValueChange={field.onChange}
-                    options={BEDROOM_OPTIONS}
+                    options={bedroomOptions}
                     required
                   />
                   <FieldError message={fieldState.error?.message} />

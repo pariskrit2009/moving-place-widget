@@ -21,7 +21,7 @@ export function HeaderWithQuote({
     (option) => option.value === locations?.loadingPropertyType,
   )?.value;
   const numberOfBedrooms = BEDROOM_OPTIONS.find(
-    (option) => option.value === locations?.loadingDetails?.bedrooms,
+    (option) => option.value === locations?.loadingDetails?.bedrooms.sqFt,
   )?.number;
 
   const propertyDetailLabel = propertyName

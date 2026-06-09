@@ -12,7 +12,7 @@ import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
 import { LocationSection } from "@/features/locations/locationSection";
 import { SelectField } from "@/components/form/SelectField";
-import { PIANOS_OPTIONS } from "@/features/locations/constant";
+import {  PIANOS_OPTIONS } from "@/features/locations/constant";
 import { HeavyItemsInfoModal } from "@/components/modals";
 
 export default function LocationsPage() {
@@ -53,7 +53,7 @@ export default function LocationsPage() {
     const prefix =
       name === "loadingPropertyType" ? "loadingDetails" : "unloadingDetails";
 
-    setValue(`${prefix}.bedrooms`, "");
+    setValue(`${prefix}.bedrooms.sqFt`, "");
     setValue(`${prefix}.floors`, "");
     setValue(`${prefix}.elevator`, "");
   };
