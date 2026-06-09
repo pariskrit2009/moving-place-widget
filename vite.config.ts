@@ -17,8 +17,8 @@ export default defineConfig({
     port: 5173,
     cors: true,
     proxy: {
-      "/partner-api": {
-        target: "https://staging.hireahelper.com",
+      "/api": {
+        target: "https://widget-staging.porchmovinggroup.com",
         changeOrigin: true,
         secure: true,
       },

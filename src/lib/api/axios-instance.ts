@@ -34,9 +34,9 @@ axiosInstance.interceptors.request.use(
 
     /** UNCOMMENT THIS AFTER BACKEND SERVER DEPLOYED, ALSO THE VALUES SHOULD BE PASSED FROM THE PARTNER SITE **/
     // const partnerDomain = searchParams.get("partnerDomain");
-    // config.headers["X-Widget-Domain"] = "www.affiliate301-demo.com";
-    // config.headers["X-Public-Token"] =
-    //   "pk_test_301_2C1FA149CF434650BCD1CD7316FF9287";
+    config.headers["X-Widget-Domain"] = "www.affiliate301-demo.com";
+    config.headers["X-Public-Token"] =
+      "pk_test_301_4E81FC3AC234449BA4A4A366AD55E65D";
 
     // Add publicToken to headers if present
     if (publicToken) {
