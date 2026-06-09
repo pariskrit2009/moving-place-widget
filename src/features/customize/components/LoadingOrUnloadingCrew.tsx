@@ -9,7 +9,7 @@ import { useRef, useState } from "react";
 
 interface LoadingOrUnloadingCrewProps {
   stepType?: "loading" | "unloading";
-  service: ServiceItem;
+  service: ServiceItem | null;
 }
 
 export function LoadingOrUnloadingCrew({
@@ -19,10 +19,13 @@ export function LoadingOrUnloadingCrew({
   const { setValue, watch } = useFormContext<CustomizeFormData>();
   const selectedMoveOption = useWidgetStore((s) => s.selectedMoveOption);
   const [isCustomizing, setIsCustomizing] = useState(false);
+  const hasDifferentDates = useWidgetStore(
+    (s) => s.movingDateData?.hasDifferentDates,
+  );
 
   const prefix = stepType;
-  const crewSize = watch(`${prefix}.crewSize`) ?? service.movers;
-  const hours = watch(`${prefix}.hours`) ?? service.hours;
+  const crewSize = watch(`${prefix}.crewSize`) ?? service?.movers;
+  const hours = watch(`${prefix}.hours`) ?? service?.hours;
   const recommendedValuesRef = useRef<{
     hours: number;
     crewSize: number;
@@ -56,14 +59,14 @@ export function LoadingOrUnloadingCrew({
   return (
     <div className="flex flex-col items-center gap-4">
       <h3 className="text-sm font-bold text-[#2e343e]">
-        Confirm your {stepType} crew
+        Confirm your {hasDifferentDates ? stepType : ""} crew
       </h3>
       <div className="flex items-start gap-2">
         <Stepper
           icon="clock"
           value={hours}
           editable={isCustomizing}
-          min={service.minHours}
+          min={service?.minHours}
           onChange={(v) =>
             setValue(`${prefix}.hours`, v, { shouldValidate: true })
           }
@@ -127,7 +130,8 @@ export function LoadingOrUnloadingCrew({
           </div>
         )}
         <span className="text-xs text-[#677890]">
-          Mover's minimum crew: {service.movers} movers × {service.hours} hours
+          Mover's minimum crew: {service?.movers} movers × {service?.hours}{" "}
+          hours
         </span>
       </div>
     </div>

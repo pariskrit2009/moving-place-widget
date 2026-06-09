@@ -6,7 +6,7 @@ interface StepperProps {
   icon: string;
   className?: string;
   value: number;
-  min: number;
+  min?: number;
   onChange: (value: number) => void;
   displayText?: (value: number) => string;
   editable?: boolean;
@@ -15,7 +15,7 @@ interface StepperProps {
 export function Stepper({
   icon,
   value,
-  min,
+  min = 0,
   onChange,
   className,
   displayText,

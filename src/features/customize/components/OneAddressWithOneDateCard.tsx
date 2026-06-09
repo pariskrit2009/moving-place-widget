@@ -24,9 +24,7 @@ export function OneAddressWithOneDateOnlyCard({
     <div className="space-y-4">
       <div className="flex items-center gap-1 text-sm font-bold flex-wrap">
         <span>{formattedDate}</span>
-        <span className="truncate capitalize">
-          . {stepType} at {service.location}
-        </span>
+        <span className="truncate capitalize">. {service.location}</span>
       </div>
       <CustomizeButton
         onCollapsibleButtonClick={onCollapsibleButtonClick}
@@ -45,7 +43,7 @@ export function OneAddressWithOneDateOnlyCard({
 
             {/* Crew section */}
             <div className="w-1/2">
-              <LoadingOrUnloadingCrew service={service} />
+              <LoadingOrUnloadingCrew service={service} stepType={stepType} />
             </div>
           </div>
         )}

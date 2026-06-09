@@ -3,7 +3,7 @@ import { z } from "zod";
 export const contactInfoSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Enter a valid email"),
+  email: z.email("Enter a valid email"),
   phone: z.string().min(10, "Enter a valid phone number"),
 });
 
@@ -13,7 +13,7 @@ export const moveStepSchema = z.object({
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
   zipCode: z.string().min(1, "Zip code is required"),
-  crewSize: z.number().min(2).max(3),
+  crewSize: z.number().min(2),
   hours: z.number().min(2),
   arrivalTime: z.string().optional(),
 });

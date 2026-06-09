@@ -19,21 +19,23 @@ import {
 } from "@/features/customize/mutations";
 
 import { buildLFSPayload, buildLOPayload } from "@/features/customize/payload";
+import { buildLocation } from "@/features/customize/helper";
 
 export default function CustomizePage() {
   const { navigateWithParams } = useNavigateWithParams();
   const isLFS = useWidgetStore((s) => s.selectedMoveOption);
-  const storeSetCustomization = useWidgetStore((s) => s.setCustomization);
   const form = useCustomizeForm();
   const { mutate: mutateLFS } = useCreateMarketplaceQuoteCheckoutLFS();
   const { mutate: mutateLO } = useCreateMarketplaceQuoteCheckoutLO();
+
+  const customization = useWidgetStore((s) => s.customization);
+  const storeSetCustomization = useWidgetStore((s) => s.setCustomization);
   const loadingServiceProvider = useWidgetStore(
     (s) => s.selectedLoadingProvider,
   );
   const unloadingServiceProvider = useWidgetStore(
     (s) => s.selectedUnloadingProvider,
   );
-
   const movingDateData = useWidgetStore((s) => s.movingDateData);
   const hasLoadingAddress = useWidgetStore(
     (s) => s.selectedPlaces?.startLocation?.fullAddress,
@@ -41,8 +43,7 @@ export default function CustomizePage() {
   const hasUnloadingAddress = useWidgetStore(
     (s) => s.selectedPlaces?.endLocation?.fullAddress,
   );
-  const loadingProvider = useWidgetStore((s) => s.selectedLoadingProvider);
-  const unloadingProvider = useWidgetStore((s) => s.selectedUnloadingProvider);
+
   const startDate = movingDateData?.hasDifferentDates
     ? movingDateData.loadingDate
     : movingDateData?.movingDate;
@@ -51,22 +52,32 @@ export default function CustomizePage() {
     ? movingDateData?.unloadingDate
     : movingDateData?.movingDate;
 
+  const loadingLocation = buildLocation(
+    customization?.loading,
+    hasLoadingAddress,
+  );
+
+  const unloadingLocation = buildLocation(
+    customization?.unloading,
+    hasUnloadingAddress,
+  );
+
   const context = {
     loadingDate: startDate ?? "",
     unloadingDate: endDate ?? "",
-    loadingLocation: hasLoadingAddress ?? "",
-    unloadingLocation: hasUnloadingAddress ?? "",
+    loadingLocation: loadingLocation,
+    unloadingLocation: unloadingLocation,
   };
 
-  const loadingService = loadingProvider
-    ? toServiceItem(loadingProvider, "loading", context)
+  const loadingService = loadingServiceProvider
+    ? toServiceItem(loadingServiceProvider, "loading", context)
     : null;
 
-  const unloadingService = unloadingProvider
-    ? toServiceItem(unloadingProvider, "unloading", context)
+  const unloadingService = unloadingServiceProvider
+    ? toServiceItem(unloadingServiceProvider, "unloading", context)
     : null;
 
-  const storeContext = {
+  const storeContextForPayload = {
     loadingDate: startDate ?? "",
     unloadingDate: endDate ?? "",
     loadingServiceProvider: loadingServiceProvider ?? null,
@@ -76,8 +87,8 @@ export default function CustomizePage() {
   const onSubmit = form.handleSubmit((data) => {
     storeSetCustomization(data);
     if (isLFS === "movers-truck")
-      mutateLFS(buildLFSPayload(data, storeContext));
-    else mutateLO(buildLOPayload(data, storeContext));
+      mutateLFS(buildLFSPayload(data, storeContextForPayload));
+    else mutateLO(buildLOPayload(data, storeContextForPayload));
   });
 
   return (
@@ -132,12 +143,12 @@ export default function CustomizePage() {
             </>
           ) : (
             <>
-              {loadingService ||
-                (unloadingService && (
-                  <TwoAddressWithOneDateOnlyCard
-                    service={loadingService || unloadingService}
-                  />
-                ))}
+              {(loadingService || unloadingService) && (
+                <TwoAddressWithOneDateOnlyCard
+                  loadingService={loadingService}
+                  unloadingService={unloadingService}
+                />
+              )}
             </>
           )}
         </FormProvider>
