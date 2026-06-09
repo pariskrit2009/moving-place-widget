@@ -10,7 +10,6 @@ export function BootstrapGate({ children }: { children: React.ReactNode }) {
     staleTime: Infinity,
     retry: false,
   });
-
   if (isPending) return <BootstrapLoadingScreen />;
   if (isError) return <BootstrapErrorScreen error={error} />;
 

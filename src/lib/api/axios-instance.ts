@@ -39,11 +39,6 @@ axiosInstance.interceptors.request.use(
     config.headers["X-Public-Token"] =
       publicToken ?? "pk_test_301_4E81FC3AC234449BA4A4A366AD55E65D";
 
-    // Add publicToken to headers if present
-    // if (publicToken) {
-    //   config.headers = config.headers || {};
-    // }
-
     // Log request details for debugging
     console.log(
       `[Axios Request] ${config.method?.toUpperCase()} ${config.url}`,
