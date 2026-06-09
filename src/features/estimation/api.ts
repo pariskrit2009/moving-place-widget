@@ -10,7 +10,7 @@ export async function getEstimation(
   data: EstimationRequest,
 ): Promise<EstimationLfsResponse> {
   return post<EstimationLfsResponse>(
-    "/quote/marketplace/estimations-lfs/",
+    "/moving/quote/marketplace/estimations-lfs/",
     data,
   );
 }
@@ -19,7 +19,7 @@ export async function getRecommendations(
   data: RecommendationsRequest,
 ): Promise<RecommendationsApiResponse> {
   return post<RecommendationsApiResponse>(
-    "/quote/marketplace/recommendations/",
+    "/moving/quote/marketplace/recommendations/",
     data,
   );
 }

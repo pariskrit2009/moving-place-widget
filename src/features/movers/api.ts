@@ -7,7 +7,7 @@ import type {
 export async function getServiceProviders(
   params: ServiceProviderParams,
 ): Promise<ServiceProviderListResponse> {
-  return get<ServiceProviderListResponse>("/service-providers/helper-list/", {
+  return get<ServiceProviderListResponse>("/moving/service-providers/helper-list/", {
     params,
   });
 }
