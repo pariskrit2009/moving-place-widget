@@ -33,15 +33,11 @@ axiosInstance.interceptors.request.use(
     config.headers["Authorization-Token"] = configuration.apiAuthorizationToken; // DELETE THIS LATER AFTER BACKEND SERVER DEPLOYED
 
     /** UNCOMMENT THIS AFTER BACKEND SERVER DEPLOYED, ALSO THE VALUES SHOULD BE PASSED FROM THE PARTNER SITE **/
-    // const partnerDomain = searchParams.get("partnerDomain");
-    config.headers["X-Widget-Domain"] = "www.affiliate301-demo.com";
+    const partnerDomain = searchParams.get("partnerDomain");
+    config.headers["X-Widget-Domain"] =
+      partnerDomain ?? "www.affiliate301-demo.com";
     config.headers["X-Public-Token"] =
-      "pk_test_301_4E81FC3AC234449BA4A4A366AD55E65D";
-
-    // Add publicToken to headers if present
-    if (publicToken) {
-      config.headers = config.headers || {};
-    }
+      publicToken ?? "pk_test_301_4E81FC3AC234449BA4A4A366AD55E65D";
 
     // Log request details for debugging
     console.log(
